@@ -20,6 +20,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('user/auth/login' , [\App\Http\Controllers\user\Auth::class , 'login']);
 Route::post('user/auth/verfyOTP' , [\App\Http\Controllers\user\Auth::class , 'verfyOTP']);
+Route::post('uploadImage' , [\App\Http\Controllers\user\Auth::class , 'imageUploadPost']);
+Route::post('driver/auth/register' , [\App\Http\Controllers\driver\Auth::class , 'registerDriver']);
 
 
 // just authrized users will access this 

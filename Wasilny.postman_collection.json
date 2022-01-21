@@ -1,0 +1,153 @@
+{
+	"info": {
+		"_postman_id": "a04b8b77-4423-4621-a329-1cc2b9e82c67",
+		"name": "Wasilny",
+		"description": "# Api documentation\n\nall incoming data in json\n\nto register driver , please first upload image and save image name in cash, then pass it as string in register driver api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Register Driver",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"avatar\" : \"name.png\",\r\n    \"first_name\" : \"ahmed\",\r\n    \"last_name\" : \"ahmed\" ,\r\n    \"email\" : \"ahmed@gmail.com\",\r\n    \"birth_date\" : \"1999-01-04\" ,\r\n    \"id_photo\" : \"name.png\" ,\r\n    \"driver_license_front\" : \"name.png\" ,\r\n    \"driver_license_back\" : \"name.png\" ,\r\n    \"military_service_certificate\" : \"name.png\" ,\r\n    \"vehicle_type\": \"name.png\" ,\r\n    \"vehicle_color\" : \"black\",\r\n    \"vehicle_model\": \"name.png\" ,\r\n    \"vehicle_made_year\": \"2014\" ,\r\n    \"vehicle_passengers\" : \"5\" ,\r\n    \"vehicle_license_front\" : \"name.png\",\r\n    \"vehicle_license_back\" : \"name.png\",\r\n    \"phone_numeber\" : \"966536301031\"\r\n }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api2.browndiamondstech.com/api/driver/auth/register",
+					"protocol": "https",
+					"host": [
+						"api2",
+						"browndiamondstech",
+						"com"
+					],
+					"path": [
+						"api",
+						"driver",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"phone\": \"966536301031\"    \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api2.browndiamondstech.com/api/user/auth/login",
+					"protocol": "https",
+					"host": [
+						"api2",
+						"browndiamondstech",
+						"com"
+					],
+					"path": [
+						"api",
+						"user",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Upload Driver Image",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "image",
+							"type": "file",
+							"src": "/C:/Users/user00/Documents/Contracts/تصاميم خاصة بالشركة/logo_with_black_background.png"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://api2.browndiamondstech.com/api/uploadImage",
+					"protocol": "https",
+					"host": [
+						"api2",
+						"browndiamondstech",
+						"com"
+					],
+					"path": [
+						"api",
+						"uploadImage"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User verfyOTP",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "1|RAYTwZhrHZcVLAyBdlJ0VoMlkqGJL0Xuj0SSs7xR",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Requested-With",
+						"value": "XMLHttpRequest",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"phone\": \"966536301031\" ,\r\n    \"otp\" : \"4546\"   \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api2.browndiamondstech.com/api/user/auth/verfyOTP",
+					"protocol": "https",
+					"host": [
+						"api2",
+						"browndiamondstech",
+						"com"
+					],
+					"path": [
+						"api",
+						"user",
+						"auth",
+						"verfyOTP"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

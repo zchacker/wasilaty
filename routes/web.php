@@ -17,3 +17,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
+Route::get('viewImage/{file}' , [\App\Http\Controllers\user\Auth::class , 'viewImage']);
