@@ -14,8 +14,8 @@ class Auth extends Controller
     //
 
     public function registerDriver(Request $request)
-    {
-                                           
+    {                           
+
         $rules = array(
             'avatar' => 'required',
             'first_name' => 'required',
@@ -33,7 +33,7 @@ class Auth extends Controller
             'vehicle_passengers' => 'required',
             'vehicle_license_front' => 'required',
             'vehicle_license_back' => 'required',               
-            'phone_numeber' => 'required'                
+            'phone_numeber' => 'required'                           
         );
 
         $validator = FacadesValidator::make($request->all() , $rules); //Validator::make($request->all() , $rules);
@@ -66,6 +66,8 @@ class Auth extends Controller
 
             try{
         
+                $otp   = 1111;// $this->generateOPT();
+
                 $driver = Driver::create(
                     [                        
                         'avatar' => $request->input('avatar'),
@@ -84,7 +86,9 @@ class Auth extends Controller
                         'vehicle_passengers' => $request->input('vehicle_passengers'),
                         'vehicle_license_front' => $request->input('vehicle_license_front'),
                         'vehicle_license_back' => $request->input('vehicle_license_back'),
-                        'phone_numeber' => $request->input('phone_numeber')
+                        'phone_numeber' => $request->input('phone_numeber'),
+                        'one_time_password' => $otp ,
+                        'otp_requested_time' => date('Y-m-d H:i:s')
                     ]
                 );
                 
@@ -108,6 +112,41 @@ class Auth extends Controller
         
     }
 
+    public function activateDriver(Request $request)
+    {
+
+        $phone  = $request->input('phone');
+        $otp    = $request->input('otp');
+        $driver   = Driver::where(['phone_numeber' => $phone , "one_time_password" => $otp ])->first();
+
+        if($driver == NULL)
+        {
+            $data = new \stdClass();
+            $data->message = "";
+            $json = $this->generateJSON( FALSE , Response::HTTP_NOT_FOUND , "user not found or wrong otp" , "");
+            return $json;
+        }
+        else
+        {
+            // generate token
+            
+            //$ourUser = FacadesAuth::user();
+
+            //$token = $driver->createToken('token')->plainTextToken;
+            
+            // if( !FacadesAuth::attempt($request->only('phone')) )
+            // {
+            //     return $this->generateJSON( TRUE , Response::HTTP_UNAUTHORIZED , "worng data" , "");
+            // }
+
+            $data = new \stdClass();
+            $data->active = "driver are active, wait approv";
+            $json = $this->generateJSON( TRUE , Response::HTTP_OK , "" , $data);
+            return $json;
+
+        }
+
+    }
 
     private function generateJSON($success , $status , $error , $data)
     {
@@ -120,6 +159,12 @@ class Auth extends Controller
         $json = json_encode($myObj);
         $response = response($json, $status);
         return $response;
+    }
+
+    private function generateOPT()
+    {
+        $digits = 4;
+        return str_pad(rand(0, pow(10, $digits)-1), $digits, '0', STR_PAD_LEFT);
     }
 
 }

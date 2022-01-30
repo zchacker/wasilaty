@@ -100,7 +100,8 @@ class Auth extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    // https://www.itsolutionstuff.com/post/laravel-8-image-upload-tutorial-exampleexample.html
+    
+     // https://www.itsolutionstuff.com/post/laravel-8-image-upload-tutorial-exampleexample.html
     public function imageUploadPost(Request $request)
     {
         $request->validate([
@@ -115,7 +116,7 @@ class Auth extends Controller
         /* Store $imageName name in DATABASE from HERE */
     
         $data = new \stdClass();
-        $data->token = $imageName;
+        $data->imageName = $imageName;
         return $this->generateJSON( TRUE , Response::HTTP_OK , "" , $data);
 
         //return back()
@@ -135,7 +136,6 @@ class Auth extends Controller
         return "Hello User: $id";
     }
 
-
     private function generateJSON($success , $status , $error , $data)
     {
         $myObj = new \stdClass();
@@ -154,4 +154,6 @@ class Auth extends Controller
         $digits = 4;
         return str_pad(rand(0, pow(10, $digits)-1), $digits, '0', STR_PAD_LEFT);
     }
+
+
 }

@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class Driver extends Model
 {
-    use HasFactory;
+    use HasFactory, HasApiTokens, Notifiable;
 
       /**
      * The table associated with the model.
@@ -34,6 +36,8 @@ class Driver extends Model
         'vehicle_license_front',
         'vehicle_license_back',
         'phone_numeber',
+        'one_time_password',
+        'otp_requested_time'
     ];
 
 }

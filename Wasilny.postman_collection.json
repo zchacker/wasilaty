@@ -148,6 +148,44 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Driver VerfyOTP",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept-Language",
+						"value": "",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"phone\": \"966536301031\" ,\r\n    \"otp\" : \"1111\"   \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api2.browndiamondstech.com/api/driver/auth/otp",
+					"protocol": "https",
+					"host": [
+						"api2",
+						"browndiamondstech",
+						"com"
+					],
+					"path": [
+						"api",
+						"driver",
+						"auth",
+						"otp"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
