@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\user;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\shared\Utils;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth as FacadesAuth;
@@ -12,11 +13,38 @@ class Auth extends Controller
 {
     //
 
+    /**
+     * @OA\Post(
+     * path="/wasilaty/api/user/auth/login",
+     * summary="الدخول للنظام",
+     * description="",
+     * operationId="Login",
+     * tags={"User Auth"},
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="جميع الخيارات إلزامية",
+     *    @OA\JsonContent(
+     *       required={"phone"},
+     *       @OA\Property(property="phone", type="String", format="966536301031", example="966536301031"),         
+     *    ),
+     * ),
+     * @OA\Response(
+     *    response=200,
+     *    description="Success credentials response",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="FALSE"),
+     *       @OA\Property(property="status", type="int", example=200),
+     *       @OA\Property(property="error", type="string", example=""),
+     *       @OA\Property(property="data", type="string", example={"message":"OK"} ),
+     *        )
+     *     )
+     * )
+     */
     public function Login(Request $request)
     {
         $phone = $request->input('phone');
         $user  = User::where('phone' , $phone)->first();
-        $otp   = 1111;// $this->generateOPT();
+        $otp   = 1111;// Utils::generateOPT();
 
         if($user == NULL){
 
@@ -32,7 +60,7 @@ class Auth extends Controller
                 
                 $data = new \stdClass();
                 $data->message = "get otp";
-                $json = $this->generateJSON(TRUE , Response::HTTP_OK, "", $data);
+                $json = Utils::generateJSON(TRUE , Response::HTTP_OK, "", $data);
 
                 return $json;
 
@@ -41,7 +69,7 @@ class Auth extends Controller
 
                 $data = new \stdClass();
                 $data->message = "";
-                $json = $this->generateJSON(FALSE , Response::HTTP_NOT_FOUND , "worng json", $data);
+                $json = Utils::generateJSON(FALSE , Response::HTTP_NOT_FOUND , "worng json", $data);
                 return $json;
             }
 
@@ -51,14 +79,43 @@ class Auth extends Controller
             ->update(['one_time_password' => $otp , "otp_requested_time" => date('Y-m-d H:i:s')]);
 
             $data = new \stdClass();
-                $data->message = "get otp";
-                $json = $this->generateJSON(TRUE , Response::HTTP_OK , "", $data);
+                $data->message = "OK";
+                $json = Utils::generateJSON(TRUE , Response::HTTP_OK , "", $data);
 
             return $json;
 
         }        
     }
 
+
+    /**
+     * @OA\Post(
+     * path="/wasilaty/api/user/auth/verfyOTP",
+     * summary="تحقق من الرقم",
+     * description="",
+     * operationId="OTP",
+     * tags={"User Auth"},
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="جميع الخيارات إلزامية",
+     *    @OA\JsonContent(
+     *       required={"phone"},
+     *       @OA\Property(property="phone", type="String", format="966536301031", example="966536301031"),     
+     *       @OA\Property(property="otp", type="String", format="1111", example="1111"),     
+     *    ),
+     * ),
+     * @OA\Response(
+     *    response=502,
+     *    description="Wrong credentials response",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="FALSE"),
+     *       @OA\Property(property="status", type="int", example=502),
+     *       @OA\Property(property="error", type="string", example={"message":"error message"}),
+     *       @OA\Property(property="data", type="string", example="" ),
+     *        )
+     *     )
+     * )
+     */
     public function verfyOTP( Request $request )
     {
         
@@ -70,7 +127,7 @@ class Auth extends Controller
         {
             $data = new \stdClass();
             $data->message = "";
-            $json = $this->generateJSON( FALSE , Response::HTTP_UNAUTHORIZED , "user not found or wrong otp" , "");
+            $json = Utils::generateJSON( FALSE , Response::HTTP_UNAUTHORIZED , "user not found or wrong otp" , "");
             return $json;
         }
         else
@@ -83,18 +140,51 @@ class Auth extends Controller
             
             // if( !FacadesAuth::attempt($request->only('phone')) )
             // {
-            //     return $this->generateJSON( TRUE , Response::HTTP_UNAUTHORIZED , "worng data" , "");
+            //     return Utils::generateJSON( TRUE , Response::HTTP_UNAUTHORIZED , "worng data" , "");
             // }
 
             $data = new \stdClass();
             $data->token = $token;
-            $json = $this->generateJSON( TRUE , Response::HTTP_OK , "" , $data);
+            $json = Utils::generateJSON( TRUE , Response::HTTP_OK , "" , $data);
             return $json;
 
         }
 
     }
 
+    /**
+     * @OA\Post(
+     * path="/wasilaty/api/uploadImage",
+     * summary="رفع صورة مستندات للسائق",
+     * description="",
+     * operationId="imageUploadPost",
+     * tags={"Driver Auth"},
+     * @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 @OA\Property(
+     *                     description="file to upload",
+     *                     property="image",
+     *                     type="file",
+     *                ),
+     *                 required={"file"}
+     *             )
+     *         )
+     * ),
+     * @OA\Response(
+     *    response=502,
+     *    description="Wrong credentials response",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="FALSE"),
+     *       @OA\Property(property="status", type="int", example=502),
+     *       @OA\Property(property="error", type="string", example=""),
+     *       @OA\Property(property="data", type="string", example={"imageName":"image.png"} ),
+     *        )
+     *     )
+     * )
+     */
      /**
      * Display a listing of the resource.
      *
@@ -102,7 +192,8 @@ class Auth extends Controller
      */
     
      // https://www.itsolutionstuff.com/post/laravel-8-image-upload-tutorial-exampleexample.html
-    public function imageUploadPost(Request $request)
+    
+     public function imageUploadPost(Request $request)
     {
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
@@ -117,7 +208,7 @@ class Auth extends Controller
     
         $data = new \stdClass();
         $data->imageName = $imageName;
-        return $this->generateJSON( TRUE , Response::HTTP_OK , "" , $data);
+        return Utils::generateJSON( TRUE , Response::HTTP_OK , "" , $data);
 
         //return back()
         //    ->with('success','You have successfully upload image.')
@@ -132,7 +223,7 @@ class Auth extends Controller
 
     public function test( Request $request )
     {           
-        $id = $request->user()->id;   
+        $id = $request->user()->id;
         return "Hello User: $id";
     }
 

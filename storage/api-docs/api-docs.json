@@ -1,0 +1,817 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "This is Wasilny Api Documentation",
+        "version": "0.1"
+    },
+    "paths": {
+        "/wasilaty/api/driver/auth/register": {
+            "post": {
+                "tags": [
+                    "Driver Auth"
+                ],
+                "summary": "إرسال الطلب",
+                "description": "order_type [1 = bus, 2=taxi], driver_gender[ 1=male, 2=female] ",
+                "operationId": "driver/registerDriver",
+                "requestBody": {
+                    "description": "جميع الخيارات إلزامية",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "avatar",
+                                    "first_name",
+                                    "last_name",
+                                    "email",
+                                    "birth_date",
+                                    "id_photo",
+                                    "driver_license_front",
+                                    "driver_license_back",
+                                    "vehicle_type",
+                                    "vehicle_color",
+                                    "vehicle_model",
+                                    "vehicle_made_year",
+                                    "vehicle_passengers",
+                                    "vehicle_license_front",
+                                    "vehicle_license_back",
+                                    "phone_numeber"
+                                ],
+                                "properties": {
+                                    "avatar": {
+                                        "type": "string",
+                                        "format": "float",
+                                        "example": "image url"
+                                    },
+                                    "first_name": {
+                                        "type": "string",
+                                        "format": "float",
+                                        "example": "frinst name"
+                                    },
+                                    "last_name": {
+                                        "type": "string",
+                                        "format": "float",
+                                        "example": "last name"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "float",
+                                        "example": "example@mail.com"
+                                    },
+                                    "birth_date": {
+                                        "type": "string",
+                                        "example": "1992-02-02"
+                                    },
+                                    "id_photo": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "driver_license_front": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "driver_license_back": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "military_service_certificate": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "vehicle_type": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "vehicle_color": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "vehicle_made_year": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "vehicle_passengers": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "vehicle_license_front": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "vehicle_license_back": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
+                                    "phone_numeber": {
+                                        "type": "string",
+                                        "example": "966536301031"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "502": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "FALSE"
+                                        },
+                                        "status": {
+                                            "type": "int",
+                                            "example": 502
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": {
+                                                "message": [
+                                                    "error message"
+                                                ]
+                                            }
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": ""
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/wasilaty/api/driver/auth/verfiyNumber": {
+            "post": {
+                "tags": [
+                    "Driver Auth"
+                ],
+                "summary": "تأكيد رقم الهاتف",
+                "description": "order_type [1 = bus, 2=taxi], driver_gender[ 1=male, 2=female] ",
+                "operationId": "activateDriver",
+                "requestBody": {
+                    "description": "جميع الخيارات إلزامية",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "phone",
+                                    "otp"
+                                ],
+                                "properties": {
+                                    "phone": {
+                                        "type": "String",
+                                        "format": "966536301031",
+                                        "example": "966536301031"
+                                    },
+                                    "otp": {
+                                        "type": "float",
+                                        "format": "1111",
+                                        "example": "1111"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "502": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "FALSE"
+                                        },
+                                        "status": {
+                                            "type": "int",
+                                            "example": 502
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": {
+                                                "message": "error message"
+                                            }
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": ""
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/wasilaty/api/driver/auth/login": {
+            "post": {
+                "tags": [
+                    "Driver Auth"
+                ],
+                "summary": "الدخول للنظام",
+                "description": "",
+                "operationId": "driver/Login",
+                "requestBody": {
+                    "description": "جميع الخيارات إلزامية",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "phone"
+                                ],
+                                "properties": {
+                                    "phone": {
+                                        "type": "String",
+                                        "format": "966536301031",
+                                        "example": "966536301031"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "FALSE"
+                                        },
+                                        "status": {
+                                            "type": "int",
+                                            "example": 200
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": {
+                                                "message": "OK"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/wasilaty/api/driver/auth/loginOtp": {
+            "post": {
+                "tags": [
+                    "Driver Auth"
+                ],
+                "summary": "تحقق من الرقم",
+                "description": "",
+                "operationId": "driver/verfyOTP",
+                "requestBody": {
+                    "description": "جميع الخيارات إلزامية",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "phone"
+                                ],
+                                "properties": {
+                                    "phone": {
+                                        "type": "String",
+                                        "format": "966536301031",
+                                        "example": "966536301031"
+                                    },
+                                    "otp": {
+                                        "type": "String",
+                                        "format": "1111",
+                                        "example": "1111"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "502": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "FALSE"
+                                        },
+                                        "status": {
+                                            "type": "int",
+                                            "example": 502
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": {
+                                                "message": "error message"
+                                            }
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": ""
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/wasilaty/api/driver/getNewOrders": {
+            "get": {
+                "tags": [
+                    "OrderDriver"
+                ],
+                "summary": "جلب المركبات من النظام",
+                "description": "استلام الطلبات الجديدة والموافقة عليها ",
+                "operationId": "driver/getNewOrders",
+                "responses": {
+                    "200": {
+                        "description": "Success credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        },
+                                        "status": {
+                                            "type": "int",
+                                            "example": 200
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": [
+                                                {
+                                                    "name": "string",
+                                                    "image": "string"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/wasilaty/api/driver/acceptOrder": {
+            "post": {
+                "tags": [
+                    "OrderDriver"
+                ],
+                "summary": "قبول الطلب",
+                "description": " ",
+                "operationId": "driver/acceptOrder",
+                "requestBody": {
+                    "description": "جميع الخيارات إلزامية",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "order_id"
+                                ],
+                                "properties": {
+                                    "order_id": {
+                                        "type": "int",
+                                        "format": "int",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "502": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "FALSE"
+                                        },
+                                        "status": {
+                                            "type": "int",
+                                            "example": 502
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": {
+                                                "message": "error message"
+                                            }
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": ""
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/wasilaty/api/user/auth/login": {
+            "post": {
+                "tags": [
+                    "User Auth"
+                ],
+                "summary": "الدخول للنظام",
+                "description": "",
+                "operationId": "Login",
+                "requestBody": {
+                    "description": "جميع الخيارات إلزامية",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "phone"
+                                ],
+                                "properties": {
+                                    "phone": {
+                                        "type": "String",
+                                        "format": "966536301031",
+                                        "example": "966536301031"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "FALSE"
+                                        },
+                                        "status": {
+                                            "type": "int",
+                                            "example": 200
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": {
+                                                "message": "OK"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/wasilaty/api/user/auth/verfyOTP": {
+            "post": {
+                "tags": [
+                    "User Auth"
+                ],
+                "summary": "تحقق من الرقم",
+                "description": "",
+                "operationId": "OTP",
+                "requestBody": {
+                    "description": "جميع الخيارات إلزامية",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "phone"
+                                ],
+                                "properties": {
+                                    "phone": {
+                                        "type": "String",
+                                        "format": "966536301031",
+                                        "example": "966536301031"
+                                    },
+                                    "otp": {
+                                        "type": "String",
+                                        "format": "1111",
+                                        "example": "1111"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "502": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "FALSE"
+                                        },
+                                        "status": {
+                                            "type": "int",
+                                            "example": 502
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": {
+                                                "message": "error message"
+                                            }
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": ""
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/wasilaty/api/uploadImage": {
+            "post": {
+                "tags": [
+                    "Driver Auth"
+                ],
+                "summary": "رفع صورة مستندات للسائق",
+                "description": "",
+                "operationId": "imageUploadPost",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "file"
+                                ],
+                                "properties": {
+                                    "image": {
+                                        "description": "file to upload",
+                                        "type": "file"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "502": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "FALSE"
+                                        },
+                                        "status": {
+                                            "type": "int",
+                                            "example": 502
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": {
+                                                "imageName": "image.png"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/wasilaty/api/user/getVehicles": {
+            "get": {
+                "tags": [
+                    "OrderUser"
+                ],
+                "summary": "جلب المركبات من النظام",
+                "description": "تحميل صور للمركبات داخل النظام",
+                "operationId": "getVehicles",
+                "responses": {
+                    "200": {
+                        "description": "Success credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        },
+                                        "status": {
+                                            "type": "int",
+                                            "example": 200
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": [
+                                                {
+                                                    "name": "string",
+                                                    "image": "string"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/wasilaty/api/user/AddOrder": {
+            "post": {
+                "tags": [
+                    "OrderUser"
+                ],
+                "summary": "إرسال الطلب",
+                "description": "order_type [1 = bus, 2=taxi], driver_gender[ 1=male, 2=female] ",
+                "operationId": "user/addOrder",
+                "requestBody": {
+                    "description": "جميع الخيارات إلزامية",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "start_lat",
+                                    "start_lng",
+                                    "end_lat",
+                                    "end_lng",
+                                    "order_type",
+                                    "vehicle_type"
+                                ],
+                                "properties": {
+                                    "start_lat": {
+                                        "type": "float",
+                                        "format": "float",
+                                        "example": "36.336363"
+                                    },
+                                    "start_lng": {
+                                        "type": "float",
+                                        "format": "float",
+                                        "example": "25.363662"
+                                    },
+                                    "end_lat": {
+                                        "type": "float",
+                                        "format": "float",
+                                        "example": "33.363662"
+                                    },
+                                    "end_lng": {
+                                        "type": "float",
+                                        "format": "float",
+                                        "example": "25.363662"
+                                    },
+                                    "order_type": {
+                                        "type": "int",
+                                        "example": "1"
+                                    },
+                                    "driver_gender": {
+                                        "type": "int",
+                                        "example": "1"
+                                    },
+                                    "vehicle_type": {
+                                        "type": "int",
+                                        "example": "1"
+                                    },
+                                    "payment_method": {
+                                        "type": "int",
+                                        "example": "1"
+                                    },
+                                    "passengers": {
+                                        "type": "int",
+                                        "example": "1"
+                                    },
+                                    "cobon_id": {
+                                        "type": "int",
+                                        "example": "0"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "502": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "FALSE"
+                                        },
+                                        "status": {
+                                            "type": "int",
+                                            "example": 502
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": {
+                                                "message": "error message"
+                                            }
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": ""
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "sanctum": {
+                "type": "apiKey",
+                "description": "Enter token in format (Bearer <token>)",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
+    },
+    "security": [
+        []
+    ]
+}

@@ -36,4 +36,5 @@ class User extends Model
         'one_time_password',
         'deleted_time',
     ];
+    
 }

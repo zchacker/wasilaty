@@ -16,7 +16,7 @@ class Utils extends Controller
         $myObj->error   = $error;
         $myObj->data    = $data;
 
-        $json = json_encode($myObj);
+        $json = json_encode($myObj, JSON_PRETTY_PRINT);
         $response = response($json, $status);
         return $response;
     }

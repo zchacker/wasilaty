@@ -22,14 +22,26 @@ Route::post('user/auth/login' , [\App\Http\Controllers\user\Auth::class , 'login
 Route::post('user/auth/verfyOTP' , [\App\Http\Controllers\user\Auth::class , 'verfyOTP']);
 Route::post('uploadImage' , [\App\Http\Controllers\user\Auth::class , 'imageUploadPost']);
 Route::post('driver/auth/register' , [\App\Http\Controllers\driver\Auth::class , 'registerDriver']);
-Route::post('driver/auth/otp' , [\App\Http\Controllers\driver\Auth::class , 'activateDriver']);
+Route::post('driver/auth/verfiyNumber' , [\App\Http\Controllers\driver\Auth::class , 'activateDriver']);
+
+Route::post('driver/auth/login' , [\App\Http\Controllers\driver\Auth::class , 'Login']);
+Route::post('driver/auth/loginOtp' , [\App\Http\Controllers\driver\Auth::class , 'verfyOTP']);
 
 Route::get('user/getVehicles' , [\App\Http\Controllers\user\Orders::class , 'getVehicles']);
 
 
-// just authrized users will access this 
-Route::group(['middleware' => ['auth:sanctum']] , function(){
-    
-    Route::get('test' , [\App\Http\Controllers\user\Auth::class, 'test']);
 
+// just authrized users will access this 
+//Route::group(['middleware' => ['auth:sanctum']] , function(){
+Route::group(['middleware' => ['auth:users']] , function(){
+            
+    Route::post('user/AddOrder' , [\App\Http\Controllers\user\Orders::class , 'addOrder']);    
+    Route::get('test' , [\App\Http\Controllers\user\Auth::class, 'test']);
+    
+});
+
+
+Route::group(['middleware' => ['auth:drivers']] , function(){
+    Route::get('driver/getNewOrders' , [\App\Http\Controllers\driver\Orders::class , 'getNewOrders']);
+    Route::post('driver/acceptOrder' , [\App\Http\Controllers\driver\Orders::class , 'acceptOrder']);
 });
