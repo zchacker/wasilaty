@@ -162,7 +162,7 @@ class Auth extends Controller
 
     /**
      * @OA\Post(
-     * path="/wasilaty/api/driver/auth/verfiyNumber",
+     * path="/wasilaty/api/driver/auth/activeDriver",
      * summary="تأكيد رقم الهاتف",
      * description="order_type [1 = bus, 2=taxi], driver_gender[ 1=male, 2=female] ",
      * operationId="activateDriver",
@@ -332,7 +332,7 @@ class Auth extends Controller
 
     /**
      * @OA\Post(
-     * path="/wasilaty/api/driver/auth/loginOtp",
+     * path="/wasilaty/api/driver/auth/verfyOTP",
      * summary="تحقق من الرقم",
      * description="",
      * operationId="driver/verfyOTP",

@@ -21,11 +21,13 @@ use Illuminate\Support\Facades\Route;
 Route::post('user/auth/login' , [\App\Http\Controllers\user\Auth::class , 'login']);
 Route::post('user/auth/verfyOTP' , [\App\Http\Controllers\user\Auth::class , 'verfyOTP']);
 Route::post('uploadImage' , [\App\Http\Controllers\user\Auth::class , 'imageUploadPost']);
+
+
 Route::post('driver/auth/register' , [\App\Http\Controllers\driver\Auth::class , 'registerDriver']);
-Route::post('driver/auth/verfiyNumber' , [\App\Http\Controllers\driver\Auth::class , 'activateDriver']);
+Route::post('driver/auth/activeDriver' , [\App\Http\Controllers\driver\Auth::class , 'activateDriver']);
 
 Route::post('driver/auth/login' , [\App\Http\Controllers\driver\Auth::class , 'Login']);
-Route::post('driver/auth/loginOtp' , [\App\Http\Controllers\driver\Auth::class , 'verfyOTP']);
+Route::post('driver/auth/verfyOTP' , [\App\Http\Controllers\driver\Auth::class , 'verfyOTP']);
 
 Route::get('user/getVehicles' , [\App\Http\Controllers\user\Orders::class , 'getVehicles']);
 
