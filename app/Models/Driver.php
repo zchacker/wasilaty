@@ -37,7 +37,25 @@ class Driver extends Model
         'vehicle_license_back',
         'phone_numeber',
         'one_time_password',
-        'otp_requested_time'
+        'otp_requested_time',
+        'isActive',
+        'isApproved',
+    ];
+
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'otp_requested_time',
+        'one_time_password',
+        'deleted_at',
+        'created_at',
+        'updated_at',
+        'isActive',
+        'isApproved',
     ];
 
 }

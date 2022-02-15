@@ -7,7 +7,9 @@ use App\Http\Controllers\shared\Utils;
 use App\Models\Driver;
 use Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Validator as FacadesValidator;
+use PhpParser\Node\Expr\FuncCall;
 use Symfony\Component\HttpFoundation\Response;
 
 class Auth extends Controller
@@ -16,7 +18,7 @@ class Auth extends Controller
 
     /**
      * @OA\Post(
-     * path="/wasilaty/api/driver/auth/register",
+     * path="/api/driver/auth/register",
      * summary="إرسال الطلب",
      * description="order_type [1 = bus, 2=taxi], driver_gender[ 1=male, 2=female] ",
      * operationId="driver/registerDriver",
@@ -63,6 +65,8 @@ class Auth extends Controller
     public function registerDriver(Request $request)
     {                           
 
+        $lang = $request->header('Accept-Language' , 'en');
+
         $rules = array(
             'avatar' => 'required',
             'first_name' => 'required',
@@ -83,7 +87,49 @@ class Auth extends Controller
             'phone_numeber' => 'required'                           
         );
 
-        $validator = FacadesValidator::make($request->all() , $rules); //Validator::make($request->all() , $rules);
+        $messages = [
+            'avatar.required' => 'الرجاء إرفاق الصورة الشخصية',
+            'first_name.required' => 'الرجاء كتابة الاسم الاول',
+            'last_name.required' => 'الرجاء كتابة الاسم الاخير',
+            'email.required' => 'الرجاء كتابة البريد الالكتروني',
+            'birth_date.required' => 'تاريخ الميلاد مطلوب',
+            'id_photo.required' => 'صورة الهوية مطلوبة',
+            'driver_license_back.required' => 'صورة الرخصة من خلف مطلوبة',
+            'driver_license_front.required' => 'صورة الهوية من أمام مطلوبة',                
+            'vehicle_type.required' => 'نوع السيارة مطلوب',
+            'vehicle_model.accepted' => 'موديل السيارة مطلوب',
+            'vehicle_color.accepted' => 'لون السيارة مطلوب',
+            'vehicle_made_year.accepted' => 'سنة الصنع مطلوبة',
+            'vehicle_passengers.accepted' => 'عدد الركاب مطلوب',
+            'vehicle_license_front.accepted' => 'صورة رخصة القيادة من أمام مطلوبة',
+            'vehicle_license_back.accepted' => 'صورة رخصة القيادة من خلف مطلوبة',
+            'phone_numeber.accepted' => 'رقم الهاتف مطلوب',
+        ];
+
+        if ($lang == 'en')
+        {
+            $messages = [
+                'avatar.required' => 'البريد الالكتروني مطلوب',
+                'first_name.required' => 'البريد الالكتروني مطلوب',
+                'last_name.required' => 'هذا الايميل مستخدم مسبقاً',
+                'email.required' => 'اسم المستخدم مطلوب',
+                'birth_date.required' => 'اسم المسخدم محجوز مسبقا',
+                'id_photo.required' => 'حدد نوع المدرسة ينين / بنات',
+                'driver_license_back.required' => 'رقم الهاتف مطلوب',
+                'driver_license_front.required' => 'الرجاء الموافقة على الشروط والاحكام',                
+                'vehicle_type.required' => 'كلمة السر مطلوبة',
+                'vehicle_model.accepted' => 'الرجاء قبول اتفاقية الاستخدام',
+                'vehicle_color.accepted' => 'الرجاء قبول اتفاقية الاستخدام',
+                'vehicle_made_year.accepted' => 'الرجاء قبول اتفاقية الاستخدام',
+                'vehicle_passengers.accepted' => 'الرجاء قبول اتفاقية الاستخدام',
+                'vehicle_license_front.accepted' => 'الرجاء قبول اتفاقية الاستخدام',
+                'vehicle_license_back.accepted' => 'الرجاء قبول اتفاقية الاستخدام',
+                'phone_numeber.accepted' => 'الرجاء قبول اتفاقية الاستخدام',
+            ];
+        }
+
+
+        $validator = FacadesValidator::make($request->all() , $rules, $messages); //Validator::make($request->all() , $rules);
 
         if($validator->fails()){
 
@@ -162,7 +208,7 @@ class Auth extends Controller
 
     /**
      * @OA\Post(
-     * path="/wasilaty/api/driver/auth/activeDriver",
+     * path="/api/driver/auth/activeDriver",
      * summary="تأكيد رقم الهاتف",
      * description="order_type [1 = bus, 2=taxi], driver_gender[ 1=male, 2=female] ",
      * operationId="activateDriver",
@@ -240,7 +286,7 @@ class Auth extends Controller
 
     /**
      * @OA\Post(
-     * path="/wasilaty/api/driver/auth/login",
+     * path="/api/driver/auth/login",
      * summary="الدخول للنظام",
      * description="",
      * operationId="driver/Login",
@@ -332,7 +378,7 @@ class Auth extends Controller
 
     /**
      * @OA\Post(
-     * path="/wasilaty/api/driver/auth/verfyOTP",
+     * path="/api/driver/auth/verfyOTP",
      * summary="تحقق من الرقم",
      * description="",
      * operationId="driver/verfyOTP",
@@ -397,6 +443,165 @@ class Auth extends Controller
 
     }
 
+    /** 
+     * @OA\Get(
+     * security={{ "apiAuth": {} }},
+     * path="/api/driver/getMyProfile",
+     * summary="جلب ملف السائق ومعلوماته",
+     * description="",
+     * operationId="driver/getMyProfileDriver",     
+     * tags={"Driver Auth"},     
+     * @OA\Response(
+     *    response=200,
+     *    description="Success credentials response",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="true"),
+     *       @OA\Property(property="status", type="int", example=200),
+     *       @OA\Property(property="error", type="string", example=""),
+     *       @OA\Property(property="data", type="string", example={{"driverData": {
+                    "id": 1,
+                    "avatar": "name.png",
+                    "first_name": "ahmed",
+                    "last_name": "ahmed",
+                    "email": "ahmed@gmail.com",
+                    "birth_date": "1999-01-04",
+                    "id_photo": "name.png",
+                    "driver_license_front": "name.png",
+                    "driver_license_back": "name.png",
+                    "military_service_certificate": "name.png",
+                    "vehicle_type": "name.png",
+                    "vehicle_model": "name.png",
+                    "vehicle_made_year": 2014,
+                    "vehicle_passengers": 5,
+                    "vehicle_color": "black",
+                    "vehicle_license_front": "name.png",
+                    "vehicle_license_back": "name.png",
+                    "phone_numeber": "966536301031"
+                }
+            }} ),
+     *        )
+     *     )
+     * )
+     */
+    public function getMyProfileDriver(Request $request)
+    {
+
+        $driverId = $request->user()->id;
+        $driver = Driver::where(['id' => $driverId])->first();
+        $data = new \stdClass();
+        $data->driverData = $driver;
+
+        $json = Utils::generateJSON( TRUE , Response::HTTP_OK , "" , $data);
+        return $json;
+
+    }
+
+
+    /**
+     * @OA\Put(
+     * path="/api/driver/updateProfile",
+     * security={{ "apiAuth": {} }},
+     * summary="تحديث بيانات السائق",
+     * description="",
+     * operationId="driver/updateDriverProfile",
+     * tags={"Driver Auth"},
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="جميع الخيارات إلزامية",
+     *    @OA\JsonContent(
+     *       required={"phone"},
+     *       @OA\Property(property="phone_numeber", type="String", format="966536301031", example="966536301031"),     
+     *       @OA\Property(property="email", type="String", format="email@gmail.com", example="1111"),     
+     *       @OA\Property(property="first_name", type="String", format="ahmed", example="1111"),     
+     *       @OA\Property(property="last_name", type="String", format="adm", example="1111"),     
+     *       @OA\Property(property="birth_date", type="String", format="2021/01/01", example="1111"),     
+     *    ),
+     * ),
+     * @OA\Response(
+     *    response=502,
+     *    description="Wrong credentials response",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="FALSE"),
+     *       @OA\Property(property="status", type="int", example=502),
+     *       @OA\Property(property="error", type="string", example={"message":"error message"}),
+     *       @OA\Property(property="data", type="string", example="" ),
+     *        )
+     *     )
+     * )
+     */
+    public function updateDriverProfile(Request $request)
+    {
+        // get languae 
+        $lang = $request->header('Accept-Language' , 'en');
+        
+        $driverId = $request->user()->id;
+        $driver = Driver::where(['id' => $driverId])->first();
+
+        // check if phone was saved
+        $phone  = $request->phone_numeber;
+        $email  = $request->email;
+        $errors = array();
+
+        if($driver != null){
+            
+            if($driver->phone_numeber != $phone){
+                $driver_phone = Driver::where(['phone_numeber' => $phone])->first();
+                
+                if($driver_phone != null){
+                    if($driver_phone->count() > 0){                        
+                        if($lang == "ar")
+                            array_push($errors , "رقم الهاتف مستخدم في حساب آخر");
+                        else
+                            array_push($errors , "phone number used with other account");                        
+                    }
+                }
+
+            }
+
+
+            if($driver->email != $email){
+                $driver_email = Driver::where(['email' => $email])->first();
+
+                if($driver_email != null){
+                    if($driver_email->count() > 0){                        
+                        if($lang == "ar")
+                            array_push($errors , "البريد الالكتروني مستخدم في حساب آخر");
+                        else
+                            array_push($errors , "email used with other account");                       
+                    }
+                }
+                
+            }
+
+        }
+                                
+
+        if(count($errors) > 0 ){
+            $data = new \stdClass();
+            $data->errors = $errors;
+    
+           return Utils::generateJSON( FALSE , Response::HTTP_BAD_REQUEST , $data , "");
+            
+        }
+
+        // if everything is ok, update profile     
+        $affectedRows = Driver::where(['id' => $driverId])->update($request->all([
+            'first_name' ,
+            'last_name' , 
+            'email' ,
+            'birth_date',
+            'phone_numeber'
+        ]));
+        
+        $data = new \stdClass();
+        $data->errors = $errors;
+
+        if($affectedRows == 1)
+        {
+            return Utils::generateJSON( TRUE , Response::HTTP_OK , "" , "");
+        }
+        
+    }
 
     private function generateJSON($success , $status , $error , $data)
     {

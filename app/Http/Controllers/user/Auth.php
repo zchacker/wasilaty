@@ -15,7 +15,7 @@ class Auth extends Controller
 
     /**
      * @OA\Post(
-     * path="/wasilaty/api/user/auth/login",
+     * path="/api/user/auth/login",
      * summary="الدخول للنظام",
      * description="",
      * operationId="Login",
@@ -90,7 +90,7 @@ class Auth extends Controller
 
     /**
      * @OA\Post(
-     * path="/wasilaty/api/user/auth/verfyOTP",
+     * path="/api/user/auth/verfyOTP",
      * summary="تحقق من الرقم",
      * description="",
      * operationId="OTP",
@@ -154,7 +154,7 @@ class Auth extends Controller
 
     /**
      * @OA\Post(
-     * path="/wasilaty/api/uploadImage",
+     * path="/api/uploadImage",
      * summary="رفع صورة مستندات للسائق",
      * description="",
      * operationId="imageUploadPost",

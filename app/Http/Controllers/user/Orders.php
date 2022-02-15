@@ -13,15 +13,27 @@ use Symfony\Component\HttpFoundation\Response;
 class Orders extends Controller
 {
     
+    // https://stackoverflow.com/questions/50614594/use-jwt-bearer-token-in-swagger-laravel
     /**
      * @OA\Info(title="This is Wasilny Api Documentation", version="0.1")  
      * docExpansion:"full"   
-     */   
+     */  
 
+    /**
+     * @OA\SecurityScheme(
+     *     type="http",
+     *     description="Login with email and password to get the authentication token",
+     *     name="Token based Based",
+     *     in="header",
+     *     scheme="bearer",
+     *     bearerFormat="JWT",
+     *     securityScheme="apiAuth",
+     * )
+     */
 
     /**
      * @OA\Get(
-     * path="/wasilaty/api/user/getVehicles",
+     * path="/api/user/getVehicles",
      * summary="جلب المركبات من النظام",
      * description="تحميل صور للمركبات داخل النظام",
      * operationId="getVehicles",
@@ -58,7 +70,8 @@ class Orders extends Controller
 
     /**
      * @OA\Post(
-     * path="/wasilaty/api/user/AddOrder",
+     * path="/api/user/AddOrder",
+     * security={{ "apiAuth": {} }},
      * summary="إرسال الطلب",
      * description="order_type [1 = bus, 2=taxi], driver_gender[ 1=male, 2=female] ",
      * operationId="user/addOrder",

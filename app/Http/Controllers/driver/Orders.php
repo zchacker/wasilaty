@@ -16,7 +16,8 @@ class Orders extends Controller
     
     /**
      * @OA\Get(
-     * path="/wasilaty/api/driver/getNewOrders",
+     * path="/api/driver/getNewOrders",
+     * security={{ "apiAuth": {} }},
      * summary="جلب المركبات من النظام",
      * description="استلام الطلبات الجديدة والموافقة عليها ",
      * operationId="driver/getNewOrders",
@@ -49,7 +50,8 @@ class Orders extends Controller
 
     /**
      * @OA\Post(
-     * path="/wasilaty/api/driver/acceptOrder",
+     * path="/api/driver/acceptOrder",
+     * security={{ "apiAuth": {} }},
      * summary="قبول الطلب",
      * description=" ",
      * operationId="driver/acceptOrder",

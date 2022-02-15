@@ -148,7 +148,7 @@
                 }
             }
         },
-        "/wasilaty/api/driver/auth/verfiyNumber": {
+        "/wasilaty/api/driver/auth/activeDriver": {
             "post": {
                 "tags": [
                     "Driver Auth"
@@ -280,7 +280,7 @@
                 }
             }
         },
-        "/wasilaty/api/driver/auth/loginOtp": {
+        "/wasilaty/api/driver/auth/verfyOTP": {
             "post": {
                 "tags": [
                     "Driver Auth"
@@ -348,6 +348,74 @@
                 }
             }
         },
+        "/wasilaty/api/driver/getMyProfile": {
+            "get": {
+                "tags": [
+                    "Driver Auth"
+                ],
+                "summary": "جلب ملف السائق ومعلوماته",
+                "description": "",
+                "operationId": "driver/getMyProfileDriver",
+                "responses": {
+                    "200": {
+                        "description": "Success credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        },
+                                        "status": {
+                                            "type": "int",
+                                            "example": 200
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": [
+                                                {
+                                                    "driverData": {
+                                                        "id": 1,
+                                                        "avatar": "name.png",
+                                                        "first_name": "ahmed",
+                                                        "last_name": "ahmed",
+                                                        "email": "ahmed@gmail.com",
+                                                        "birth_date": "1999-01-04",
+                                                        "id_photo": "name.png",
+                                                        "driver_license_front": "name.png",
+                                                        "driver_license_back": "name.png",
+                                                        "military_service_certificate": "name.png",
+                                                        "vehicle_type": "name.png",
+                                                        "vehicle_model": "name.png",
+                                                        "vehicle_made_year": 2014,
+                                                        "vehicle_passengers": 5,
+                                                        "vehicle_color": "black",
+                                                        "vehicle_license_front": "name.png",
+                                                        "vehicle_license_back": "name.png",
+                                                        "phone_numeber": "966536301031"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
         "/wasilaty/api/driver/getNewOrders": {
             "get": {
                 "tags": [
@@ -390,7 +458,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
             }
         },
         "/wasilaty/api/driver/acceptOrder": {
@@ -453,7 +526,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
             }
         },
         "/wasilaty/api/user/auth/login": {
@@ -797,12 +875,25 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
             }
         }
     },
     "components": {
         "securitySchemes": {
+            "apiAuth": {
+                "type": "http",
+                "description": "Login with email and password to get the authentication token",
+                "name": "Token based Based",
+                "in": "header",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            },
             "sanctum": {
                 "type": "apiKey",
                 "description": "Enter token in format (Bearer <token>)",
