@@ -16,7 +16,7 @@ class Vehicle extends Model
      */
     protected $table = 'vehicle';
 
-    protected $fillable = [
+    protected $fillable = [        
         'name_ar',
         'name_en',
         'image',        

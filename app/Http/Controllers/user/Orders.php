@@ -56,11 +56,11 @@ class Orders extends Controller
         // get languae 
         $lang = $request->header('Accept-Language' , 'en');
 
-        $vehicles = Vehicle::all(['name_en as name' , 'image']);
+        $vehicles = Vehicle::all(['id','name_en as name' , 'image']);
 
         if ($lang == 'ar')
-        {
-            $vehicles = Vehicle::all(['name_ar as name' , 'image']);
+        {            
+            $vehicles = Vehicle::all(['id','name_ar as name' , 'image']);
         }                
 
         return Utils::generateJSON(TRUE, Response::HTTP_OK , "",$vehicles );        

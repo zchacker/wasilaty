@@ -5,7 +5,7 @@
         "version": "0.1"
     },
     "paths": {
-        "/wasilaty/api/driver/auth/register": {
+        "/api/driver/auth/register": {
             "post": {
                 "tags": [
                     "Driver Auth"
@@ -148,7 +148,7 @@
                 }
             }
         },
-        "/wasilaty/api/driver/auth/activeDriver": {
+        "/api/driver/auth/activeDriver": {
             "post": {
                 "tags": [
                     "Driver Auth"
@@ -217,7 +217,7 @@
                 }
             }
         },
-        "/wasilaty/api/driver/auth/login": {
+        "/api/driver/auth/login": {
             "post": {
                 "tags": [
                     "Driver Auth"
@@ -280,7 +280,7 @@
                 }
             }
         },
-        "/wasilaty/api/driver/auth/verfyOTP": {
+        "/api/driver/auth/verfyOTP": {
             "post": {
                 "tags": [
                     "Driver Auth"
@@ -348,7 +348,7 @@
                 }
             }
         },
-        "/wasilaty/api/driver/getMyProfile": {
+        "/api/driver/getMyProfile": {
             "get": {
                 "tags": [
                     "Driver Auth"
@@ -416,7 +416,95 @@
                 ]
             }
         },
-        "/wasilaty/api/driver/getNewOrders": {
+        "/api/driver/updateProfile": {
+            "put": {
+                "tags": [
+                    "Driver Auth"
+                ],
+                "summary": "تحديث بيانات السائق",
+                "description": "",
+                "operationId": "driver/updateDriverProfile",
+                "requestBody": {
+                    "description": "جميع الخيارات إلزامية",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "phone"
+                                ],
+                                "properties": {
+                                    "phone_numeber": {
+                                        "type": "String",
+                                        "format": "966536301031",
+                                        "example": "966536301031"
+                                    },
+                                    "email": {
+                                        "type": "String",
+                                        "format": "email@gmail.com",
+                                        "example": "1111"
+                                    },
+                                    "first_name": {
+                                        "type": "String",
+                                        "format": "ahmed",
+                                        "example": "1111"
+                                    },
+                                    "last_name": {
+                                        "type": "String",
+                                        "format": "adm",
+                                        "example": "1111"
+                                    },
+                                    "birth_date": {
+                                        "type": "String",
+                                        "format": "2021/01/01",
+                                        "example": "1111"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "502": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "FALSE"
+                                        },
+                                        "status": {
+                                            "type": "int",
+                                            "example": 502
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": {
+                                                "message": "error message"
+                                            }
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": ""
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/driver/getNewOrders": {
             "get": {
                 "tags": [
                     "OrderDriver"
@@ -466,7 +554,7 @@
                 ]
             }
         },
-        "/wasilaty/api/driver/acceptOrder": {
+        "/api/driver/acceptOrder": {
             "post": {
                 "tags": [
                     "OrderDriver"
@@ -534,7 +622,7 @@
                 ]
             }
         },
-        "/wasilaty/api/user/auth/login": {
+        "/api/user/auth/login": {
             "post": {
                 "tags": [
                     "User Auth"
@@ -597,7 +685,7 @@
                 }
             }
         },
-        "/wasilaty/api/user/auth/verfyOTP": {
+        "/api/user/auth/verfyOTP": {
             "post": {
                 "tags": [
                     "User Auth"
@@ -665,7 +753,7 @@
                 }
             }
         },
-        "/wasilaty/api/uploadImage": {
+        "/api/uploadImage": {
             "post": {
                 "tags": [
                     "Driver Auth"
@@ -726,7 +814,7 @@
                 }
             }
         },
-        "/wasilaty/api/user/getVehicles": {
+        "/api/user/getVehicles": {
             "get": {
                 "tags": [
                     "OrderUser"
@@ -771,7 +859,7 @@
                 }
             }
         },
-        "/wasilaty/api/user/AddOrder": {
+        "/api/user/AddOrder": {
             "post": {
                 "tags": [
                     "OrderUser"
