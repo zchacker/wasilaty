@@ -183,7 +183,11 @@ class Orders extends Controller
         }
                
     }        
+       
+    public function bookingTrip(Request $request)
+    {
         
+    }
 
     private function get_distance_between_points($latitude1, $longitude1, $latitude2, $longitude2) {
         $meters = $this->get_meters_between_points($latitude1, $longitude1, $latitude2, $longitude2);

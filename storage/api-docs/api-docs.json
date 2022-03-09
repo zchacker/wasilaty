@@ -509,7 +509,7 @@
                 "tags": [
                     "OrderDriver"
                 ],
-                "summary": "جلب المركبات من النظام",
+                "summary": "استلام الطلبات الجديدة",
                 "description": "استلام الطلبات الجديدة والموافقة عليها ",
                 "operationId": "driver/getNewOrders",
                 "responses": {
@@ -539,6 +539,161 @@
                                                     "image": "string"
                                                 }
                                             ]
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/driver/getMyAddedTrips": {
+            "get": {
+                "tags": [
+                    "OrderDriver"
+                ],
+                "summary": " جلب الرحلات المضافة في الحساب ",
+                "description": " ",
+                "operationId": "driver/getMyAddedTrips",
+                "responses": {
+                    "200": {
+                        "description": "Success credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        },
+                                        "status": {
+                                            "type": "int",
+                                            "example": 200
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": {
+                                                "start_time": "2022-03-09 03:14:41",
+                                                "end_time": "2022-03-09 03:14:41",
+                                                "passengers": 25,
+                                                "vehicle_id": 1,
+                                                "start_lat": 34.26,
+                                                "start_lng": 26.2,
+                                                "end_lat": 34.26,
+                                                "end_lng": 26.2
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/driver/addTrip": {
+            "post": {
+                "tags": [
+                    "OrderDriver"
+                ],
+                "summary": "إضافة معلومات رحلة",
+                "description": "",
+                "operationId": "driver/addTrip",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "start_time",
+                                    "end_time",
+                                    "passengers",
+                                    "vehicle_id",
+                                    "start_lat",
+                                    "start_lng",
+                                    "end_lat",
+                                    "end_lng"
+                                ],
+                                "properties": {
+                                    "start_time": {
+                                        "type": "string",
+                                        "example": "2022-03-09 03:14:41"
+                                    },
+                                    "end_time": {
+                                        "type": "string",
+                                        "example": "2022-03-09 03:14:41"
+                                    },
+                                    "passengers": {
+                                        "type": "int",
+                                        "example": "25"
+                                    },
+                                    "vehicle_id": {
+                                        "type": "int",
+                                        "example": "1"
+                                    },
+                                    "start_lat": {
+                                        "type": "string",
+                                        "example": "34.26"
+                                    },
+                                    "start_lng": {
+                                        "type": "string",
+                                        "example": "26.20"
+                                    },
+                                    "end_lat": {
+                                        "type": "string",
+                                        "example": "34.26"
+                                    },
+                                    "end_lng": {
+                                        "type": "string",
+                                        "example": "26.20"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "502": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "FALSE"
+                                        },
+                                        "status": {
+                                            "type": "int",
+                                            "example": 502
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": {
+                                                "message": "error message"
+                                            }
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": ""
                                         }
                                     },
                                     "type": "object"
