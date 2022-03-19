@@ -43,7 +43,7 @@ class Orders extends Controller
 
         $orders = ModelsOrders::where(['status' => 1])
         ->orderBy('created_at')
-        ->first(['start_lat' , 'start_lng' , 'end_lat' , 'end_lng' , 'passengers']);
+        ->get(['id','start_lat' , 'start_lng' , 'end_lat' , 'end_lng' , 'passengers']);
 
         
         //$orders = $request->user()->tokenCan('driver');
