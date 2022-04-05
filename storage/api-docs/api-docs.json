@@ -78,6 +78,10 @@
                                         "type": "string",
                                         "example": "string"
                                     },
+                                    "vehicle_model": {
+                                        "type": "string",
+                                        "example": "string"
+                                    },
                                     "vehicle_type": {
                                         "type": "string",
                                         "example": "string"
@@ -88,11 +92,11 @@
                                     },
                                     "vehicle_made_year": {
                                         "type": "string",
-                                        "example": "string"
+                                        "example": "2018"
                                     },
                                     "vehicle_passengers": {
-                                        "type": "string",
-                                        "example": "string"
+                                        "type": "int",
+                                        "example": 5
                                     },
                                     "vehicle_license_front": {
                                         "type": "string",

@@ -41,10 +41,11 @@ class Auth extends Controller
      *       @OA\Property(property="driver_license_front", type="string", example="string"),
      *       @OA\Property(property="driver_license_back", type="string", example="string"),
      *       @OA\Property(property="military_service_certificate", type="string", example="string"),
+     *       @OA\Property(property="vehicle_model", type="string", example="string"),
      *       @OA\Property(property="vehicle_type", type="string", example="string"),
      *       @OA\Property(property="vehicle_color", type="string", example="string"),
-     *       @OA\Property(property="vehicle_made_year", type="string", example="string"),
-     *       @OA\Property(property="vehicle_passengers", type="string", example="string"),
+     *       @OA\Property(property="vehicle_made_year", type="int", example="2018"),
+     *       @OA\Property(property="vehicle_passengers", type="int", example=5),
      *       @OA\Property(property="vehicle_license_front", type="string", example="string"),
      *       @OA\Property(property="vehicle_license_back", type="string", example="string"),
      *       @OA\Property(property="phone_numeber", type="string", example="966536301031")
@@ -137,7 +138,7 @@ class Auth extends Controller
             $allErrors = array();
 
             foreach($error->all() as $err){                
-                array_push($allErrors , $err);
+                array_push($allErrors , $err."1");
             }
 
             $data = new \stdClass();
@@ -150,9 +151,15 @@ class Auth extends Controller
             $driver  = Driver::where('phone_numeber' , $request->input('phone_numeber'))->first();
 
             if($driver != NULL){
+                             
+                array_push($allErrors , "phone number used");
+                    
                 $data = new \stdClass();
-                $data->message = "";
-                $json = Utils::generateJSON(FALSE , Response::HTTP_UNPROCESSABLE_ENTITY , "phone number used", $data);
+                $data->message = $allErrors;
+                $data = new \stdClass();
+                $data->message = $allErrors;
+
+                $json = Utils::generateJSON(FALSE , Response::HTTP_UNPROCESSABLE_ENTITY , $data , "");
                 return $json;// stop here
             }
 
@@ -192,7 +199,7 @@ class Auth extends Controller
                 return $json;
     
             }catch(\Illuminate\Database\QueryException $ex){
-                //dd($ex->getMessage());
+                dd($ex->getMessage());
     
                 $data = new \stdClass();
                 $data->message = "";
