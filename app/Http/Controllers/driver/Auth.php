@@ -75,16 +75,15 @@ class Auth extends Controller
             'email' => 'required',
             'birth_date' => 'required',
             'id_photo' => 'required',
-            'driver_license_front' => 'required',
-            'driver_license_back' => 'required',
-            //'military_service_certificate' => 'required',
-            'vehicle_type' => 'required',
-            'vehicle_model' => 'required',
-            "vehicle_color" => 'required',
-            'vehicle_made_year' => 'required',
-            'vehicle_passengers' => 'required',
-            'vehicle_license_front' => 'required',
-            'vehicle_license_back' => 'required',               
+            //'driver_license_front' => 'required',
+            //'driver_license_back' => 'required',            
+            // 'vehicle_type' => 'required',
+            // 'vehicle_model' => 'required',
+            // "vehicle_color" => 'required',
+            // 'vehicle_made_year' => 'required',
+            // 'vehicle_passengers' => 'required',
+            // 'vehicle_license_front' => 'required',
+            // 'vehicle_license_back' => 'required',               
             'phone_numeber' => 'required'                           
         );
 
@@ -107,7 +106,7 @@ class Auth extends Controller
             'phone_numeber.accepted' => 'رقم الهاتف مطلوب',
         ];
 
-        if ($lang == 'en')
+        if ($lang == 'ar')
         {
             $messages = [
                 'avatar.required' => 'البريد الالكتروني مطلوب',
@@ -166,7 +165,9 @@ class Auth extends Controller
 
             try{
         
-                $otp   = 1111;// Utils::generateOPT();
+                $otp   = Utils::generateOPT();
+                $numbsr = $request->input('phone_numeber');
+                $msg = "OTP: #$otp";                
 
                 $driver = Driver::create(
                     [                        
@@ -196,6 +197,7 @@ class Auth extends Controller
                 $data->message = "Driver Created";
                 $json = Utils::generateJSON(TRUE , Response::HTTP_OK, "", $data);
     
+                Utils::sendSMS($msg , $numbsr);
                 return $json;
     
             }catch(\Illuminate\Database\QueryException $ex){
@@ -325,7 +327,7 @@ class Auth extends Controller
 
         $phone = $request->input('phone');
         $driver  = Driver::where('phone_numeber' , $phone)->first();
-        $otp   = 1111;// Utils::generateOPT();
+        $otp   = Utils::generateOPT();
 
         if($driver == NULL){
 
@@ -367,6 +369,10 @@ class Auth extends Controller
                 $data->message = "get otp";
                 $json = Utils::generateJSON(TRUE , Response::HTTP_OK, "", $data);
 
+                $numbsr = $phone;
+                $msg = "OTP: #$otp"; 
+                Utils::sendSMS($msg , $numbsr);
+                
                 return $json;
 
             }catch(\Illuminate\Database\QueryException $ex){

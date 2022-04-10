@@ -91,7 +91,7 @@
                                         "example": "string"
                                     },
                                     "vehicle_made_year": {
-                                        "type": "string",
+                                        "type": "int",
                                         "example": "2018"
                                     },
                                     "vehicle_passengers": {

@@ -44,7 +44,7 @@ class Auth extends Controller
     {
         $phone = $request->input('phone');
         $user  = User::where('phone' , $phone)->first();
-        $otp   = 1111;// Utils::generateOPT();
+        $otp   = Utils::generateOPT();
 
         if($user == NULL){
 
@@ -61,6 +61,10 @@ class Auth extends Controller
                 $data = new \stdClass();
                 $data->message = "get otp";
                 $json = Utils::generateJSON(TRUE , Response::HTTP_OK, "", $data);
+
+                $numbsr = $phone;
+                $msg = "OTP: #$otp"; 
+                Utils::sendSMS($msg , $numbsr);
 
                 return $json;
 
@@ -81,6 +85,10 @@ class Auth extends Controller
             $data = new \stdClass();
                 $data->message = "OK";
                 $json = Utils::generateJSON(TRUE , Response::HTTP_OK , "", $data);
+
+            $numbsr = $phone;
+            $msg = "OTP: #$otp"; 
+            Utils::sendSMS($msg , $numbsr);
 
             return $json;
 
