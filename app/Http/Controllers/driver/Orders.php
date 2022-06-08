@@ -94,7 +94,6 @@ class Orders extends Controller
         return Utils::generateJSON(TRUE, Response::HTTP_OK , "" , $orders);
     }
 
-
     /**
      * @OA\Post(
      * path="/api/driver/addTrip",
@@ -138,7 +137,7 @@ class Orders extends Controller
             'start_time' => 'required',
             'end_time' => 'required',
             'passengers' => 'required',
-            'vehicle_id' => 'required',
+            //'vehicle_id' => 'required',
             'start_lat' => 'required',
             'start_lng' => 'required',
             'end_lat' => 'required',
@@ -150,6 +149,7 @@ class Orders extends Controller
             'start_time.required' => 'الرجاء إرفاق الصورة الشخصية',
             'end_time.required' => 'الرجاء كتابة الاسم الاول',
             'passengers.required' => 'الرجاء كتابة الاسم الاخير',
+            'vehicle_id.required' => 'الرجاء اختيار نوع المركبة',
             'start_lat.required' => 'الرجاء كتابة البريد الالكتروني',
             'start_lng.required' => 'تاريخ الميلاد مطلوب',
             'end_lat.required' => 'صورة الهوية مطلوبة',
@@ -162,6 +162,7 @@ class Orders extends Controller
                 'start_time.required' => 'الرجاء إرفاق الصورة الشخصية',
                 'end_time.required' => 'الرجاء كتابة الاسم الاول',
                 'passengers.required' => 'الرجاء كتابة الاسم الاخير',
+                'vehicle_id.required' => 'الرجاء اختيار نوع المركبة',
                 'start_lat.required' => 'الرجاء كتابة البريد الالكتروني',
                 'start_lng.required' => 'تاريخ الميلاد مطلوب',
                 'end_lat.required' => 'صورة الهوية مطلوبة',
@@ -195,7 +196,7 @@ class Orders extends Controller
                         'start_time' => $request->input('start_time'),
                         'end_time' => $request->input('end_time'),
                         'passengers' => $request->input('passengers'),
-                        'vehicle_id' => $request->input('vehicle_id'),
+                        //'vehicle_id' => $request->input('vehicle_id'),
                         'start_lat' => $request->input('start_lat'),
                         'start_lng' => $request->input('start_lng'),
                         'end_lat' => $request->input('end_lat'),

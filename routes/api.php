@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Route;
 // this is Auth system
 Route::post('/user/auth/login' , [\App\Http\Controllers\user\Auth::class , 'login']);
 Route::post('/user/auth/verfyOTP' , [\App\Http\Controllers\user\Auth::class , 'verfyOTP']);
+Route::post('/user/auth/verfyOTP' , [\App\Http\Controllers\user\Auth::class , 'verfyOTP']);
 Route::post('/uploadImage' , [\App\Http\Controllers\user\Auth::class , 'imageUploadPost']);
 
 Route::post('/driver/auth/register' , [\App\Http\Controllers\driver\Auth::class , 'registerDriver']);
@@ -29,13 +30,11 @@ Route::post('/driver/auth/activeDriver' , [\App\Http\Controllers\driver\Auth::cl
 Route::post('/driver/auth/login' , [\App\Http\Controllers\driver\Auth::class , 'Login']);
 Route::post('/driver/auth/verfyOTP' , [\App\Http\Controllers\driver\Auth::class , 'verfyOTP']);
 
+
 Route::get('/user/getVehicles' , [\App\Http\Controllers\user\Orders::class , 'getVehicles']);
 
 
-
-
-
-
+Route::get('/user/getAvailableTrips' , [\App\Http\Controllers\user\Orders::class , 'getAvailableTrips']);
 
 // just authrized users will access this 
 //Route::group(['middleware' => ['auth:sanctum']] , function(){

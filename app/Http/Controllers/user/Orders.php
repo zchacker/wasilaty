@@ -4,7 +4,9 @@ namespace App\Http\Controllers\user;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\shared\Utils;
+use App\Models\BookingTrip;
 use App\Models\Orders as ModelsOrders;
+use App\Models\Trips;
 use Illuminate\Support\Facades\Validator as FacadesValidator;
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
@@ -66,7 +68,6 @@ class Orders extends Controller
         return Utils::generateJSON(TRUE, Response::HTTP_OK , "",$vehicles );        
 
     }
-
 
     /**
      * @OA\Post(
@@ -183,9 +184,68 @@ class Orders extends Controller
         }
                
     }        
+
+    
+
+    /**
+     * @OA\Get(
+     * path="/api/user/getAvailableTrips",
+     * summary="إحضار الرحلات المتاحة",
+     * description="تقوم بعرض الرحلات المتاحة للحجز حسب المواعيد",
+     * operationId="getAvailableTrips",
+     * tags={"OrderUser"},     
+     * @OA\Response(
+     *    response=200,
+     *    description="Success credentials response",
+     *    @OA\JsonContent( example=    
+     *           {
+     *               "id": 1,
+     *               "start_time": "17:44:16",
+     *               "end_time": "03:14:41",
+     *               "passengers": 25,
+     *               "vehicle_id": 1,
+     *               "start_lat": 34.26,
+     *               "start_lng": 26.2,
+     *               "end_lat": 34.26,
+     *               "end_lng": 26.2,
+     *               "driver_id": 1,
+     *               "first_name": "Ahmed",
+     *               "last_name": "Nagem"
+     *           })
+     *       
+     *        )
+     *     )
+     * )
+     */
+    public function getAvailableTrips(Request $request)
+    {
+        $trips = [];
+
+        $all_trips = Trips::
+        join('driver', 'driver.id', '=', 'trips.driver_id')
+        ->get(['trips.*' , 'driver.first_name' , 'driver.last_name']);
+
+        foreach($all_trips as $trip){
+            // checking if the trip have max open trips online
+
+            $trip_id = $trip->id;
+            $passengers = $trip->passengers;
+            $booked = BookingTrip::where(['trip_id' => $trip_id  , "status" => 2 ]);
+            
+            if($booked->count() < $passengers)
+            {
+                array_push($trips , $trip);
+            }
+
+        }
+
+        return $trips;
+    }
        
     public function bookingTrip(Request $request)
     {
+        // get languae 
+        $lang = $request->header('Accept-Language' , 'en');
         
     }
 
