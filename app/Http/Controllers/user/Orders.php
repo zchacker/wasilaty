@@ -190,6 +190,7 @@ class Orders extends Controller
     /**
      * @OA\Get(
      * path="/api/user/getAvailableTrips",
+     * security={{ "apiAuth": {} }},
      * summary="إحضار الرحلات المتاحة",
      * description="تقوم بعرض الرحلات المتاحة للحجز حسب المواعيد",
      * operationId="getAvailableTrips",
@@ -242,11 +243,99 @@ class Orders extends Controller
         return $trips;
     }
        
+    /**
+     * @OA\POST(
+     * path="/api/user/bookingTrip",
+     * security={{ "apiAuth": {} }},
+     * summary="حجز رحلة",
+     * description="القيام باختيار رحلة ثم حجزها",
+     * operationId="bookingTrip",
+     * tags={"OrderUser"},    
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="جميع الخيارات إلزامية",
+     *    @OA\JsonContent(
+     *       required={"trip_id"},
+     *       @OA\Property(property="trip_id", type="int", format="int", example="1"),        
+     *    ),
+     * ), 
+     * @OA\Response(
+     *    response=200,
+     *    description="Success credentials response",
+     *    @OA\JsonContent( example=    
+     *           {
+     *               "success": true,
+     *               "status": 200,
+     *               "error": "",
+     *              "data": {
+     *                   "message": "Order Created Successfuly"
+     *               }
+     *           })
+     *       
+     *        )
+     *     )
+     * )
+     */
     public function bookingTrip(Request $request)
     {
         // get languae 
         $lang = $request->header('Accept-Language' , 'en');
-        
+        $userId = $request->user()->id;
+
+        $rules = array(            
+            'trip_id' => 'required'                     
+        );
+
+        $validator = FacadesValidator::make($request->all() , $rules); //Validator::make($request->all() , $rules);
+
+        if($validator->fails()){
+            $data = new \stdClass();
+            $data->message =  "Error accurs and we working to fix it, please try again later";
+    
+            if ($lang == 'ar')
+            {
+                $data->message = "حدث خطأ غير متوقع جاري العمل على إصلاحه, حاول مرة أخرى لاحقا";
+            }
+    
+            return Utils::generateJSON(FALSE , Response::HTTP_BAD_GATEWAY, $data ,"" ); 
+        }
+
+        try{
+                        
+            $order = BookingTrip::create(
+                [                        
+                    'trip_id' => $request->input('trip_id'),                    
+                    'status' => 2,                    
+                    'user_id' => $userId ,
+                ]
+            );
+                        
+            
+            $data = new \stdClass();
+            $data->message = "Order Created Successfuly";
+    
+            if ($lang == 'ar')
+            {
+                $data->message = "تم انشاء الطلب بنجاح";
+            }
+    
+            return Utils::generateJSON(TRUE , Response::HTTP_OK, "", $data); 
+
+        }catch(\Illuminate\Database\QueryException $ex){
+
+            $data = new \stdClass();
+            $data->message =$ex->getMessage();// "Error accurs and we working to fix it, please try again later";
+    
+            if ($lang == 'ar')
+            {
+                $data->message = "حدث خطأ غير متوقع جاري العمل على إصلاحه, حاول مرة أخرى لاحقا";
+            }
+    
+            return Utils::generateJSON(FALSE , Response::HTTP_BAD_GATEWAY, "", $data); 
+
+        }
+
+
     }
 
     private function get_distance_between_points($latitude1, $longitude1, $latitude2, $longitude2) {

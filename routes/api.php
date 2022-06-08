@@ -34,13 +34,15 @@ Route::post('/driver/auth/verfyOTP' , [\App\Http\Controllers\driver\Auth::class 
 Route::get('/user/getVehicles' , [\App\Http\Controllers\user\Orders::class , 'getVehicles']);
 
 
-Route::get('/user/getAvailableTrips' , [\App\Http\Controllers\user\Orders::class , 'getAvailableTrips']);
+
 
 // just authrized users will access this 
 //Route::group(['middleware' => ['auth:sanctum']] , function(){
 Route::group(['middleware' => ['auth:users']] , function(){
             
     Route::post('user/AddOrder' , [\App\Http\Controllers\user\Orders::class , 'addOrder']);    
+    Route::get('/user/getAvailableTrips' , [\App\Http\Controllers\user\Orders::class , 'getAvailableTrips']);
+    Route::post('/user/bookingTrip' , [\App\Http\Controllers\user\Orders::class , 'bookingTrip']);
     Route::get('test' , [\App\Http\Controllers\user\Auth::class, 'test']);
     
 });
