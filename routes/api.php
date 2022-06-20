@@ -43,6 +43,11 @@ Route::group(['middleware' => ['auth:users']] , function(){
     Route::post('user/AddOrder' , [\App\Http\Controllers\user\Orders::class , 'addOrder']);    
     Route::get('/user/getAvailableTrips' , [\App\Http\Controllers\user\Orders::class , 'getAvailableTrips']);
     Route::post('/user/bookingTrip' , [\App\Http\Controllers\user\Orders::class , 'bookingTrip']);
+    Route::get('/user/orders/getMyOrders' , [\App\Http\Controllers\user\Orders::class , 'getMyOrders']);
+    Route::get('/user/orders/getMyBookedTrips' , [\App\Http\Controllers\user\Orders::class , 'getMyBookedTrips']);
+    Route::post('/user/orders/cancelOrder' , [\App\Http\Controllers\user\Orders::class , 'cancelOrder']);
+    Route::get('/user/profile/getMyProfile' , [\App\Http\Controllers\user\profile::class , 'getMyProfile']);
+    Route::post('/user/profile/updateMyProfile' , [\App\Http\Controllers\user\profile::class , 'updateMyProfile']);
     Route::get('test' , [\App\Http\Controllers\user\Auth::class, 'test']);
     
 });

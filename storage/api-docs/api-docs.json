@@ -1129,6 +1129,263 @@
                     }
                 ]
             }
+        },
+        "/api/user/orders/getMyOrders": {
+            "get": {
+                "tags": [
+                    "OrderUser"
+                ],
+                "summary": "جلب طلباتي",
+                "description": "تقوم بجلب طلباتي",
+                "operationId": "user/getMyOrders",
+                "responses": {
+                    "200": {
+                        "description": "Success credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "id": 3,
+                                    "start_lat": 33.3637,
+                                    "start_lng": 25.3637,
+                                    "end_lat": 33.3637,
+                                    "end_lng": 25.3637,
+                                    "vehicle_type": 1,
+                                    "user_id": 2,
+                                    "order_type": 1,
+                                    "driver_gender": 1,
+                                    "status": 1,
+                                    "payment_method": 1,
+                                    "passengers": 1,
+                                    "cobon_id": 0
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/user/orders/getMyBookedTrips": {
+            "get": {
+                "tags": [
+                    "OrderUser"
+                ],
+                "summary": "جلب تذاكري المحجوزة",
+                "description": "تقوم بجلب التذاكر المحجوزة",
+                "operationId": "getMyBookedTrips",
+                "responses": {
+                    "200": {
+                        "description": "Success credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": [
+                                    {
+                                        "id": 3,
+                                        "user_id": 2,
+                                        "trip_id": 2,
+                                        "status": 1,
+                                        "start_lat": 15.12,
+                                        "start_lng": 15.1,
+                                        "end_lat": 14.12,
+                                        "end_lng": 14.1,
+                                        "passengers": 15,
+                                        "driver_id": 1
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/user/orders/cancelOrder": {
+            "post": {
+                "tags": [
+                    "OrderUser"
+                ],
+                "summary": "إلغاء طلب",
+                "description": "تقوم بإلغاء طلب",
+                "operationId": "user/orders/cancelOrder",
+                "requestBody": {
+                    "description": "جميع الخيارات إلزامية",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "order_id"
+                                ],
+                                "properties": {
+                                    "order_id": {
+                                        "type": "int",
+                                        "format": "int",
+                                        "example": "2"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "success": true,
+                                    "status": 400,
+                                    "error": "",
+                                    "data": "Order Canceled Successfuly"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/user/getAvailableTrips": {
+            "get": {
+                "tags": [
+                    "OrderUser"
+                ],
+                "summary": "إحضار الرحلات المتاحة",
+                "description": "تقوم بعرض الرحلات المتاحة للحجز حسب المواعيد",
+                "operationId": "getAvailableTrips",
+                "responses": {
+                    "200": {
+                        "description": "Success credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "id": 1,
+                                    "start_time": "17:44:16",
+                                    "end_time": "03:14:41",
+                                    "passengers": 25,
+                                    "vehicle_id": 1,
+                                    "start_lat": 34.26,
+                                    "start_lng": 26.2,
+                                    "end_lat": 34.26,
+                                    "end_lng": 26.2,
+                                    "driver_id": 1,
+                                    "first_name": "Ahmed",
+                                    "last_name": "Nagem"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/user/bookingTrip": {
+            "post": {
+                "tags": [
+                    "OrderUser"
+                ],
+                "summary": "حجز رحلة",
+                "description": "القيام باختيار رحلة ثم حجزها",
+                "operationId": "bookingTrip",
+                "requestBody": {
+                    "description": "جميع الخيارات إلزامية",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "trip_id"
+                                ],
+                                "properties": {
+                                    "trip_id": {
+                                        "type": "int",
+                                        "format": "int",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "success": true,
+                                    "status": 200,
+                                    "error": "",
+                                    "data": {
+                                        "message": "Order Created Successfuly"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/user/profile/getMyProfile": {
+            "get": {
+                "tags": [
+                    "UserProfile"
+                ],
+                "summary": "جلب ملفي الشخصي",
+                "description": "تقوم بجلب الملف الشخصي",
+                "operationId": "profile/getMyProfile",
+                "responses": {
+                    "200": {
+                        "description": "Success credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "id": 2,
+                                    "name": "Ahmed Nagem",
+                                    "phone": "966536301031",
+                                    "created_at": "2022-01-17T23:03:14.000000Z",
+                                    "updated_at": "2022-06-20T07:45:15.000000Z",
+                                    "deleted_at": null
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {

@@ -46,6 +46,11 @@ class Auth extends Controller
         $user  = User::where('phone' , $phone)->first();
         $otp   = Utils::generateOPT();
 
+        // TODO: this is test account
+        if( $phone == '966536301031'){
+            $otp = 1111;
+        }
+        
         if($user == NULL){
 
             try{

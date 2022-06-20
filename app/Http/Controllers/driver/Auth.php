@@ -325,9 +325,14 @@ class Auth extends Controller
         // get languae 
         $lang = $request->header('Accept-Language' , 'en');
 
-        $phone = $request->input('phone');
+        $phone   = $request->input('phone');
         $driver  = Driver::where('phone_numeber' , $phone)->first();
-        $otp   = Utils::generateOPT();
+        $otp     = Utils::generateOPT();
+
+        // TODO: this is test account
+        if( $phone == '966536301031'){
+            $otp = 1111;
+        }
 
         if($driver == NULL){
 

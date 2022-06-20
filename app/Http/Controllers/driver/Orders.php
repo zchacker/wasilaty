@@ -81,17 +81,19 @@ class Orders extends Controller
      */
     public function getMyAddedTrips(Request $request)
     {
+
         // get languae 
-        $lang = $request->header('Accept-Language' , 'en');
+        $lang     = $request->header('Accept-Language' , 'en');
         $driverId = $request->user()->id;
 
         $orders = Trips::where(['driver_id' => $driverId])
-        ->orderBy('created_at')
+        ->orderBy('created_at' , 'desc')
         ->first(['start_time' , 'end_time' , 'passengers' , 'vehicle_id' , 'start_lat' , 'start_lng' , 'end_lat' , 'end_lng' ]);
 
         
         //$orders = $request->user()->tokenCan('driver');
         return Utils::generateJSON(TRUE, Response::HTTP_OK , "" , $orders);
+
     }
 
     /**

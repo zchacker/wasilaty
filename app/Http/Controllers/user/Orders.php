@@ -183,9 +183,164 @@ class Orders extends Controller
 
         }
                
-    }        
+    }       
+    
 
     
+     /**
+     * @OA\Get(
+     * path="/api/user/orders/getMyOrders",
+     * security={{ "apiAuth": {} }},
+     * summary="جلب طلباتي",
+     * description="تقوم بجلب طلباتي",
+     * operationId="user/getMyOrders",
+     * tags={"OrderUser"},     
+     * @OA\Response(
+     *    response=200,
+     *    description="Success credentials response",
+     *    @OA\JsonContent( example={
+     *              "id": 3,
+     *               "start_lat": 33.3637,
+     *               "start_lng": 25.3637,
+     *               "end_lat": 33.3637,
+     *               "end_lng": 25.3637,
+     *               "vehicle_type": 1,
+     *               "user_id": 2,
+     *               "order_type": 1,
+     *               "driver_gender": 1,
+     *               "status": 1,
+     *               "payment_method": 1,
+     *               "passengers": 1,
+     *               "cobon_id": 0
+     *          } ),     
+     *     )
+     * )
+     */
+    public function getMyOrders(Request $request)
+    {
+        // get languae 
+        $lang   = $request->header('Accept-Language' , 'en');
+        $userId = $request->user()->id;
+
+        $orders = ModelsOrders::where('user_id', $userId)
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+        return $orders;        
+
+    }
+
+
+    /**
+     * @OA\Get(
+     * path="/api/user/orders/getMyBookedTrips",
+     * security={{ "apiAuth": {} }},
+     * summary="جلب تذاكري المحجوزة",
+     * description="تقوم بجلب التذاكر المحجوزة",
+     * operationId="getMyBookedTrips",
+     * tags={"OrderUser"},     
+     * @OA\Response(
+     *    response=200,
+     *    description="Success credentials response",
+     *    @OA\JsonContent( example=   
+     *           {{
+     *               "id": 3,
+     *               "user_id": 2,
+     *               "trip_id": 2,
+     *               "status": 1,
+     *               "start_lat": 15.12,
+     *               "start_lng": 15.1,
+     *               "end_lat": 14.12,
+     *               "end_lng": 14.1,
+     *               "passengers": 15,
+     *               "driver_id": 1
+     *           }})     
+     *        )
+     *     )
+     * )
+     */
+    public function getMyBookedTrips(Request $request)
+    {
+        // get languae 
+        $lang   = $request->header('Accept-Language' , 'en');
+        $userId = $request->user()->id;
+
+        $trips = BookingTrip::where('user_id', $userId)
+        ->join('trips', 'booking_trip.trip_id', '=', 'trips.id')
+        ->orderBy('booking_trip.created_at', 'desc')
+        ->get(['booking_trip.*', 'trips.start_lat', 'trips.start_lng', 'trips.end_lat', 'trips.end_lng', 'trips.passengers', 'trips.driver_id']);
+
+        return $trips;
+    }
+    
+
+    /**
+     * @OA\Post(
+     * path="/api/user/orders/cancelOrder",
+     * security={{ "apiAuth": {} }},
+     * summary="إلغاء طلب",
+     * description="تقوم بإلغاء طلب",
+     * operationId="user/orders/cancelOrder",
+     * tags={"OrderUser"},    
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="جميع الخيارات إلزامية",
+     *    @OA\JsonContent(
+     *       required={"order_id"},
+     *       @OA\Property(property="order_id", type="int", format="int", example="2"),
+     *    ),
+     * ), 
+     * @OA\Response(
+     *    response=200,
+     *    description="Success credentials response",
+     *    @OA\JsonContent( example=    
+     *           {
+     *                "success": true,
+     *               "status": 400,
+     *               "error": "",
+     *               "data": "Order Canceled Successfuly"
+     *           })     
+     *        )
+     *     )
+     * )
+     */    
+    public function cancelOrder(Request $request)
+    {
+        // get languae 
+        $lang   = $request->header('Accept-Language' , 'en');
+        $orderId = $request->input('order_id');
+
+        try{
+            $order = ModelsOrders::find($orderId);
+            $order -> status = 6;
+            
+            if($order -> save()){
+
+                if($lang == 'ar'){
+                    return Utils::generateJSON(TRUE , Response::HTTP_BAD_REQUEST , "", "تم الإلغاء بنجاح");
+                }           
+                return Utils::generateJSON(TRUE , Response::HTTP_BAD_REQUEST , "", "Order Canceled Successfuly");
+
+            }else{
+
+                if($lang == 'ar'){
+                    return Utils::generateJSON(FALSE , Response::HTTP_BAD_REQUEST , "لم يتم الإلغاء ",[]);
+                }           
+                return Utils::generateJSON(FALSE , Response::HTTP_BAD_REQUEST , "Cancel Order Not Succesed", []);
+            
+            }
+        }
+        catch(\Exception $e){
+            // do task when error
+            if($lang == 'ar'){
+                return Utils::generateJSON(FALSE , Response::HTTP_BAD_REQUEST , "خطأ غير متوقع: " . $e->getMessage(), []);
+            }           
+            return Utils::generateJSON(FALSE , Response::HTTP_BAD_REQUEST , "bad request: " . $e->getMessage(), []);
+            // return response()->json(['error' => $e->getMessage()],
+            // Response::HTTP_BAD_REQUEST
+            // ); 
+        }
+    }
 
     /**
      * @OA\Get(
@@ -224,6 +379,7 @@ class Orders extends Controller
 
         $all_trips = Trips::
         join('driver', 'driver.id', '=', 'trips.driver_id')
+        ->orderBy('trips.created_at', 'desc')
         ->get(['trips.*' , 'driver.first_name' , 'driver.last_name']);
 
         foreach($all_trips as $trip){
@@ -289,6 +445,7 @@ class Orders extends Controller
         $validator = FacadesValidator::make($request->all() , $rules); //Validator::make($request->all() , $rules);
 
         if($validator->fails()){
+
             $data = new \stdClass();
             $data->message =  "Error accurs and we working to fix it, please try again later";
     
@@ -305,7 +462,7 @@ class Orders extends Controller
             $order = BookingTrip::create(
                 [                        
                     'trip_id' => $request->input('trip_id'),                    
-                    'status' => 2,                    
+                    'status' => 1,                    
                     'user_id' => $userId ,
                 ]
             );

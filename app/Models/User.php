@@ -22,8 +22,7 @@ class User extends Model
         'name',
         'phone',
         'one_time_password',
-        'otp_requested_time',
-        'deleted_time',
+        'otp_requested_time'        
     ];
 
     /**
@@ -34,7 +33,7 @@ class User extends Model
     protected $hidden = [
         'otp_requested_time',
         'one_time_password',
-        'deleted_time',
+        'deleted_at',        
     ];
     
 }
