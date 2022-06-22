@@ -86,6 +86,8 @@ class Orders extends Controller
      *       @OA\Property(property="start_lng", type="float", format="float", example="25.363662"),
      *       @OA\Property(property="end_lat", type="float", format="float", example="33.363662"),
      *       @OA\Property(property="end_lng", type="float", format="float", example="25.363662"),     
+     *       @OA\Property(property="start_point_description", type="string", format="string", example="London, Saudi Arabia"),     
+     *       @OA\Property(property="end_point_description", type="string", format="string", example="London, Saudi Arabia"),     
      *       @OA\Property(property="order_type", type="int", example="1"),
      *       @OA\Property(property="driver_gender", type="int", example="1"),
      *       @OA\Property(property="vehicle_type", type="int", example="1"),
@@ -117,6 +119,8 @@ class Orders extends Controller
             'start_lng' => 'required',
             'end_lat' => 'required',
             'end_lng' => 'required',
+            'start_point_description' => 'required',
+            'end_point_description' => 'required',
             'order_type' => 'required',
             'driver_gender' => 'required',                          
             'vehicle_type' => 'required', 
@@ -148,6 +152,8 @@ class Orders extends Controller
                     'start_lng' => $request->input('start_lng'),
                     'end_lat' => $request->input('end_lat'),
                     'end_lng' => $request->input('end_lng'),
+                    'start_point_description' => $request->input('start_point_description'),
+                    'end_point_description' => $request->input('end_point_description'),
                     'order_type' => $request->input('order_type'),
                     'driver_gender' => $request->input('driver_gender'),
                     'vehicle_type' => $request->input('vehicle_type'),
@@ -198,6 +204,96 @@ class Orders extends Controller
      * @OA\Response(
      *    response=200,
      *    description="Success credentials response",
+     *    @OA\JsonContent( example={{
+     *              "id": 3,
+     *               "start_lat": 33.3637,
+     *               "start_lng": 25.3637,
+     *               "end_lat": 33.3637,
+     *               "end_lng": 25.3637,
+     *               "vehicle_type": 1,
+     *               "user_id": 2,
+     *               "order_type": 1,
+     *               "driver_gender": 1,
+     *               "status": 1,
+     *               "payment_method": 1,
+     *               "passengers": 1,
+     *               "cobon_id": 0
+     *          }} ),     
+     *     )
+     * )
+     */
+    public function getMyOrders(Request $request)
+    {
+        // get languae 
+        $lang   = $request->header('Accept-Language' , 'en');
+        $userId = $request->user()->id;
+
+        $orders = ModelsOrders::where('user_id', $userId)
+        ->whereIn('status' , [1,2,3])
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+        return $orders;        
+
+    }
+
+    /**
+     * @OA\Get(
+     * path="/api/user/orders/getMyPastOrders",
+     * security={{ "apiAuth": {} }},
+     * summary="جلب طلباتي",
+     * description="تقوم بجلب طلباتي السابقة",
+     * operationId="user/getMyPastOrders",
+     * tags={"OrderUser"},     
+     * @OA\Response(
+     *    response=200,
+     *    description="Success credentials response",
+     *    @OA\JsonContent( example=
+     *          {{
+     *              "id": 3,
+     *               "start_lat": 33.3637,
+     *               "start_lng": 25.3637,
+     *               "end_lat": 33.3637,
+     *               "end_lng": 25.3637,
+     *               "vehicle_type": 1,
+     *               "user_id": 2,
+     *               "order_type": 1,
+     *               "driver_gender": 1,
+     *               "status": 1,
+     *               "payment_method": 1,
+     *               "passengers": 1,
+     *               "cobon_id": 0
+     *          }} ),     
+     *     )
+     * )
+     */
+    public function getMyPastOrders(Request $request)
+    {
+        // get languae 
+        $lang   = $request->header('Accept-Language' , 'en');
+        $userId = $request->user()->id;
+
+        $orders = ModelsOrders::where('user_id', $userId)
+        ->whereIn('status' , [4,5,6])
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+        return $orders;        
+
+    }
+
+
+    /**
+     * @OA\Get(
+     * path="/api/user/orders/getOrderDetails",
+     * security={{ "apiAuth": {} }},
+     * summary="جلب تفاصيل الطلب",
+     * description="تقوم بجلب تفاصيل طلب واحد فقط",
+     * operationId="user/getOrderDetails",
+     * tags={"OrderUser"},     
+     * @OA\Response(
+     *    response=200,
+     *    description="Success credentials response",
      *    @OA\JsonContent( example={
      *              "id": 3,
      *               "start_lat": 33.3637,
@@ -216,20 +312,19 @@ class Orders extends Controller
      *     )
      * )
      */
-    public function getMyOrders(Request $request)
+    public function getOrderDetails(Request $request)
     {
         // get languae 
         $lang   = $request->header('Accept-Language' , 'en');
         $userId = $request->user()->id;
+        $orderID = $request->order_id;
 
-        $orders = ModelsOrders::where('user_id', $userId)
-        ->orderBy('created_at', 'desc')
-        ->get();
+        $order = ModelsOrders::where(['user_id' => $userId , 'id' => $orderID])    
+        ->first();
 
-        return $orders;        
+        return $order;        
 
     }
-
 
     /**
      * @OA\Get(

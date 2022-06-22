@@ -44,6 +44,8 @@ Route::group(['middleware' => ['auth:users']] , function(){
     Route::get('/user/getAvailableTrips' , [\App\Http\Controllers\user\Orders::class , 'getAvailableTrips']);
     Route::post('/user/bookingTrip' , [\App\Http\Controllers\user\Orders::class , 'bookingTrip']);
     Route::get('/user/orders/getMyOrders' , [\App\Http\Controllers\user\Orders::class , 'getMyOrders']);
+    Route::get('/user/orders/getMyPastOrders' , [\App\Http\Controllers\user\Orders::class , 'getMyPastOrders']);
+    Route::get('/user/orders/getOrderDetails' , [\App\Http\Controllers\user\Orders::class , 'getOrderDetails']);
     Route::get('/user/orders/getMyBookedTrips' , [\App\Http\Controllers\user\Orders::class , 'getMyBookedTrips']);
     Route::post('/user/orders/cancelOrder' , [\App\Http\Controllers\user\Orders::class , 'cancelOrder']);
     Route::get('/user/profile/getMyProfile' , [\App\Http\Controllers\user\profile::class , 'getMyProfile']);

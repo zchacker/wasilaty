@@ -1144,6 +1144,90 @@
                         "content": {
                             "application/json": {
                                 "schema": {},
+                                "example": [
+                                    {
+                                        "id": 3,
+                                        "start_lat": 33.3637,
+                                        "start_lng": 25.3637,
+                                        "end_lat": 33.3637,
+                                        "end_lng": 25.3637,
+                                        "vehicle_type": 1,
+                                        "user_id": 2,
+                                        "order_type": 1,
+                                        "driver_gender": 1,
+                                        "status": 1,
+                                        "payment_method": 1,
+                                        "passengers": 1,
+                                        "cobon_id": 0
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/user/orders/getMyPastOrders": {
+            "get": {
+                "tags": [
+                    "OrderUser"
+                ],
+                "summary": "جلب طلباتي",
+                "description": "تقوم بجلب طلباتي السابقة",
+                "operationId": "user/getMyPastOrders",
+                "responses": {
+                    "200": {
+                        "description": "Success credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": [
+                                    {
+                                        "id": 3,
+                                        "start_lat": 33.3637,
+                                        "start_lng": 25.3637,
+                                        "end_lat": 33.3637,
+                                        "end_lng": 25.3637,
+                                        "vehicle_type": 1,
+                                        "user_id": 2,
+                                        "order_type": 1,
+                                        "driver_gender": 1,
+                                        "status": 1,
+                                        "payment_method": 1,
+                                        "passengers": 1,
+                                        "cobon_id": 0
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/user/orders/getOrderDetails": {
+            "get": {
+                "tags": [
+                    "OrderUser"
+                ],
+                "summary": "جلب تفاصيل الطلب",
+                "description": "تقوم بجلب تفاصيل طلب واحد فقط",
+                "operationId": "user/getOrderDetails",
+                "responses": {
+                    "200": {
+                        "description": "Success credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
                                 "example": {
                                     "id": 3,
                                     "start_lat": 33.3637,
@@ -1373,8 +1457,81 @@
                                     "name": "Ahmed Nagem",
                                     "phone": "966536301031",
                                     "created_at": "2022-01-17T23:03:14.000000Z",
-                                    "updated_at": "2022-06-20T07:45:15.000000Z",
-                                    "deleted_at": null
+                                    "updated_at": "2022-06-20T07:45:15.000000Z"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/user/profile/updateMyProfile": {
+            "post": {
+                "tags": [
+                    "UserProfile"
+                ],
+                "summary": "تحديث ملفي الشخصي",
+                "description": "تقوم بتحديث الملف الشخصي",
+                "operationId": "profile/updateMyProfile",
+                "requestBody": {
+                    "description": "جميع الخيارات إلزامية",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "phone"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "Ahmed Nagem"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "966536301031"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "502": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "FALSE"
+                                        },
+                                        "status": {
+                                            "type": "int",
+                                            "example": 502
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": {
+                                                "message": "error message"
+                                            }
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": ""
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
