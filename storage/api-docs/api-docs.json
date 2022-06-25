@@ -1061,6 +1061,16 @@
                                         "format": "float",
                                         "example": "25.363662"
                                     },
+                                    "start_point_description": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "London, Saudi Arabia"
+                                    },
+                                    "end_point_description": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "London, Saudi Arabia"
+                                    },
                                     "order_type": {
                                         "type": "int",
                                         "example": "1"
@@ -1222,6 +1232,27 @@
                 "summary": "جلب تفاصيل الطلب",
                 "description": "تقوم بجلب تفاصيل طلب واحد فقط",
                 "operationId": "user/getOrderDetails",
+                "requestBody": {
+                    "description": "جميع الخيارات إلزامية",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "order_id"
+                                ],
+                                "properties": {
+                                    "order_id": {
+                                        "type": "int",
+                                        "format": "int",
+                                        "example": "3"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Success credentials response",

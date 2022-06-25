@@ -16,7 +16,7 @@ class Orders extends Model
      * @var string
      */
     protected $table = 'orders';
-    protected $dateFormat = 'd-m-Y H:i';
+    //protected $dateFormat = 'd-m-Y H:i';
 
     protected $fillable = [
         'start_lat',

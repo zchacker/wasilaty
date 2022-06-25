@@ -286,13 +286,21 @@ class Orders extends Controller
 
 
     /**
-     * @OA\Get(
+     * @OA\Post(
      * path="/api/user/orders/getOrderDetails",
      * security={{ "apiAuth": {} }},
      * summary="جلب تفاصيل الطلب",
      * description="تقوم بجلب تفاصيل طلب واحد فقط",
      * operationId="user/getOrderDetails",
-     * tags={"OrderUser"},     
+     * tags={"OrderUser"},   
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="جميع الخيارات إلزامية",
+     *    @OA\JsonContent(
+     *       required={"order_id"},
+     *       @OA\Property(property="order_id", type="int", format="int", example="3"),
+     *	),
+     * ),  
      * @OA\Response(
      *    response=200,
      *    description="Success credentials response",
@@ -321,12 +329,17 @@ class Orders extends Controller
         $userId  = $request->user()->id;
         $orderID = $request->order_id;
 
-        $order = ModelsOrders::where(['user_id' => $userId , 'id' => $orderID])->first();
+        $order = ModelsOrders::where(['user_id' => $userId , 'id' => $orderID]);
         
-        $data  = new stdClass;
-        $data->order_details  = $order;
+        if($order == null){
 
-        $orderWithDriver = OrdersAssignedToDrivers::where(['order_id' => $order->id])
+            return [];
+        }
+
+        $data  = new stdClass;
+        $data->order_details  = $order->first();
+
+        $orderWithDriver = OrdersAssignedToDrivers::where(['order_id' => $orderID])
         ->join('driver' ,  'orders_assigned_to_drivers.driver_id' , '=' , 'driver.id')
         ->first([            
             'driver.first_name AS driver_first_name' ,
