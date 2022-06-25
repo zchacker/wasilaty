@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\shared\Utils;
 use App\Models\BookingTrip;
 use App\Models\Orders as ModelsOrders;
+use App\Models\OrdersAssignedToDrivers;
 use App\Models\Trips;
 use Illuminate\Support\Facades\Validator as FacadesValidator;
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
+use stdClass;
 use Symfony\Component\HttpFoundation\Response;
 
 class Orders extends Controller
@@ -315,14 +317,27 @@ class Orders extends Controller
     public function getOrderDetails(Request $request)
     {
         // get languae 
-        $lang   = $request->header('Accept-Language' , 'en');
-        $userId = $request->user()->id;
+        $lang    = $request->header('Accept-Language' , 'en');
+        $userId  = $request->user()->id;
         $orderID = $request->order_id;
 
-        $order = ModelsOrders::where(['user_id' => $userId , 'id' => $orderID])    
-        ->first();
+        $order = ModelsOrders::where(['user_id' => $userId , 'id' => $orderID])->first();
+        
+        $data  = new stdClass;
+        $data->order_details  = $order;
 
-        return $order;        
+        $orderWithDriver = OrdersAssignedToDrivers::where(['order_id' => $order->id])
+        ->join('driver' ,  'orders_assigned_to_drivers.driver_id' , '=' , 'driver.id')
+        ->first([            
+            'driver.first_name AS driver_first_name' ,
+            'driver.last_name AS driver_last_name',
+            'driver.phone_numeber AS driver_phone_numeber',
+            'avatar'
+        ]);
+        
+        $data->driver_details = $orderWithDriver;
+        
+        return $data;        
 
     }
 

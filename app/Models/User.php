@@ -36,4 +36,10 @@ class User extends Model
         'deleted_at',        
     ];
     
+    protected $casts = [
+        //'birthday' => 'date:Y-m-d',
+        'created_at' => 'datetime:Y-m-d H:i',
+        'updated_at' => 'datetime:Y-m-d H:i',
+    ];
+    
 }

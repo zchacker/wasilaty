@@ -16,6 +16,7 @@ class Orders extends Model
      * @var string
      */
     protected $table = 'orders';
+    protected $dateFormat = 'd-m-Y H:i';
 
     protected $fillable = [
         'start_lat',
@@ -26,6 +27,8 @@ class Orders extends Model
         'user_id',
         'order_type',
         'status',
+        'start_point_description',
+        'end_point_description',
     ];
 
     /**
@@ -35,8 +38,14 @@ class Orders extends Model
      */
     protected $hidden = [
         'deleted_at',
-        'created_at',
+        //'created_at',
         'updated_at',
+    ];
+
+    protected $casts = [
+        //'birthday' => 'date:Y-m-d',
+        'created_at' => 'datetime:Y-m-d H:i',
+        'updated_at' => 'datetime:Y-m-d H:i',
     ];
 
 }

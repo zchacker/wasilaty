@@ -52,10 +52,16 @@ class Driver extends Model
         'otp_requested_time',
         'one_time_password',
         'deleted_at',
-        'created_at',
-        'updated_at',
+        //'created_at',
+        //'updated_at',
         'isActive',
         'isApproved',
+    ];
+
+    protected $casts = [
+        //'birthday' => 'date:Y-m-d',
+        'created_at' => 'datetime:Y-m-d H:i',
+        'updated_at' => 'datetime:Y-m-d H:i',
     ];
 
 }
