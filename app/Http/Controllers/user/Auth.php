@@ -187,8 +187,8 @@ class Auth extends Controller
      *         )
      * ),
      * @OA\Response(
-     *    response=502,
-     *    description="Wrong credentials response",
+     *    response=200,
+     *    description="Success credentials response",
      *    @OA\JsonContent(
      *       @OA\Property(property="success", type="boolean", example="FALSE"),
      *       @OA\Property(property="status", type="int", example=502),

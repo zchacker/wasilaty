@@ -334,6 +334,10 @@ class Auth extends Controller
             $otp = 1111;
         }
 
+        if( $phone == '966500000000'){
+            $otp = 1111;
+        }
+
         if($driver == NULL){
 
             $data = new \stdClass();
