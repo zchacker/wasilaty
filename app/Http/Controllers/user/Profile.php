@@ -43,7 +43,7 @@ class Profile extends Controller
         $lang = $request->header('Accept-Language' , 'en');
 
         $user_id = $request->user()->id;
-        $user    = User::find($user_id);
+        $user    = User::where(['id' => $user_id]);
 
         if($user == null){
             //return response()->json(['status' => 'error' , 'message' => 'user not found']);

@@ -15,6 +15,14 @@ class Vehicle extends Model
      * @var string
      */
     protected $table = 'vehicle';
+    
+
+    /**
+     * The primary key associated with the table.
+     *
+     * @var int
+     */
+    protected $primaryKey = 'id';
 
     protected $fillable = [        
         'name_ar',

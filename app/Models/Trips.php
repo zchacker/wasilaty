@@ -17,6 +17,14 @@ class Trips extends Model
     protected $table = 'trips';
 
 
+    /**
+     * The primary key associated with the table.
+     *
+     * @var int
+     */
+    protected $primaryKey = 'id';
+
+
     protected $fillable = [
         'start_time',
         'end_time',

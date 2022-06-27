@@ -17,6 +17,13 @@ class OrdersAssignedToDrivers extends Model
      */
     protected $table = 'orders_assigned_to_drivers';
 
+    /**
+     * The primary key associated with the table.
+     *
+     * @var int
+     */
+    protected $primaryKey = 'id';
+
     protected $fillable = [
         'order_id',
         'driver_id',

@@ -18,6 +18,13 @@ class Orders extends Model
     protected $table = 'orders';
     //protected $dateFormat = 'd-m-Y H:i';
 
+    /**
+     * The primary key associated with the table.
+     *
+     * @var int
+     */
+    protected $primaryKey = 'id';
+
     protected $fillable = [
         'start_lat',
         'start_lng',

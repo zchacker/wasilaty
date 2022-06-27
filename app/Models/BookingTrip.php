@@ -16,6 +16,13 @@ class BookingTrip extends Model
      */
     protected $table = 'booking_trip';
 
+    /**
+     * The primary key associated with the table.
+     *
+     * @var int
+     */
+    protected $primaryKey = 'id';
+
 
     protected $fillable = [
         'user_id',

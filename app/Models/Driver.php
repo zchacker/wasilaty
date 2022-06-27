@@ -18,6 +18,13 @@ class Driver extends Model
      */
     protected $table = 'driver';
 
+    /**
+     * The primary key associated with the table.
+     *
+     * @var int
+     */
+    protected $primaryKey = 'id';
+
     protected $fillable = [
         'avatar',
         'first_name',

@@ -18,6 +18,13 @@ class User extends Model
      */
     protected $table = 'user';
 
+    /**
+     * The primary key associated with the table.
+     *
+     * @var int
+     */
+    protected $primaryKey = 'id';
+
     protected $fillable = [
         'name',
         'phone',
