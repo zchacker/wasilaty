@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Validator as FacadesValidator;
+use stdClass;
 
 class Orders extends Controller
 {
@@ -93,6 +94,193 @@ class Orders extends Controller
         
         //$orders = $request->user()->tokenCan('driver');
         return Utils::generateJSON(TRUE, Response::HTTP_OK , "" , $orders);
+
+    }
+
+    /**
+     * @OA\Get(
+     * path="/api/driver/orders/getMyOrders",
+     * security={{ "apiAuth": {} }},
+     * summary="جلب طلباتي",
+     * description="تقوم بجلب طلباتي",
+     * operationId="driver/getMyOrders",
+     * tags={"OrderDriver"},     
+     * @OA\Response(
+     *    response=200,
+     *    description="Success credentials response",
+     *    @OA\JsonContent( example={{
+     *               "id": 2,
+     *               "order_id": 1,
+     *               "driver_id": 1,
+     *               "start_lat": 1,
+     *               "start_lng": 25.3637,
+     *               "end_lat": 33.3637,
+     *               "end_lng": 25.3637,
+     *               "start_point_description": null,
+     *               "end_point_description": null,
+     *               "vehicle_type": 1,
+     *               "user_id": 2,
+     *               "order_type": 1,
+     *               "driver_gender": 1,
+     *               "status": 2,
+     *               "payment_method": 1,
+     *               "passengers": 1,
+     *               "price": 25,
+     *               "cobon_id": 0,
+     *               "name": "Ahmed M Nagem",
+     *               "phone": "966536301031",
+     *               "one_time_password": "1111",
+     *               "otp_requested_time": "2022-06-20 07:45:15"
+     *          }} ),     
+     *     )
+     * )
+     */
+    public function getMyOrders(Request $request)
+    {
+        // get languae 
+        $lang   = $request->header('Accept-Language' , 'en');
+        $userId = $request->user()->id;
+
+        $orders = OrdersAssignedToDrivers::join('orders' , 'orders.id' , '=' ,'orders_assigned_to_drivers.order_id')
+        ->join('user' , 'user.id' , '=' ,'orders.user_id')
+        ->whereIn('orders.status' , [1,2,3])
+        ->orderBy('orders.created_at', 'desc')
+        ->get(['*']);
+
+        /*$orders = ModelsOrders::where('user_id', $userId)
+        ->whereIn('status' , [1,2,3])
+        ->orderBy('created_at', 'desc')
+        ->get();*/
+
+        return $orders;        
+
+    }
+
+    /**
+     * @OA\Get(
+     * path="/api/driver/orders/getMyPastOrders",
+     * security={{ "apiAuth": {} }},
+     * summary="جلب طلباتي",
+     * description="تقوم بجلب طلباتي السابقة",
+     * operationId="driver/getMyPastOrders",
+     * tags={"OrderDriver"},     
+     * @OA\Response(
+     *    response=200,
+     *    description="Success credentials response",
+     *    @OA\JsonContent( example={{
+     *               "id": 2,
+     *               "order_id": 1,
+     *               "driver_id": 1,
+     *               "start_lat": 1,
+     *               "start_lng": 25.3637,
+     *               "end_lat": 33.3637,
+     *               "end_lng": 25.3637,
+     *               "start_point_description": null,
+     *               "end_point_description": null,
+     *               "vehicle_type": 1,
+     *               "user_id": 2,
+     *               "order_type": 1,
+     *               "driver_gender": 1,
+     *               "status": 2,
+     *               "payment_method": 1,
+     *               "passengers": 1,
+     *               "price": 25,
+     *               "cobon_id": 0,
+     *               "name": "Ahmed M Nagem",
+     *               "phone": "966536301031",
+     *               "one_time_password": "1111",
+     *               "otp_requested_time": "2022-06-20 07:45:15"
+     *          }} ),     
+     *     )
+     * )
+     */
+    public function getMyPastOrders(Request $request)
+    {
+        // get languae 
+        $lang   = $request->header('Accept-Language' , 'en');
+        $userId = $request->user()->id;
+
+        $orders = OrdersAssignedToDrivers::join('orders' , 'orders.id' , '=' ,'orders_assigned_to_drivers.order_id')
+        ->join('user' , 'user.id' , '=' ,'orders.user_id')
+        ->whereIn('orders.status' , [4,5,6])
+        ->orderBy('orders.created_at', 'desc')
+        ->get(['*']);
+
+        /*$orders = ModelsOrders::where('user_id', $userId)
+        ->whereIn('status' , [1,2,3])
+        ->orderBy('created_at', 'desc')
+        ->get();*/
+
+        return $orders;        
+
+    }
+
+    /**
+     * @OA\Post(
+     * path="/api/driver/orders/getOrderDetails",
+     * security={{ "apiAuth": {} }},
+     * summary="جلب تفاصيل الطلب",
+     * description="تقوم بجلب تفاصيل طلب واحد فقط",
+     * operationId="driver/getOrderDetails",
+     * tags={"OrderDriver"},   
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="جميع الخيارات إلزامية",
+     *    @OA\JsonContent(
+     *       required={"order_id"},
+     *       @OA\Property(property="order_id", type="int", format="int", example="3"),
+     *	),
+     * ),  
+     * @OA\Response(
+     *    response=200,
+     *    description="Success credentials response",
+     *    @OA\JsonContent( example={
+     *              "id": 3,
+     *               "start_lat": 33.3637,
+     *               "start_lng": 25.3637,
+     *               "end_lat": 33.3637,
+     *               "end_lng": 25.3637,
+     *               "vehicle_type": 1,
+     *               "user_id": 2,
+     *               "order_type": 1,
+     *               "driver_gender": 1,
+     *               "status": 1,
+     *               "payment_method": 1,
+     *               "passengers": 1,
+     *               "cobon_id": 0
+     *          } ),     
+     *     )
+     * )
+     */
+    public function getOrderDetails(Request $request)
+    {
+        // get languae 
+        $lang    = $request->header('Accept-Language' , 'en');
+        //$userId  = $request->user()->id;
+        $orderID = $request->order_id;
+
+        $order = ModelsOrders::where([ 'id' => $orderID ]);
+        
+        if($order == null){
+
+            return [];
+        }
+
+        $data  = new stdClass;
+        $data->order_details  = $order->first();
+
+        $orderWithDriver = OrdersAssignedToDrivers::where(['order_id' => $orderID])
+        ->join('driver' ,  'orders_assigned_to_drivers.driver_id' , '=' , 'driver.id')
+        ->first([            
+            'driver.first_name AS driver_first_name' ,
+            'driver.last_name AS driver_last_name',
+            'driver.phone_numeber AS driver_phone_numeber',
+            'avatar'
+        ]);
+        
+        $data->driver_details = $orderWithDriver;
+        
+        return $data;        
 
     }
 
