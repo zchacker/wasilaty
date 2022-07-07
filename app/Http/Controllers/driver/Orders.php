@@ -69,8 +69,7 @@ class Orders extends Controller
      *          @OA\Property(property="data", type="string", example={
      *              "start_time": "2022-03-09 03:14:41",
      *              "end_time": "2022-03-09 03:14:41",
-     *              "passengers": 25,
-     *              "vehicle_id": 1,
+     *              "passengers": 25,     
      *              "start_lat": 34.26,
      *              "start_lng": 26.2,
      *              "end_lat": 34.26,
@@ -89,7 +88,7 @@ class Orders extends Controller
 
         $orders = Trips::where(['driver_id' => $driverId])
         ->orderBy('created_at' , 'desc')
-        ->first(['start_time' , 'end_time' , 'passengers' , 'vehicle_id' , 'start_lat' , 'start_lng' , 'end_lat' , 'end_lng' ]);
+        ->get(['start_time' , 'end_time' , 'passengers', 'start_lat' , 'start_lng' , 'end_lat' , 'end_lng' ]);
 
         
         //$orders = $request->user()->tokenCan('driver');

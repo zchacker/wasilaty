@@ -59,7 +59,8 @@ Route::group(['middleware' => ['auth:drivers']] , function(){
     Route::get('/driver/getNewOrders' , [\App\Http\Controllers\driver\Orders::class , 'getNewOrders']);
     Route::post('/driver/addTrip' , [\App\Http\Controllers\driver\Orders::class , 'addTrip']);
     Route::get('/driver/getMyAddedTrips' , [\App\Http\Controllers\driver\Orders::class , 'getMyAddedTrips']);
-    Route::get('/driver/getMyOrders' , [\App\Http\Controllers\driver\Orders::class , 'getMyOrders']);
+    Route::get('/driver/orders/getMyOrders' , [\App\Http\Controllers\driver\Orders::class , 'getMyOrders']);
+    Route::get('/driver/orders/getMyPastOrders' , [\App\Http\Controllers\driver\Orders::class , 'getMyPastOrders']);
     Route::post('/driver/orders/getOrderDetails' , [\App\Http\Controllers\driver\Orders::class , 'getOrderDetails']);
     Route::post('driver/acceptOrder' , [\App\Http\Controllers\driver\Orders::class , 'acceptOrder']);
     Route::get('/driver/getMyProfile' , [\App\Http\Controllers\driver\Auth::class , 'getMyProfileDriver']);

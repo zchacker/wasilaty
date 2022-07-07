@@ -28,8 +28,7 @@ class Trips extends Model
     protected $fillable = [
         'start_time',
         'end_time',
-        'passengers',
-        'vehicle_id',
+        'passengers',    
         'start_lat',
         'start_lng',
         'end_lat',
