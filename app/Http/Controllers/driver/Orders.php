@@ -42,13 +42,13 @@ class Orders extends Controller
         // get languae 
         $lang = $request->header('Accept-Language' , 'en');
 
-        $orders = ModelsOrders::where(['status' => 1])
-        ->orderBy('created_at')
-        ->get(['id','start_lat' , 'start_lng' , 'end_lat' , 'end_lng' , 'passengers']);
-
+        $orders = ModelsOrders::join('user' , 'user.id' , '=' , 'orders.user_id')
+        ->where(['status' => 1])
+        ->orderByDesc('orders.created_at')
+        ->get(['orders.id', 'user.name' ,'user.phone' ,'orders.start_lat' , 'orders.start_lng' , 'orders.end_lat' , 'orders.end_lng' , 'orders.start_point_description' , 'orders.end_point_description', 'orders.price' , 'orders.payment_method' , 'orders.passengers']);        
         
         //$orders = $request->user()->tokenCan('driver');
-        return Utils::generateJSON(TRUE, Response::HTTP_OK , "" , $orders);
+        return $orders;// Utils::generateJSON(TRUE, Response::HTTP_OK , "" , $orders);
     }
 
     /**
