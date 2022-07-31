@@ -50,9 +50,11 @@ Route::group(['middleware' => ['auth:users']] , function(){
     Route::post('/user/orders/cancelOrder' , [\App\Http\Controllers\user\Orders::class , 'cancelOrder']);
     Route::get('/user/profile/getMyProfile' , [\App\Http\Controllers\user\Profile::class , 'getMyProfile']);
     Route::post('/user/profile/updateMyProfile' , [\App\Http\Controllers\user\Profile::class , 'updateMyProfile']);
+    Route::post('/user/driverLocation' , [\App\Http\Controllers\driver\Data::class , 'getDriverLocation']);
     Route::get('test' , [\App\Http\Controllers\user\Auth::class, 'test']);
     
 });
+
 
 
 Route::group(['middleware' => ['auth:drivers']] , function(){
@@ -65,4 +67,5 @@ Route::group(['middleware' => ['auth:drivers']] , function(){
     Route::post('driver/acceptOrder' , [\App\Http\Controllers\driver\Orders::class , 'acceptOrder']);
     Route::get('/driver/getMyProfile' , [\App\Http\Controllers\driver\Auth::class , 'getMyProfileDriver']);
     Route::put('/driver/updateProfile' , [\App\Http\Controllers\driver\Auth::class , 'updateDriverProfile']);
+    Route::post('/driver/updateLocation' , [\App\Http\Controllers\driver\Data::class , 'updateLocation']);
 });

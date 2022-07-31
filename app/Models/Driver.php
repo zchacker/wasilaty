@@ -47,6 +47,8 @@ class Driver extends Model
         'otp_requested_time',
         'isActive',
         'isApproved',
+        'latitude',
+        'longitude'
     ];
 
 
