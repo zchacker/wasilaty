@@ -341,7 +341,8 @@ class Orders extends Controller
 
         $orderWithDriver = OrdersAssignedToDrivers::where(['order_id' => $orderID])
         ->join('driver' ,  'orders_assigned_to_drivers.driver_id' , '=' , 'driver.id')
-        ->first([            
+        ->first([ 
+            'driver.id AS driver_id',           
             'driver.first_name AS driver_first_name' ,
             'driver.last_name AS driver_last_name',
             'driver.phone_numeber AS driver_phone_numeber',
