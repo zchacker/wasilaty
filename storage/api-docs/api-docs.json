@@ -355,7 +355,7 @@
         "/api/driver/getMyProfile": {
             "get": {
                 "tags": [
-                    "Driver Auth"
+                    "Driver Profile"
                 ],
                 "summary": "جلب ملف السائق ومعلوماته",
                 "description": "",
@@ -421,9 +421,9 @@
             }
         },
         "/api/driver/updateProfile": {
-            "put": {
+            "post": {
                 "tags": [
-                    "Driver Auth"
+                    "Driver Profile"
                 ],
                 "summary": "تحديث بيانات السائق",
                 "description": "",
@@ -462,6 +462,211 @@
                                         "type": "String",
                                         "format": "2021/01/01",
                                         "example": "1111"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "502": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "FALSE"
+                                        },
+                                        "status": {
+                                            "type": "int",
+                                            "example": 502
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": {
+                                                "message": "error message"
+                                            }
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": ""
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/driver/update_firebase_token": {
+            "post": {
+                "tags": [
+                    "Driver Profile"
+                ],
+                "summary": "تحديث توكن الاشعارات",
+                "description": "الرجاء ارسال توكن صالح من Firebase حتى تتلقى الاشعارات من النظام",
+                "operationId": "driver/update_firebase_token",
+                "requestBody": {
+                    "description": "جميع الخيارات إلزامية",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "firebase_token"
+                                ],
+                                "properties": {
+                                    "firebase_token": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "asdSjfHE54jSFXjhdfdfwerweSHHDkjk5443"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "TRUE"
+                                        },
+                                        "status": {
+                                            "type": "int",
+                                            "example": 200
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": {
+                                                "message": "Updated Successfuly"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/driver/updateLocation": {
+            "post": {
+                "tags": [
+                    "driverLocation"
+                ],
+                "summary": "تحديث احداثيات السائق",
+                "description": "",
+                "operationId": "driverLocation/updateLocation",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "latitude",
+                                    "longitude"
+                                ],
+                                "properties": {
+                                    "latitude": {
+                                        "type": "string",
+                                        "example": "34.26"
+                                    },
+                                    "longitude": {
+                                        "type": "string",
+                                        "example": "26.20"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "502": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "FALSE"
+                                        },
+                                        "status": {
+                                            "type": "int",
+                                            "example": 502
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": {
+                                                "message": "error message"
+                                            }
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": ""
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/user/getDriverLocation": {
+            "post": {
+                "tags": [
+                    "driverLocation"
+                ],
+                "summary": "احصل على احداثيات السائق",
+                "description": "",
+                "operationId": "driverLocation/getDriverLocation",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "driverId"
+                                ],
+                                "properties": {
+                                    "driverId": {
+                                        "type": "int",
+                                        "example": 1
                                     }
                                 },
                                 "type": "object"
@@ -591,7 +796,6 @@
                                                 "start_time": "2022-03-09 03:14:41",
                                                 "end_time": "2022-03-09 03:14:41",
                                                 "passengers": 25,
-                                                "vehicle_id": 1,
                                                 "start_lat": 34.26,
                                                 "start_lng": 26.2,
                                                 "end_lat": 34.26,
@@ -600,6 +804,169 @@
                                         }
                                     },
                                     "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/driver/orders/getMyOrders": {
+            "get": {
+                "tags": [
+                    "OrderDriver"
+                ],
+                "summary": "جلب طلباتي",
+                "description": "تقوم بجلب طلباتي",
+                "operationId": "driver/getMyOrders",
+                "responses": {
+                    "200": {
+                        "description": "Success credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": [
+                                    {
+                                        "id": 2,
+                                        "order_id": 1,
+                                        "driver_id": 1,
+                                        "start_lat": 1,
+                                        "start_lng": 25.3637,
+                                        "end_lat": 33.3637,
+                                        "end_lng": 25.3637,
+                                        "start_point_description": null,
+                                        "end_point_description": null,
+                                        "vehicle_type": 1,
+                                        "user_id": 2,
+                                        "order_type": 1,
+                                        "driver_gender": 1,
+                                        "status": 2,
+                                        "payment_method": 1,
+                                        "passengers": 1,
+                                        "price": 25,
+                                        "cobon_id": 0,
+                                        "name": "Ahmed M Nagem",
+                                        "phone": "966536301031",
+                                        "one_time_password": "1111",
+                                        "otp_requested_time": "2022-06-20 07:45:15"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/driver/orders/getMyPastOrders": {
+            "get": {
+                "tags": [
+                    "OrderDriver"
+                ],
+                "summary": "جلب طلباتي",
+                "description": "تقوم بجلب طلباتي السابقة",
+                "operationId": "driver/getMyPastOrders",
+                "responses": {
+                    "200": {
+                        "description": "Success credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": [
+                                    {
+                                        "id": 2,
+                                        "order_id": 1,
+                                        "driver_id": 1,
+                                        "start_lat": 1,
+                                        "start_lng": 25.3637,
+                                        "end_lat": 33.3637,
+                                        "end_lng": 25.3637,
+                                        "start_point_description": null,
+                                        "end_point_description": null,
+                                        "vehicle_type": 1,
+                                        "user_id": 2,
+                                        "order_type": 1,
+                                        "driver_gender": 1,
+                                        "status": 2,
+                                        "payment_method": 1,
+                                        "passengers": 1,
+                                        "price": 25,
+                                        "cobon_id": 0,
+                                        "name": "Ahmed M Nagem",
+                                        "phone": "966536301031",
+                                        "one_time_password": "1111",
+                                        "otp_requested_time": "2022-06-20 07:45:15"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/driver/orders/getOrderDetails": {
+            "post": {
+                "tags": [
+                    "OrderDriver"
+                ],
+                "summary": "جلب تفاصيل الطلب",
+                "description": "تقوم بجلب تفاصيل طلب واحد فقط",
+                "operationId": "driver/getOrderDetails",
+                "requestBody": {
+                    "description": "جميع الخيارات إلزامية",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "order_id"
+                                ],
+                                "properties": {
+                                    "order_id": {
+                                        "type": "int",
+                                        "format": "int",
+                                        "example": "3"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "id": 3,
+                                    "start_lat": 33.3637,
+                                    "start_lng": 25.3637,
+                                    "end_lat": 33.3637,
+                                    "end_lng": 25.3637,
+                                    "vehicle_type": 1,
+                                    "user_id": 2,
+                                    "order_type": 1,
+                                    "driver_gender": 1,
+                                    "status": 1,
+                                    "payment_method": 1,
+                                    "passengers": 1,
+                                    "cobon_id": 0
                                 }
                             }
                         }
@@ -940,8 +1307,8 @@
                     }
                 },
                 "responses": {
-                    "502": {
-                        "description": "Wrong credentials response",
+                    "200": {
+                        "description": "Success credentials response",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1225,7 +1592,7 @@
             }
         },
         "/api/user/orders/getOrderDetails": {
-            "get": {
+            "post": {
                 "tags": [
                     "OrderUser"
                 ],
@@ -1469,6 +1836,86 @@
                 ]
             }
         },
+        "/api/user/order/addOrderWithMultiPath": {
+            "post": {
+                "tags": [
+                    "OrderUser"
+                ],
+                "summary": "إرسال الطلب متعدد النقاط",
+                "description": "رجاء اخذ الاعتبار بهذه الفيم driver_gender[ male, female], payment method[1 , 2] حيث 1تعني كاش و 2 تعني بالبطاقة ",
+                "operationId": "user/addOrderWithMultiPath",
+                "requestBody": {
+                    "description": "جميع الخيارات إلزامية",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {},
+                            "example": {
+                                "end_lat": 12.1,
+                                "end_lng": 12.2,
+                                "payment_method": 1,
+                                "passengers": 4,
+                                "driver_gender": "male",
+                                "points": [
+                                    {
+                                        "lat": 10.1,
+                                        "lng": 13.1,
+                                        "description": "street name 1"
+                                    },
+                                    {
+                                        "lat": 11,
+                                        "lng": 14.1,
+                                        "description": "street name 3"
+                                    },
+                                    {
+                                        "lat": 13.4,
+                                        "lng": 15.1,
+                                        "description": "street name 2"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "TRUE"
+                                        },
+                                        "status": {
+                                            "type": "int",
+                                            "example": 200
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": {
+                                                "order_id": "8"
+                                            }
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": ""
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
         "/api/user/profile/getMyProfile": {
             "get": {
                 "tags": [
@@ -1560,6 +2007,74 @@
                                         "data": {
                                             "type": "string",
                                             "example": ""
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/user/update_firebase_token": {
+            "post": {
+                "tags": [
+                    "UserProfile"
+                ],
+                "summary": "تحديث ملفي الشخصي",
+                "description": "تقوم بتحديث الملف الشخصي",
+                "operationId": "user/update_firebase_token",
+                "requestBody": {
+                    "description": "جميع الخيارات إلزامية",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "firebase_token"
+                                ],
+                                "properties": {
+                                    "firebase_token": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "asdSjfHE54jSFXjhdfdfwerweSHHDkjk5443"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "TRUE"
+                                        },
+                                        "status": {
+                                            "type": "int",
+                                            "example": 200
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": {
+                                                "message": "Updated Successfuly"
+                                            }
                                         }
                                     },
                                     "type": "object"

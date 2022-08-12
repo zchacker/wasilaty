@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,6 +19,20 @@ use Illuminate\Support\Facades\Route;
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
+
+// for test
+
+Route::get('/users' , function(){
+    //$users = User::limit(50)->get();
+    $users = User::get();
+    return $users;
+});
+
+Route::get('/fastUsers' , function(){
+    $users = DB::table('user')->get();
+    return $users;
+});
+
 
 // this is Auth system
 Route::post('/user/auth/login' , [\App\Http\Controllers\user\Auth::class , 'login']);
@@ -36,6 +52,7 @@ Route::get('/user/getVehicles' , [\App\Http\Controllers\user\Orders::class , 'ge
 
 
 
+
 // just authrized users will access this 
 //Route::group(['middleware' => ['auth:sanctum']] , function(){
 Route::group(['middleware' => ['auth:users']] , function(){
@@ -51,6 +68,10 @@ Route::group(['middleware' => ['auth:users']] , function(){
     Route::get('/user/profile/getMyProfile' , [\App\Http\Controllers\user\Profile::class , 'getMyProfile']);
     Route::post('/user/profile/updateMyProfile' , [\App\Http\Controllers\user\Profile::class , 'updateMyProfile']);
     Route::post('/user/getDriverLocation' , [\App\Http\Controllers\driver\Data::class , 'getDriverLocation']);
+
+    Route::post('/user/order/addOrderWithMultiPath' , [\App\Http\Controllers\user\Orders::class , 'addOrderWithMultiPath']);
+    Route::post('/user/update_firebase_token' , [\App\Http\Controllers\user\Profile::class , 'update_firebase_token']);
+
     Route::get('test' , [\App\Http\Controllers\user\Auth::class, 'test']);
     
 });
@@ -66,6 +87,6 @@ Route::group(['middleware' => ['auth:drivers']] , function(){
     Route::post('/driver/orders/getOrderDetails' , [\App\Http\Controllers\driver\Orders::class , 'getOrderDetails']);
     Route::post('driver/acceptOrder' , [\App\Http\Controllers\driver\Orders::class , 'acceptOrder']);
     Route::get('/driver/getMyProfile' , [\App\Http\Controllers\driver\Auth::class , 'getMyProfileDriver']);
-    Route::put('/driver/updateProfile' , [\App\Http\Controllers\driver\Auth::class , 'updateDriverProfile']);
+    Route::post('/driver/updateProfile' , [\App\Http\Controllers\driver\Auth::class , 'updateDriverProfile']);
     Route::post('/driver/updateLocation' , [\App\Http\Controllers\driver\Data::class , 'updateLocation']);
 });

@@ -1,5 +1,9 @@
 <?php
 
+use App\Models\User;
+use Barryvdh\Debugbar\Facades\Debugbar;
+use Barryvdh\Debugbar\Twig\Extension\Debug;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +18,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::get('/fastUsers' , function(){
+    //Debugbar::info('info');
+    $users = DB::table('user')->limit(50)->get();
+    // $users = User::limit(2)->get();
+    //return $users;
     return view('welcome');
 });
 

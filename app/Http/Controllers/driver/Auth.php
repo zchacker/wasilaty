@@ -472,7 +472,7 @@ class Auth extends Controller
      * summary="جلب ملف السائق ومعلوماته",
      * description="",
      * operationId="driver/getMyProfileDriver",     
-     * tags={"Driver Auth"},     
+     * tags={"Driver Profile"},     
      * @OA\Response(
      *    response=200,
      *    description="Success credentials response",
@@ -520,13 +520,13 @@ class Auth extends Controller
 
 
     /**
-     * @OA\Put(
+     * @OA\Post(
      * path="/api/driver/updateProfile",
      * security={{ "apiAuth": {} }},
      * summary="تحديث بيانات السائق",
      * description="",
      * operationId="driver/updateDriverProfile",
-     * tags={"Driver Auth"},
+     * tags={"Driver Profile"},
      * @OA\RequestBody(
      *    required=true,
      *    description="جميع الخيارات إلزامية",
@@ -623,6 +623,104 @@ class Auth extends Controller
             return Utils::generateJSON( TRUE , Response::HTTP_OK , "" , "");
         }
         
+    }
+
+    /**
+     * @OA\Post(
+     * path="/api/driver/update_firebase_token",
+     * security={{ "apiAuth": {} }},
+     * summary="تحديث توكن الاشعارات",
+     * description="الرجاء ارسال توكن صالح من Firebase حتى تتلقى الاشعارات من النظام",
+     * operationId="driver/update_firebase_token",
+     * tags={"Driver Profile"},
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="جميع الخيارات إلزامية",
+     *    @OA\JsonContent(
+     *       required={"firebase_token"},
+     *       @OA\Property(property="firebase_token", type="string", format="string", example="asdSjfHE54jSFXjhdfdfwerweSHHDkjk5443"),
+     *    ),
+     * ),
+     * @OA\Response(
+     *    response=200,
+     *    description="Success credentials response",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="TRUE"),
+     *       @OA\Property(property="status", type="int", example=200),
+     *       @OA\Property(property="error", type="string", example=""),
+     *       @OA\Property(property="data", type="string", example={"message":"Updated Successfuly"} ),
+     *        )
+     *     )
+     * )
+     */
+    public function update_firebase_token(Request $request)
+    {
+
+        // get languae 
+        $lang = $request->header('Accept-Language' , 'en');
+    
+        try{
+
+            $token = $request->firebase_token;        
+            $driver  = Driver::find($request->user()->id);
+
+            $rules = array(
+                'firebase_token' => 'required',
+            );
+    
+            $messages = [
+                'firebase_token.required' => "firebase_token مطلوب",
+            ];
+    
+            if($lang == 'en'){
+    
+                $messages = [
+                    'firebase_token.required' => "firebase_token required",
+                ];
+    
+            }
+    
+            $validator = FacadesValidator::make($request->all() , $rules , $messages);
+    
+            if($validator->fails() == false){
+
+                $driver->firebase_token  = $token;
+                
+                $driver->save();
+
+                if($lang == 'ar'){
+                    return Utils::generateJSON(TRUE , Response::HTTP_BAD_REQUEST , "", "تم التحديث بنجاح");
+                }
+
+                return Utils::generateJSON(TRUE , Response::HTTP_BAD_REQUEST , "", "Updated Successfuly");
+                
+            }else{
+
+                $error     = $validator->errors();
+                $allErrors = "";
+
+                foreach($error->all() as $err){                
+                    $allErrors .= $err . " <br/>";
+                }
+                
+
+                return Utils::generateJSON(TRUE , Response::HTTP_BAD_REQUEST, $allErrors , "" );
+
+            }
+
+            
+        }catch(\Exception $e){
+            
+            // do task when error
+            
+            if($lang == 'ar'){
+                return Utils::generateJSON(FALSE , Response::HTTP_BAD_REQUEST , "خطأ غير متوقع: " . $e->getMessage(), []);
+            }           
+            
+            return Utils::generateJSON(FALSE , Response::HTTP_BAD_REQUEST , "bad request: " . $e->getMessage(), []);            
+        
+        }
+
     }
 
     private function generateJSON($success , $status , $error , $data)

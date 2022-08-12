@@ -165,6 +165,8 @@ class Auth extends Controller
 
     }
 
+    
+
     /**
      * @OA\Post(
      * path="/api/uploadImage",

@@ -48,5 +48,6 @@ class User extends Model
         'created_at' => 'datetime:Y-m-d H:i',
         'updated_at' => 'datetime:Y-m-d H:i',
     ];
-    
+       
+
 }

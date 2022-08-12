@@ -11,6 +11,7 @@ use App\Models\Trips;
 use Illuminate\Support\Facades\Validator as FacadesValidator;
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use stdClass;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -175,7 +176,7 @@ class Orders extends Controller
                 $data->message = "تم انشاء الطلب بنجاح";
             }
     
-            return Utils::generateJSON(TRUE , Response::HTTP_OK, "", $data); 
+            return Utils::generateJSON(TRUE , Response::HTTP_OK, "", $data);
 
         }catch(\Illuminate\Database\QueryException $ex){
 
@@ -193,9 +194,8 @@ class Orders extends Controller
                
     }       
     
-
     
-     /**
+    /**
      * @OA\Get(
      * path="/api/user/orders/getMyOrders",
      * security={{ "apiAuth": {} }},
@@ -616,6 +616,133 @@ class Orders extends Controller
 
         }
 
+
+    }
+
+
+    /**
+     * @OA\Post(
+     * path="/api/user/order/addOrderWithMultiPath",
+     * security={{ "apiAuth": {} }},
+     * summary="إرسال الطلب متعدد النقاط",
+     * description="رجاء اخذ الاعتبار بهذه الفيم driver_gender[ male, female], payment method[1 , 2] حيث 1تعني كاش و 2 تعني بالبطاقة ",
+     * operationId="user/addOrderWithMultiPath",
+     * tags={"OrderUser"},
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="جميع الخيارات إلزامية",
+     *    @OA\JsonContent( example={
+     *          "end_lat" : 12.1,
+     *          "end_lng" : 12.2,
+     *          "payment_method" : 1,
+     *          "passengers" : 4,
+     *          "driver_gender" : "male",
+     *          "points" : {
+     *              {"lat" : 10.1,"lng" : 13.1 , "description": "street name 1"},
+     *              {"lat" : 11.0,"lng" : 14.1 , "description": "street name 3"},
+     *              {"lat" : 13.4,"lng" : 15.1 , "description": "street name 2"}
+     *          }
+     *      }       
+     *    ),
+     * ),
+     * @OA\Response(
+     *    response=200,
+     *    description="Success response",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="TRUE"),
+     *       @OA\Property(property="status", type="int", example=200),
+     *       @OA\Property(property="error", type="string", example={"order_id": "8"}),
+     *       @OA\Property(property="data", type="string", example="" ),
+     *        )
+     *     )
+     * )
+     */
+    public function addOrderWithMultiPath(Request $request)
+    {
+
+        // get languae 
+        $lang = $request->header('Accept-Language' , 'en');
+
+        $rules = array(
+            'end_lat' => 'required',
+            'end_lng' => 'required',
+            'payment_method' => 'required',
+            'passengers' => 'required',
+            'driver_gender' => 'required',
+            //'points' => 'required'
+        );
+
+        $messages = [
+            'end_lat.required' => "احداثيات lat مطلوبة",
+            'end_lng.required' => "احداثيات lng مطلوبة",
+            'payment_method.unique' =>"طريقة الدفع مطلوبة",
+            'passengers.required' => "عدد الركاب مطلوب",
+            'driver_gender.required' => "نوع جنس السائق مطلوب",
+            'points.required' => 'الرجاء ارفاق نقاط الانطلاق'
+        ];
+
+        if($lang == 'en'){
+
+            $messages = [
+                'end_lat.required' => "Lattude required",
+                'end_lng.required' => "Logntiude required",
+                'payment_method.unique' =>"Payment Method required",
+                'passengers.required' => "Passenger required",
+                'driver_gender.unique' => "Driver Gender required",
+                'points.required' => 'Please upload start coordenates'
+            ];
+
+        }
+
+        $validator = FacadesValidator::make($request->all() , $rules , $messages);
+
+        if($validator->fails() == false){
+
+            // insert data
+            $userId = $request->user()->id;
+
+            $order = DB::table('order_multi_path')->insert([
+                'end_lat' => $request->end_lat,
+                'end_lng' => $request->end_lng,
+                'payment_method' => $request->payment_method,
+                'passengers' => $request->passengers,
+                'driver_gender' => $request->driver_gender,
+                'user_id' => $userId
+            ]);
+
+            $order_id = DB::getPdo()->lastInsertId();
+            
+            $points = $request->points;
+
+            foreach($points AS $point)
+            {
+                DB::table('order_locations')->insert([
+                    'lat' => $point['lat'],
+                    'lng' => $point['lng'],
+                    'description' => $point['description'],
+                    'order_id' => $order_id
+                ]);
+            }
+            
+
+            $data = new stdClass();
+            $data->order_id = $order_id;
+            
+            return Utils::generateJSON(TRUE , Response::HTTP_OK, "", $data);
+
+        }else{
+
+            $error     = $validator->errors();
+            $allErrors = "";
+
+            foreach($error->all() as $err){                
+                $allErrors .= $err . " <br/>";
+            }
+            
+
+            return Utils::generateJSON(TRUE , Response::HTTP_BAD_REQUEST, $allErrors , "" );
+
+        }
 
     }
 
