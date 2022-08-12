@@ -89,4 +89,5 @@ Route::group(['middleware' => ['auth:drivers']] , function(){
     Route::get('/driver/getMyProfile' , [\App\Http\Controllers\driver\Auth::class , 'getMyProfileDriver']);
     Route::post('/driver/updateProfile' , [\App\Http\Controllers\driver\Auth::class , 'updateDriverProfile']);
     Route::post('/driver/updateLocation' , [\App\Http\Controllers\driver\Data::class , 'updateLocation']);
+    Route::post('/driver/update_firebase_token' , [\App\Http\Controllers\driver\Auth::class , 'update_firebase_token']);
 });

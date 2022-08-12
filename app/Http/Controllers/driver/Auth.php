@@ -689,10 +689,10 @@ class Auth extends Controller
                 $driver->save();
 
                 if($lang == 'ar'){
-                    return Utils::generateJSON(TRUE , Response::HTTP_BAD_REQUEST , "", "تم التحديث بنجاح");
+                    return Utils::generateJSON(TRUE , Response::HTTP_OK , "", "تم التحديث بنجاح");
                 }
 
-                return Utils::generateJSON(TRUE , Response::HTTP_BAD_REQUEST , "", "Updated Successfuly");
+                return Utils::generateJSON(TRUE , Response::HTTP_OK , "", "Updated Successfuly");
                 
             }else{
 
@@ -704,7 +704,7 @@ class Auth extends Controller
                 }
                 
 
-                return Utils::generateJSON(TRUE , Response::HTTP_BAD_REQUEST, $allErrors , "" );
+                return Utils::generateJSON(FALSE , Response::HTTP_BAD_REQUEST, $allErrors , "" );
 
             }
 
