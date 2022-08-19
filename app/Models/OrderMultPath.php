@@ -26,8 +26,9 @@ class OrderMultPath extends Model
      * @var array
      */
     protected $fillable = [
-        'end_lat', 'end_lng' , 'location_description' , 'user_id',
-        'status' , 'payment_method' , 'passengers', 'driver_gender', 'price'
+        'end_lat', 'end_lng' , 'location_description' ,
+        'user_id','status' , 'payment_method' ,
+        'passengers', 'driver_gender', 'price', 'total_distance'
     ];
 
 

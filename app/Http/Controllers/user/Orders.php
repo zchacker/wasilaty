@@ -714,6 +714,10 @@ class Orders extends Controller
             
             $points = $request->points;
 
+            $last_lat = -1;
+            $last_lng = -1;
+            $total_distance_meters = 0;
+
             foreach($points AS $point)
             {
                 DB::table('order_locations')->insert([
@@ -722,8 +726,24 @@ class Orders extends Controller
                     'description' => $point['description'],
                     'order_id' => $order_id
                 ]);
+
+                if($last_lat != -1 && $last_lng != -1){
+                    $distance_meters = $this->get_meters_between_points($point['lat'] , $point['lng'] , $last_lat , $last_lng);
+                    $total_distance_meters += $distance_meters;
+                }
+
+                $last_lat = $point['lat'];
+                $last_lng = $point['lng'];
+
             }
-            
+
+
+            $distance_meters = $this->get_meters_between_points($request->end_lat , $request->end_lng , $last_lat , $last_lng);
+            $total_distance_meters += $distance_meters;
+
+            DB::table('order_multi_path')
+              ->where('id', $order_id)
+              ->update(['total_distance' => $total_distance_meters]);
 
             $data = new stdClass();
             $data->order_id = $order_id;

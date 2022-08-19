@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Validator as FacadesValidator;
+use ReflectionFunctionAbstract;
 use stdClass;
 
 class Orders extends Controller
@@ -505,6 +506,120 @@ class Orders extends Controller
             return Utils::generateJSON(FALSE , Response::HTTP_NOT_FOUND, "", $data);
         }        
     }
+
+    /**
+     * @OA\Get(
+     * path="/api/driver/getNewMultiPathOrders",
+     * security={{ "apiAuth": {} }},
+     * summary="جلب الطلبات متعددة النقاط",
+     * description="تقوم بجلب الطلبات ذات النقاط المتعددة",
+     * operationId="driver/getMultiPathOrders",
+     * tags={"OrderDriver"},   
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="جميع الخيارات إلزامية",    
+     * ),  
+     * @OA\Response(
+     *    response=200,
+     *    description="Success credentials response",
+     *    @OA\JsonContent( example={
+     *              "id": 1,
+     *              "end_lat": 24.480911,
+     *              "end_lng": 39.595821,
+     *              "location_description": null,
+     *              "user_id": 1,
+     *              "status": 1,
+     *              "payment_method": 1,
+     *              "passengers": 4,
+     *              "driver_gender": "male",
+     *              "price": 0,
+     *              "total_distance": 0,
+     *              "created_at": null,
+     *              "updated_at": null,
+     *              "deleted_at": null,
+     *              "calculated_distance": 547.0263208294848
+     *          } ),     
+     *     )
+     * )
+     */
+    public function getMultiPathOrders(Request $request)
+    {
+        /*
+            $lat = 41.118491 // user's latitude
+            $lng = 25.404509 // user's longitude
+
+            To convert to miles, multiply by 3961.
+            To convert to kilometers, multiply by 6373.
+            To convert to meters, multiply by 6373000.
+            To convert to feet, multiply by (3961 * 5280) 20914080.
+
+            SELECT *, 
+            ( 6371 * acos( cos( radians($lat) ) 
+            * cos( radians( latitude ) ) 
+            * cos( radians( longitude ) - radians($lng) ) + sin( radians($lat) ) 
+            * sin( radians( latitude ) ) ) ) 
+            AS calculated_distance 
+            FROM settings as T 
+            HAVING calculated_distance <= (SELECT distance FROM settings WHERE sid=T.sid) 
+            ORDER BY distance_calc
+        */
+
+        // get last driver location
+        $userId = $request->user()->id;
+        $driver = DB::table('driver')
+        ->where('id', $userId)
+        ->first();
+        
+        $lat  = $driver->latitude;
+        $lng  = $driver->longitude;
+
+
+        $distanceField = "( 6373000 * acos( cos( radians($lat) ) * cos( radians( end_lat ) ) * cos( radians( end_lng ) - radians($lng) ) + sin( radians($lat) ) * sin( radians( end_lat ) ) ) ) AS calculated_distance";
+        // $distanceField = "6373000 * 2 * ASIN(SQRT(POWER(SIN(($lat -abs( end_lat )) * pi()/180 / 2), 2)  + COS($lat * pi()/180 ) * COS(abs( end_lat ) * pi()/180) * POWER(SIN(( end_lat ) * pi()/180 / 2), 2) )) as  calculated_distance";
+
+
+        // get orders
+        $orders = DB::table('order_multi_path')
+        ->select('order_multi_path.*', DB::raw($distanceField))
+        ->where('status' , '=' , 1)
+        ->orderBy('order_multi_path.total_distance' , 'asc')
+        ->having('calculated_distance' , '<' , DB::raw('(SELECT max_distance FROM settings limit 1)'))
+        ->limit(100)
+        ->get();
+
+        return $orders;
+       
+    }
+
+    public function getMultiPathOrdersDetails(Request $request)
+    {
+
+        // get last driver location
+        $userId = $request->user()->id;
+        $order_id = $request->order_id;     
+              
+        // get orders
+        $order_details = DB::table('order_multi_path')
+        ->join('user' , 'user.id' , '=' , 'order_multi_path.user_id')
+        ->select('order_multi_path.*' , 'user.phone AS client_phone' , 'user.name AS client_name' )
+        ->where('order_multi_path.id' , '=' , $order_id)        
+        ->first();
+
+        $points = DB::table('order_locations')
+        ->where('order_id' , '=', $order_id)
+        ->get();
+
+        $obj = new stdClass();
+        $obj->order_details = $order_details;
+        $obj->points = $points;
+
+        return $obj;
+
+    }
+
+
+    
+
 
 }
 

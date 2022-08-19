@@ -1148,6 +1148,52 @@
                 ]
             }
         },
+        "/api/driver/getNewMultiPathOrders": {
+            "get": {
+                "tags": [
+                    "OrderDriver"
+                ],
+                "summary": "جلب الطلبات متعددة النقاط",
+                "description": "تقوم بجلب الطلبات ذات النقاط المتعددة",
+                "operationId": "driver/getMultiPathOrders",
+                "requestBody": {
+                    "description": "جميع الخيارات إلزامية",
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "id": 1,
+                                    "end_lat": 24.480911,
+                                    "end_lng": 39.595821,
+                                    "location_description": null,
+                                    "user_id": 1,
+                                    "status": 1,
+                                    "payment_method": 1,
+                                    "passengers": 4,
+                                    "driver_gender": "male",
+                                    "price": 0,
+                                    "total_distance": 0,
+                                    "created_at": null,
+                                    "updated_at": null,
+                                    "deleted_at": null,
+                                    "calculated_distance": 547.0263208294848
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
         "/api/user/auth/login": {
             "post": {
                 "tags": [

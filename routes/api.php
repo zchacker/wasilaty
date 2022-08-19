@@ -37,7 +37,6 @@ Route::get('/fastUsers' , function(){
 // this is Auth system
 Route::post('/user/auth/login' , [\App\Http\Controllers\user\Auth::class , 'login']);
 Route::post('/user/auth/verfyOTP' , [\App\Http\Controllers\user\Auth::class , 'verfyOTP']);
-Route::post('/user/auth/verfyOTP' , [\App\Http\Controllers\user\Auth::class , 'verfyOTP']);
 Route::post('/uploadImage' , [\App\Http\Controllers\user\Auth::class , 'imageUploadPost']);
 
 Route::post('/driver/auth/register' , [\App\Http\Controllers\driver\Auth::class , 'registerDriver']);
@@ -80,13 +79,16 @@ Route::group(['middleware' => ['auth:users']] , function(){
 
 Route::group(['middleware' => ['auth:drivers']] , function(){
     Route::get('/driver/getNewOrders' , [\App\Http\Controllers\driver\Orders::class , 'getNewOrders']);
+    Route::get('/driver/getNewMultiPathOrders' , [\App\Http\Controllers\driver\Orders::class , 'getMultiPathOrders']);
+    Route::get('/driver/getMultiPathOrdersDetails' , [\App\Http\Controllers\driver\Orders::class , 'getMultiPathOrdersDetails']);
+
     Route::post('/driver/addTrip' , [\App\Http\Controllers\driver\Orders::class , 'addTrip']);
     Route::get('/driver/getMyAddedTrips' , [\App\Http\Controllers\driver\Orders::class , 'getMyAddedTrips']);
     Route::get('/driver/orders/getMyOrders' , [\App\Http\Controllers\driver\Orders::class , 'getMyOrders']);
     Route::get('/driver/orders/getMyPastOrders' , [\App\Http\Controllers\driver\Orders::class , 'getMyPastOrders']);
     Route::post('/driver/orders/getOrderDetails' , [\App\Http\Controllers\driver\Orders::class , 'getOrderDetails']);
     Route::post('driver/acceptOrder' , [\App\Http\Controllers\driver\Orders::class , 'acceptOrder']);
-    Route::get('/driver/getMyProfile' , [\App\Http\Controllers\driver\Auth::class , 'getMyProfileDriver']);
+    Route::get('/driver/getMyProfile' , [\App\Http\Controllers\driver\Auth::class , 'getMyProfileDriver']);    
     Route::post('/driver/updateProfile' , [\App\Http\Controllers\driver\Auth::class , 'updateDriverProfile']);
     Route::post('/driver/updateLocation' , [\App\Http\Controllers\driver\Data::class , 'updateLocation']);
     Route::post('/driver/update_firebase_token' , [\App\Http\Controllers\driver\Auth::class , 'update_firebase_token']);
