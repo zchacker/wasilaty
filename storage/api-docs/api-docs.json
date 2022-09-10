@@ -713,6 +713,77 @@
                 ]
             }
         },
+        "/api/driver/offer/add": {
+            "post": {
+                "tags": [
+                    "OfferDriver"
+                ],
+                "summary": " إضافة عرض سعر ",
+                "description": "",
+                "operationId": "offer/add",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "order_id",
+                                    "amount"
+                                ],
+                                "properties": {
+                                    "order_id": {
+                                        "type": "int",
+                                        "example": "1"
+                                    },
+                                    "amount": {
+                                        "type": "int",
+                                        "example": "25"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "TRUE"
+                                        },
+                                        "status": {
+                                            "type": "int",
+                                            "example": 200
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": {
+                                                "message": "Created"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
         "/api/driver/getNewOrders": {
             "get": {
                 "tags": [
@@ -1182,6 +1253,104 @@
                                     "updated_at": null,
                                     "deleted_at": null,
                                     "calculated_distance": 547.0263208294848
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/driver/getMultiPathOrdersDetails": {
+            "get": {
+                "tags": [
+                    "OrderDriver"
+                ],
+                "summary": "جلب الطلبات متعددة النقاط",
+                "description": "تقوم بجلب الطلبات ذات النقاط المتعددة",
+                "operationId": "driver/getMultiPathOrdersDetails",
+                "requestBody": {
+                    "description": "جميع الخيارات إلزامية",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "order_id",
+                                    "amount"
+                                ],
+                                "properties": {
+                                    "order_id": {
+                                        "type": "int",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "order_details": {
+                                        "id": 10,
+                                        "end_lat": 24.480911,
+                                        "end_lng": 39.595821,
+                                        "location_description": null,
+                                        "user_id": 60013,
+                                        "status": 1,
+                                        "payment_method": 1,
+                                        "passengers": 4,
+                                        "driver_gender": "male",
+                                        "price": 0,
+                                        "total_distance": 1147.1,
+                                        "created_at": null,
+                                        "updated_at": null,
+                                        "deleted_at": null,
+                                        "client_phone": "966536301031",
+                                        "client_name": null
+                                    },
+                                    "points": [
+                                        {
+                                            "id": 7,
+                                            "lat": 24.476466,
+                                            "lng": 39.594674,
+                                            "description": "street name 1",
+                                            "order_id": 10,
+                                            "created_at": "2022-08-19 07:47:36",
+                                            "updated_at": "2022-08-19 07:47:36",
+                                            "deleted_at": null
+                                        },
+                                        {
+                                            "id": 8,
+                                            "lat": 24.47715,
+                                            "lng": 39.587913,
+                                            "description": "street name 3",
+                                            "order_id": 10,
+                                            "created_at": "2022-08-19 07:47:36",
+                                            "updated_at": "2022-08-19 07:47:36",
+                                            "deleted_at": null
+                                        },
+                                        {
+                                            "id": 9,
+                                            "lat": 24.477591,
+                                            "lng": 39.587203,
+                                            "description": "street name 2",
+                                            "order_id": 10,
+                                            "created_at": "2022-08-19 07:47:36",
+                                            "updated_at": "2022-08-19 07:47:36",
+                                            "deleted_at": null
+                                        }
+                                    ]
                                 }
                             }
                         }

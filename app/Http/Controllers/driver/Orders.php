@@ -5,6 +5,7 @@ namespace App\Http\Controllers\driver;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\shared\Utils;
 use App\Models\Driver;
+use App\Models\MultiPathOrdersAssignedToDriver;
 use App\Models\Orders as ModelsOrders;
 use App\Models\OrdersAssignedToDrivers;
 use App\Models\Trips;
@@ -516,7 +517,7 @@ class Orders extends Controller
      * operationId="driver/getMultiPathOrders",
      * tags={"OrderDriver"},   
      * @OA\RequestBody(
-     *    required=true,
+     *    required=false,
      *    description="جميع الخيارات إلزامية",    
      * ),  
      * @OA\Response(
@@ -591,6 +592,80 @@ class Orders extends Controller
        
     }
 
+    /**
+     * @OA\Get(
+     * path="/api/driver/getMultiPathOrdersDetails",
+     * security={{ "apiAuth": {} }},
+     * summary="جلب الطلبات متعددة النقاط",
+     * description="تقوم بجلب الطلبات ذات النقاط المتعددة",
+     * operationId="driver/getMultiPathOrdersDetails",
+     * tags={"OrderDriver"},   
+     * @OA\RequestBody(
+     *       required=true,
+     *       description="جميع الخيارات إلزامية",           
+     *       @OA\JsonContent(
+     *           required={"order_id","amount"},         
+     *           @OA\Property(property="order_id", type="int", example="1"),               
+     *      ),  
+     * ),  
+     * @OA\Response(
+     *    response=200,
+     *    description="Success credentials response",
+     *    @OA\JsonContent( example={
+     *       "order_details": {
+     *           "id": 10,
+     *           "end_lat": 24.480911,
+     *           "end_lng": 39.595821,
+     *           "location_description": null,
+     *           "user_id": 60013,
+      *          "status": 1,
+     *           "payment_method": 1,
+     *           "passengers": 4,
+     *           "driver_gender": "male",
+     *           "price": 0,
+     *          "total_distance": 1147.1,
+     *           "created_at": null,
+     *           "updated_at": null,
+     *           "deleted_at": null,
+     *           "client_phone": "966536301031",
+     *           "client_name": null
+     *       },
+     *       "points": {
+     *           {
+     *               "id": 7,
+     *               "lat": 24.476466,
+     *               "lng": 39.594674,
+     *               "description": "street name 1",
+     *               "order_id": 10,
+     *               "created_at": "2022-08-19 07:47:36",
+     *               "updated_at": "2022-08-19 07:47:36",
+     *               "deleted_at": null
+     *           },
+     *           {
+     *               "id": 8,
+     *               "lat": 24.47715,
+     *               "lng": 39.587913,
+     *               "description": "street name 3",
+     *               "order_id": 10,
+     *               "created_at": "2022-08-19 07:47:36",
+     *               "updated_at": "2022-08-19 07:47:36",
+     *               "deleted_at": null
+     *           },
+     *           {
+     *               "id": 9,
+     *               "lat": 24.477591,
+     *               "lng": 39.587203,
+     *               "description": "street name 2",
+     *               "order_id": 10,
+     *               "created_at": "2022-08-19 07:47:36",
+     *                  "updated_at": "2022-08-19 07:47:36",
+     *                   "deleted_at": null
+     *               }
+     *           }
+     *      } ),     
+     *     )
+     * )
+     */
     public function getMultiPathOrdersDetails(Request $request)
     {
 
@@ -618,7 +693,110 @@ class Orders extends Controller
     }
 
 
-    
+    /**
+     * @OA\Get(
+     * path="/api/driver/order/getMyMultiPathOrders",
+     * security={{ "apiAuth": {} }},
+     * summary="جلب الطلبات متعددة النقاط قيد التوصيل",
+     * description="تقوم بجلب الطلبات ذات النقاط المتعددة الحالية قيد التوصيل",
+     * operationId="driver/order/getMyMultiPathOrders",
+     * tags={"OrderDriver"},   
+     * @OA\RequestBody(
+     *    required=false,
+     *    description="",    
+     * ),  
+     * @OA\Response(
+     *    response=200,
+     *    description="Success credentials response",
+     *    @OA\JsonContent( example={
+     *              "id": 1,
+     *              "end_lat": 24.480911,
+     *              "end_lng": 39.595821,
+     *              "location_description": null,
+     *              "user_id": 1,
+     *              "status": 1,
+     *              "payment_method": 1,
+     *              "passengers": 4,
+     *              "driver_gender": "male",
+     *              "price": 0,
+     *              "total_distance": 0,
+     *              "created_at": null,
+     *              "updated_at": null,
+     *              "deleted_at": null,
+     *              "calculated_distance": 547.0263208294848
+     *          } ),     
+     *     )
+     * )
+     */
+    public function getMyMultiPathOrders(Request $request)
+    {
+
+        // get languae 
+        $lang   = $request->header('Accept-Language' , 'en');
+        $userId = $request->user()->id;
+
+        $orders = MultiPathOrdersAssignedToDriver::join('order_multi_path' , 'order_multi_path.id' , '=' ,'multi_path_orders_assigned_to_driver.order_id')
+        ->join('user' , 'user.id' , '=' ,'order_multi_path.user_id')
+        ->whereIn('order_multi_path.status' , [1,2,3])
+        ->orderBy('order_multi_path.created_at', 'desc')
+        ->get(['*']);        
+
+        return $orders; 
+
+    }
+
+
+    /**
+     * @OA\Get(
+     * path="/api/driver/order/getMyPastMultiPathOrders",
+     * security={{ "apiAuth": {} }},
+     * summary="جلب الطلبات متعددة النقاط منتهية او ملغية التوصيل",
+     * description="تقوم بجلب الطلبات ذات النقاط المتعددة الحالية منتهية او ملغية التوصيل",
+     * operationId="driver/order/getMyPastMultiPathOrders",
+     * tags={"OrderDriver"},   
+     * @OA\RequestBody(
+     *    required=false,
+     *    description="",    
+     * ),  
+     * @OA\Response(
+     *    response=200,
+     *    description="Success credentials response",
+     *    @OA\JsonContent( example={
+     *              "id": 1,
+     *              "end_lat": 24.480911,
+     *              "end_lng": 39.595821,
+     *              "location_description": null,
+     *              "user_id": 1,
+     *              "status": 1,
+     *              "payment_method": 1,
+     *              "passengers": 4,
+     *              "driver_gender": "male",
+     *              "price": 0,
+     *              "total_distance": 0,
+     *              "created_at": null,
+     *              "updated_at": null,
+     *              "deleted_at": null,
+     *              "calculated_distance": 547.0263208294848
+     *          } ),     
+     *     )
+     * )
+     */
+    public function getMyPastMultiPathOrders(Request $request)
+    {
+
+        // get languae 
+        $lang   = $request->header('Accept-Language' , 'en');
+        $userId = $request->user()->id;
+
+        $orders = MultiPathOrdersAssignedToDriver::join('order_multi_path' , 'order_multi_path.id' , '=' ,'multi_path_orders_assigned_to_driver.order_id')
+        ->join('user' , 'user.id' , '=' ,'order_multi_path.user_id')
+        ->whereIn('order_multi_path.status' , [4,5,6])
+        ->orderBy('order_multi_path.created_at', 'desc')
+        ->get(['*']);        
+
+        return $orders;
+
+    }
 
 
 }

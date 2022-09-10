@@ -59,11 +59,16 @@ Route::group(['middleware' => ['auth:users']] , function(){
     Route::post('user/AddOrder' , [\App\Http\Controllers\user\Orders::class , 'addOrder']);    
     Route::get('/user/getAvailableTrips' , [\App\Http\Controllers\user\Orders::class , 'getAvailableTrips']);
     Route::post('/user/bookingTrip' , [\App\Http\Controllers\user\Orders::class , 'bookingTrip']);
+    
     Route::get('/user/orders/getMyOrders' , [\App\Http\Controllers\user\Orders::class , 'getMyOrders']);
     Route::get('/user/orders/getMyPastOrders' , [\App\Http\Controllers\user\Orders::class , 'getMyPastOrders']);
     Route::post('/user/orders/getOrderDetails' , [\App\Http\Controllers\user\Orders::class , 'getOrderDetails']);
     Route::get('/user/orders/getMyBookedTrips' , [\App\Http\Controllers\user\Orders::class , 'getMyBookedTrips']);
     Route::post('/user/orders/cancelOrder' , [\App\Http\Controllers\user\Orders::class , 'cancelOrder']);
+    
+    // multi path orders
+    Route::get('/user/orders/getMyMultiPathOrders' , [\App\Http\Controllers\user\Orders::class , 'getMyMultiPathOrders']);
+
     Route::get('/user/profile/getMyProfile' , [\App\Http\Controllers\user\Profile::class , 'getMyProfile']);
     Route::post('/user/profile/updateMyProfile' , [\App\Http\Controllers\user\Profile::class , 'updateMyProfile']);
     Route::post('/user/getDriverLocation' , [\App\Http\Controllers\driver\Data::class , 'getDriverLocation']);
@@ -78,18 +83,28 @@ Route::group(['middleware' => ['auth:users']] , function(){
 
 
 Route::group(['middleware' => ['auth:drivers']] , function(){
+
     Route::get('/driver/getNewOrders' , [\App\Http\Controllers\driver\Orders::class , 'getNewOrders']);
     Route::get('/driver/getNewMultiPathOrders' , [\App\Http\Controllers\driver\Orders::class , 'getMultiPathOrders']);
     Route::get('/driver/getMultiPathOrdersDetails' , [\App\Http\Controllers\driver\Orders::class , 'getMultiPathOrdersDetails']);
+    Route::get('/driver/getMultiPathOrdersDetails' , [\App\Http\Controllers\driver\Orders::class , 'getMultiPathOrdersDetails']);
+    Route::get('/driver/order/getMyMultiPathOrders' , [\App\Http\Controllers\driver\Orders::class , 'getMyMultiPathOrders']);
+    Route::get('/driver/order/getMyPastMultiPathOrders' , [\App\Http\Controllers\driver\Orders::class , 'getMyPastMultiPathOrders']);
 
     Route::post('/driver/addTrip' , [\App\Http\Controllers\driver\Orders::class , 'addTrip']);
     Route::get('/driver/getMyAddedTrips' , [\App\Http\Controllers\driver\Orders::class , 'getMyAddedTrips']);
+    
     Route::get('/driver/orders/getMyOrders' , [\App\Http\Controllers\driver\Orders::class , 'getMyOrders']);
     Route::get('/driver/orders/getMyPastOrders' , [\App\Http\Controllers\driver\Orders::class , 'getMyPastOrders']);
     Route::post('/driver/orders/getOrderDetails' , [\App\Http\Controllers\driver\Orders::class , 'getOrderDetails']);
+    
     Route::post('driver/acceptOrder' , [\App\Http\Controllers\driver\Orders::class , 'acceptOrder']);
     Route::get('/driver/getMyProfile' , [\App\Http\Controllers\driver\Auth::class , 'getMyProfileDriver']);    
     Route::post('/driver/updateProfile' , [\App\Http\Controllers\driver\Auth::class , 'updateDriverProfile']);
+    
     Route::post('/driver/updateLocation' , [\App\Http\Controllers\driver\Data::class , 'updateLocation']);
     Route::post('/driver/update_firebase_token' , [\App\Http\Controllers\driver\Auth::class , 'update_firebase_token']);
+    
+    Route::post('/driver/offer/add' , [\App\Http\Controllers\driver\Offers::class , 'add_offer']);
+
 });
