@@ -661,11 +661,11 @@ class Auth extends Controller
     
         try{
 
-            $token = $request->firebase_token;        
+            $token   = $request->firebase_token;        
             $driver  = Driver::find($request->user()->id);
 
             $rules = array(
-                'firebase_token' => 'required',
+                //'firebase_token' => 'required',
             );
     
             $messages = [
@@ -684,6 +684,9 @@ class Auth extends Controller
     
             if($validator->fails() == false){
 
+                if($token == NULL)
+                    $token = '';
+                    
                 $driver->firebase_token  = $token;
                 
                 $driver->save();
@@ -693,6 +696,103 @@ class Auth extends Controller
                 }
 
                 return Utils::generateJSON(TRUE , Response::HTTP_OK , "", "Updated Successfuly");
+                
+            }else{
+
+                $error     = $validator->errors();
+                $allErrors = "";
+
+                foreach($error->all() as $err){                
+                    $allErrors .= $err . " <br/>";
+                }
+                
+
+                return Utils::generateJSON(FALSE , Response::HTTP_BAD_REQUEST, $allErrors , "" );
+
+            }
+
+            
+        }catch(\Exception $e){
+            
+            // do task when error
+            
+            if($lang == 'ar'){
+                return Utils::generateJSON(FALSE , Response::HTTP_BAD_REQUEST , "خطأ غير متوقع: " . $e->getMessage(), []);
+            }           
+            
+            return Utils::generateJSON(FALSE , Response::HTTP_BAD_REQUEST , "bad request: " . $e->getMessage(), []);            
+        
+        }
+
+    }
+
+
+    /**
+     * @OA\Post(
+     * path="/api/driver/request_account_deletion",
+     * security={{ "apiAuth": {} }},
+     * summary="طلب حذف حساب",
+     * description="",
+     * operationId="driver/request_account_deletion",
+     * tags={"Driver Profile"},
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="جميع الخيارات إلزامية",
+     *    @OA\JsonContent(
+     *       required={"reason"},
+     *       @OA\Property(property="reason", type="string", format="string", example="i want to stop working"),
+     *    ),
+     * ),
+     * @OA\Response(
+     *    response=200,
+     *    description="Success credentials response",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="TRUE"),
+     *       @OA\Property(property="status", type="int", example=200),
+     *       @OA\Property(property="error", type="string", example=""),
+     *       @OA\Property(property="data", type="string", example={"message":"done Successfuly"} ),
+     *        )
+     *     )
+     * )
+     */
+    public function request_account_deletion(Request $request)
+    {
+
+        // get languae 
+        $lang = $request->header('Accept-Language' , 'en');
+    
+        try{
+
+            $token   = $request->reason;        
+            $driver  = Driver::find($request->user()->id);
+
+            $rules = array(
+                'reason' => 'required',
+            );
+    
+            $messages = [
+                'reason.required' => "reason مطلوب",
+            ];
+    
+            if($lang == 'en'){
+    
+                $messages = [
+                    'reason.required' => "reason required",
+                ];
+    
+            }
+    
+            $validator = FacadesValidator::make($request->all() , $rules , $messages);
+    
+            if($validator->fails() == false){
+
+                
+
+                if($lang == 'ar'){
+                    return Utils::generateJSON(TRUE , Response::HTTP_OK , "", "تم الطلب بنجاح");
+                }
+
+                return Utils::generateJSON(TRUE , Response::HTTP_OK , "", "Request completed Successfuly");
                 
             }else{
 

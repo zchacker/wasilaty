@@ -104,6 +104,7 @@ Route::group(['middleware' => ['auth:drivers']] , function(){
     
     Route::post('/driver/updateLocation' , [\App\Http\Controllers\driver\Data::class , 'updateLocation']);
     Route::post('/driver/update_firebase_token' , [\App\Http\Controllers\driver\Auth::class , 'update_firebase_token']);
+    Route::post('/driver/request_account_deletion' , [\App\Http\Controllers\driver\Auth::class , 'request_account_deletion']);
     
     Route::post('/driver/offer/add' , [\App\Http\Controllers\driver\Offers::class , 'add_offer']);
 
