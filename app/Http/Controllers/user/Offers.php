@@ -44,8 +44,8 @@ class Offers extends Controller
      *    ),
      * )
      */
-    public function getOrderOffers(Request $request)
-    {
+    public function getOrderOffers(Request $request, $order_id)
+    {       
 
         // get languae 
         $lang = $request->header('Accept-Language' , 'en');
@@ -67,17 +67,25 @@ class Offers extends Controller
             ];
         }
 
-        $validator = Validator::make($request->all() , $rules, $messages); //Validator::make($request->all() , $rules);
+        $validator = Validator::make( [$order_id] , $rules, $messages); //Validator::make($request->all() , $rules);
 
-        if($validator->fails())
+        //if($validator->fails())
+        if( empty($order_id) )
         {
 
             $error = $validator->errors();
             $allErrors = array();
 
-            foreach($error->all() as $err){                
-                array_push($allErrors , $err);
+            if ($lang == 'en')
+            {
+                array_push($allErrors , 'رقم الطلب مطلوب');
+            }else{
+                array_push($allErrors , 'please send order id');
             }
+            
+            /*foreach($error->all() as $err){                
+                array_push($allErrors , $err);
+            }*/
 
             $data = new \stdClass();
             $data->message = $allErrors;
@@ -90,7 +98,7 @@ class Offers extends Controller
 
             $offer = DB::table('offers')
             ->where(['order_id' => $order_id ])
-            ->get();
+            ->get(['id AS offer_id' ,'driver_id' , 'order_id' , 'amount', 'status']);
 
             $data = new \stdClass();
             $data->message = [];
