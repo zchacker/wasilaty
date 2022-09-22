@@ -54,26 +54,22 @@ class Offers extends Controller
             //'status' => 'required|numeric',                                      
         );
 
-        $messages = [
-            'driver_id.required' => ' id السائق مطلوب ',
+        $messages = [            
             'order_id.required' => 'رقم الطلب مطلوب',
-            'amount.required' => 'مبلغ العرض مطلوب',
-            'status.required' => 'الرجاء اختيار نوع المركبة',        
+            'amount.required' => 'مبلغ العرض مطلوب',                  
         ];
 
         if ($lang == 'en')
         {
             $messages = [
-                'driver_id.required' => ' id السائق مطلوب ',
-                'order_id.required' => 'الرجاء كتابة الاسم الاول',
-                'amount.required' => 'الرجاء كتابة الاسم الاخير',
-                'status.required' => 'الرجاء اختيار نوع المركبة',
+                'order_id.required' => 'please send order id',
+                'amount.required' => 'please send offer amount',
             ];
         }
 
         $validator = Validator::make($request->all() , $rules, $messages); //Validator::make($request->all() , $rules);
 
-        if($validator->fails()){
+        if($validator->fails()){        
 
             $error = $validator->errors();
             $allErrors = array();
@@ -98,10 +94,14 @@ class Offers extends Controller
                     'amount' => $request->input('amount'),
                     'status' => 1,
                 ]);
-                
+                                
                 
                 $data = new \stdClass();
-                $data->message = "Created";
+                $data->message = "Offer sent successfuly";
+                if($lang == 'ar')
+                {
+                    $data->message = "تم إرسال الطلب بنجاح";
+                }
                 $json = Utils::generateJSON(TRUE , Response::HTTP_OK, "", $data);
     
                 return $json;

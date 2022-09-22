@@ -68,6 +68,9 @@ Route::group(['middleware' => ['auth:users']] , function(){
     
     // multi path orders
     Route::get('/user/orders/getMyMultiPathOrders' , [\App\Http\Controllers\user\Orders::class , 'getMyMultiPathOrders']);
+    
+    Route::get('/user/get/offer/{order_id?}' , [\App\Http\Controllers\user\Offers::class , 'getOrderOffers']);
+    Route::post('/user/offer/accept' , [\App\Http\Controllers\user\Offers::class , 'acceptOffer']);
 
     Route::get('/user/profile/getMyProfile' , [\App\Http\Controllers\user\Profile::class , 'getMyProfile']);
     Route::post('/user/profile/updateMyProfile' , [\App\Http\Controllers\user\Profile::class , 'updateMyProfile']);
@@ -86,8 +89,7 @@ Route::group(['middleware' => ['auth:drivers']] , function(){
 
     Route::get('/driver/getNewOrders' , [\App\Http\Controllers\driver\Orders::class , 'getNewOrders']);
     Route::get('/driver/getNewMultiPathOrders' , [\App\Http\Controllers\driver\Orders::class , 'getMultiPathOrders']);
-    Route::get('/driver/getMultiPathOrdersDetails' , [\App\Http\Controllers\driver\Orders::class , 'getMultiPathOrdersDetails']);
-    Route::get('/driver/getMultiPathOrdersDetails' , [\App\Http\Controllers\driver\Orders::class , 'getMultiPathOrdersDetails']);
+    Route::post('/driver/getMultiPathOrdersDetails' , [\App\Http\Controllers\driver\Orders::class , 'getMultiPathOrdersDetails']);    
     Route::get('/driver/order/getMyMultiPathOrders' , [\App\Http\Controllers\driver\Orders::class , 'getMyMultiPathOrders']);
     Route::get('/driver/order/getMyPastMultiPathOrders' , [\App\Http\Controllers\driver\Orders::class , 'getMyPastMultiPathOrders']);
 

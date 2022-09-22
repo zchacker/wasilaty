@@ -576,6 +576,74 @@
                 ]
             }
         },
+        "/api/driver/request_account_deletion": {
+            "post": {
+                "tags": [
+                    "Driver Profile"
+                ],
+                "summary": "طلب حذف حساب",
+                "description": "",
+                "operationId": "driver/request_account_deletion",
+                "requestBody": {
+                    "description": "جميع الخيارات إلزامية",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "reason"
+                                ],
+                                "properties": {
+                                    "reason": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "i want to stop working"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "TRUE"
+                                        },
+                                        "status": {
+                                            "type": "int",
+                                            "example": 200
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": {
+                                                "message": "done Successfuly"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
         "/api/driver/updateLocation": {
             "post": {
                 "tags": [
@@ -1229,7 +1297,7 @@
                 "operationId": "driver/getMultiPathOrders",
                 "requestBody": {
                     "description": "جميع الخيارات إلزامية",
-                    "required": true
+                    "required": false
                 },
                 "responses": {
                     "200": {
@@ -1266,7 +1334,7 @@
             }
         },
         "/api/driver/getMultiPathOrdersDetails": {
-            "get": {
+            "post": {
                 "tags": [
                     "OrderDriver"
                 ],
@@ -1351,6 +1419,98 @@
                                             "deleted_at": null
                                         }
                                     ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/driver/order/getMyMultiPathOrders": {
+            "get": {
+                "tags": [
+                    "OrderDriver"
+                ],
+                "summary": "جلب الطلبات متعددة النقاط قيد التوصيل",
+                "description": "تقوم بجلب الطلبات ذات النقاط المتعددة الحالية قيد التوصيل",
+                "operationId": "driver/order/getMyMultiPathOrders",
+                "requestBody": {
+                    "description": "",
+                    "required": false
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "id": 1,
+                                    "end_lat": 24.480911,
+                                    "end_lng": 39.595821,
+                                    "location_description": null,
+                                    "user_id": 1,
+                                    "status": 1,
+                                    "payment_method": 1,
+                                    "passengers": 4,
+                                    "driver_gender": "male",
+                                    "price": 0,
+                                    "total_distance": 0,
+                                    "created_at": null,
+                                    "updated_at": null,
+                                    "deleted_at": null,
+                                    "calculated_distance": 547.0263208294848
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/driver/order/getMyPastMultiPathOrders": {
+            "get": {
+                "tags": [
+                    "OrderDriver"
+                ],
+                "summary": "جلب الطلبات متعددة النقاط منتهية او ملغية التوصيل",
+                "description": "تقوم بجلب الطلبات ذات النقاط المتعددة الحالية منتهية او ملغية التوصيل",
+                "operationId": "driver/order/getMyPastMultiPathOrders",
+                "requestBody": {
+                    "description": "",
+                    "required": false
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "id": 1,
+                                    "end_lat": 24.480911,
+                                    "end_lng": 39.595821,
+                                    "location_description": null,
+                                    "user_id": 1,
+                                    "status": 1,
+                                    "payment_method": 1,
+                                    "passengers": 4,
+                                    "driver_gender": "male",
+                                    "price": 0,
+                                    "total_distance": 0,
+                                    "created_at": null,
+                                    "updated_at": null,
+                                    "deleted_at": null,
+                                    "calculated_distance": 547.0263208294848
                                 }
                             }
                         }
@@ -1553,6 +1713,132 @@
                         }
                     }
                 }
+            }
+        },
+        "/api/user/get/offer/{order_id}": {
+            "get": {
+                "tags": [
+                    "Offer User"
+                ],
+                "summary": "جلب عروض الاسعار",
+                "description": "",
+                "operationId": "offer/get",
+                "parameters": [
+                    {
+                        "name": "order_id",
+                        "in": "path",
+                        "description": "ID of order",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "TRUE"
+                                        },
+                                        "status": {
+                                            "type": "int",
+                                            "example": 200
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": {
+                                                "message": "offer accepted"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/user/offer/accept": {
+            "post": {
+                "tags": [
+                    "Offer User"
+                ],
+                "summary": " إضافة عرض سعر ",
+                "description": "",
+                "operationId": "offer/accept",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "offer_id"
+                                ],
+                                "properties": {
+                                    "offer_id": {
+                                        "type": "int",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "TRUE"
+                                        },
+                                        "status": {
+                                            "type": "int",
+                                            "example": 200
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": {
+                                                "message": "offer accepted"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
             }
         },
         "/api/user/getVehicles": {
@@ -2119,6 +2405,98 @@
                                         }
                                     },
                                     "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/user/orders/getMyMultiPathOrders": {
+            "get": {
+                "tags": [
+                    "OrderUser"
+                ],
+                "summary": "جلب الطلبات متعددة النقاط قيد التوصيل",
+                "description": "تقوم بجلب الطلبات ذات النقاط المتعددة الحالية قيد التوصيل",
+                "operationId": "user/orders/getMyMultiPathOrders",
+                "requestBody": {
+                    "description": "",
+                    "required": false
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "id": 1,
+                                    "end_lat": 24.480911,
+                                    "end_lng": 39.595821,
+                                    "location_description": null,
+                                    "user_id": 1,
+                                    "status": 1,
+                                    "payment_method": 1,
+                                    "passengers": 4,
+                                    "driver_gender": "male",
+                                    "price": 0,
+                                    "total_distance": 0,
+                                    "created_at": null,
+                                    "updated_at": null,
+                                    "deleted_at": null,
+                                    "calculated_distance": 547.0263208294848
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/user/orders/getMyPastMultiPathOrders": {
+            "get": {
+                "tags": [
+                    "OrderUser"
+                ],
+                "summary": "جلب الطلبات متعددة النقاط منتهية التوصيل",
+                "description": "تقوم بجلب الطلبات ذات النقاط المتعددة الحالية منتهية التوصيل",
+                "operationId": "user/orders/getMyPastMultiPathOrders",
+                "requestBody": {
+                    "description": "",
+                    "required": false
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "id": 1,
+                                    "end_lat": 24.480911,
+                                    "end_lng": 39.595821,
+                                    "location_description": null,
+                                    "user_id": 1,
+                                    "status": 1,
+                                    "payment_method": 1,
+                                    "passengers": 4,
+                                    "driver_gender": "male",
+                                    "price": 0,
+                                    "total_distance": 0,
+                                    "created_at": null,
+                                    "updated_at": null,
+                                    "deleted_at": null,
+                                    "calculated_distance": 547.0263208294848
                                 }
                             }
                         }

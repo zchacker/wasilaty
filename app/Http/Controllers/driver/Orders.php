@@ -593,7 +593,7 @@ class Orders extends Controller
     }
 
     /**
-     * @OA\Get(
+     * @OA\Post(
      * path="/api/driver/getMultiPathOrdersDetails",
      * security={{ "apiAuth": {} }},
      * summary="جلب الطلبات متعددة النقاط",

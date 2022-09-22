@@ -812,7 +812,61 @@ class Orders extends Controller
         $orders = DB::table('order_multi_path')
         ->where('user_id' , $userId)
         ->whereIn('status' , [1,2,3])
-        ->orderBy('create_at' , 'desc')
+        ->orderBy('created_at' , 'desc')
+        ->get();
+        
+
+        return $orders; 
+
+    }
+
+
+    /**
+     * @OA\Get(
+     * path="/api/user/orders/getMyPastMultiPathOrders",
+     * security={{ "apiAuth": {} }},
+     * summary="جلب الطلبات متعددة النقاط منتهية التوصيل",
+     * description="تقوم بجلب الطلبات ذات النقاط المتعددة الحالية منتهية التوصيل",
+     * operationId="user/orders/getMyPastMultiPathOrders",
+     * tags={"OrderUser"},   
+     * @OA\RequestBody(
+     *    required=false,
+     *    description="",    
+     * ),  
+     * @OA\Response(
+     *    response=200,
+     *    description="Success credentials response",
+     *    @OA\JsonContent( example={
+     *              "id": 1,
+     *              "end_lat": 24.480911,
+     *              "end_lng": 39.595821,
+     *              "location_description": null,
+     *              "user_id": 1,
+     *              "status": 1,
+     *              "payment_method": 1,
+     *              "passengers": 4,
+     *              "driver_gender": "male",
+     *              "price": 0,
+     *              "total_distance": 0,
+     *              "created_at": null,
+     *              "updated_at": null,
+     *              "deleted_at": null,
+     *              "calculated_distance": 547.0263208294848
+     *          } ),     
+     *     )
+     * )
+     */
+    public function getMyPastMultiPathOrders(Request $request)
+    {
+
+        // get languae 
+        $lang   = $request->header('Accept-Language' , 'en');
+        $userId = $request->user()->id;
+
+        $orders = DB::table('order_multi_path')
+        ->where('user_id' , $userId)
+        ->whereIn('status' , [4,5,6])
+        ->orderBy('created_at' , 'desc')
         ->get();
         
 
