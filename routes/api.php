@@ -68,7 +68,9 @@ Route::group(['middleware' => ['auth:users']] , function(){
     
     // multi path orders
     Route::get('/user/orders/getMyMultiPathOrders' , [\App\Http\Controllers\user\Orders::class , 'getMyMultiPathOrders']);
-    
+    Route::post('/user/orders/getMultiPathOrdersDetails' , [\App\Http\Controllers\user\Orders::class , 'getMultiPathOrdersDetails']);
+
+
     Route::get('/user/get/offer/{order_id?}' , [\App\Http\Controllers\user\Offers::class , 'getOrderOffers']);
     Route::post('/user/offer/accept' , [\App\Http\Controllers\user\Offers::class , 'acceptOffer']);
 
@@ -89,12 +91,13 @@ Route::group(['middleware' => ['auth:drivers']] , function(){
 
     Route::get('/driver/getNewOrders' , [\App\Http\Controllers\driver\Orders::class , 'getNewOrders']);
     Route::get('/driver/getNewMultiPathOrders' , [\App\Http\Controllers\driver\Orders::class , 'getMultiPathOrders']);
-    Route::post('/driver/getMultiPathOrdersDetails' , [\App\Http\Controllers\driver\Orders::class , 'getMultiPathOrdersDetails']);    
+    Route::post('/driver/getMultiPathOrdersDetails' , [\App\Http\Controllers\driver\Orders::class , 'getMultiPathOrdersDetails']);
     Route::get('/driver/order/getMyMultiPathOrders' , [\App\Http\Controllers\driver\Orders::class , 'getMyMultiPathOrders']);
     Route::get('/driver/order/getMyPastMultiPathOrders' , [\App\Http\Controllers\driver\Orders::class , 'getMyPastMultiPathOrders']);
 
     Route::post('/driver/addTrip' , [\App\Http\Controllers\driver\Orders::class , 'addTrip']);
     Route::get('/driver/getMyAddedTrips' , [\App\Http\Controllers\driver\Orders::class , 'getMyAddedTrips']);
+    Route::get('/driver/bookedTripUsers/{trip_id?}' , [\App\Http\Controllers\driver\Orders::class , 'bookedTripUsers']);
     
     Route::get('/driver/orders/getMyOrders' , [\App\Http\Controllers\driver\Orders::class , 'getMyOrders']);
     Route::get('/driver/orders/getMyPastOrders' , [\App\Http\Controllers\driver\Orders::class , 'getMyPastOrders']);

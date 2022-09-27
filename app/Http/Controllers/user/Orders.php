@@ -10,6 +10,7 @@ use App\Models\OrdersAssignedToDrivers;
 use App\Models\Trips;
 use Illuminate\Support\Facades\Validator as FacadesValidator;
 use App\Models\Vehicle;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use stdClass;
@@ -535,8 +536,10 @@ class Orders extends Controller
      *    required=true,
      *    description="جميع الخيارات إلزامية",
      *    @OA\JsonContent(
-     *       required={"trip_id"},
+     *       required={"trip_id" , "lat", "lng"},
      *       @OA\Property(property="trip_id", type="int", format="int", example="1"),        
+     *       @OA\Property(property="lat", type="double", format="double", example="34.2525525"),        
+     *       @OA\Property(property="lng", type="double", format="double", example="34.2525525"),        
      *    ),
      * ), 
      * @OA\Response(
@@ -563,7 +566,9 @@ class Orders extends Controller
         $userId = $request->user()->id;
 
         $rules = array(            
-            'trip_id' => 'required'                     
+            'trip_id' => 'required',
+            'lat' => 'required',
+            'lng' => 'required'
         );
 
         $validator = FacadesValidator::make($request->all() , $rules); //Validator::make($request->all() , $rules);
@@ -585,8 +590,10 @@ class Orders extends Controller
                         
             $order = BookingTrip::create(
                 [                        
-                    'trip_id' => $request->input('trip_id'),                    
-                    'status' => 1,                    
+                    'trip_id' => $request->input('trip_id'),
+                    'lat' => $request->input('lat'),
+                    'lng' => $request->input('lng'),
+                    'status' => 1,
                     'user_id' => $userId ,
                 ]
             );
@@ -707,7 +714,9 @@ class Orders extends Controller
                 'payment_method' => $request->payment_method,
                 'passengers' => $request->passengers,
                 'driver_gender' => $request->driver_gender,
-                'user_id' => $userId
+                'user_id' => $userId,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ]);
 
             $order_id = DB::getPdo()->lastInsertId();
@@ -871,6 +880,109 @@ class Orders extends Controller
         
 
         return $orders; 
+
+    }
+
+
+    /**
+     * @OA\Post(
+     * path="/api/user/orders/getMultiPathOrdersDetails",
+     * security={{ "apiAuth": {} }},
+     * summary="جلب الطلبات متعددة النقاط",
+     * description="تقوم بجلب الطلبات ذات النقاط المتعددة",
+     * operationId="user/getMultiPathOrdersDetails",
+     * tags={"OrderUser"},   
+     * @OA\RequestBody(
+     *       required=true,
+     *       description="جميع الخيارات إلزامية",           
+     *       @OA\JsonContent(
+     *           required={"order_id"},         
+     *           @OA\Property(property="order_id", type="int", example="1"),               
+     *      ),  
+     * ),  
+     * @OA\Response(
+     *    response=200,
+     *    description="Success credentials response",
+     *    @OA\JsonContent( example={
+     *       "order_details": {
+     *           "id": 10,
+     *           "end_lat": 24.480911,
+     *           "end_lng": 39.595821,
+     *           "location_description": null,
+     *           "user_id": 60013,
+      *          "status": 1,
+     *           "payment_method": 1,
+     *           "passengers": 4,
+     *           "driver_gender": "male",
+     *           "price": 0,
+     *          "total_distance": 1147.1,
+     *           "created_at": null,
+     *           "updated_at": null,
+     *           "deleted_at": null,
+     *           "client_phone": "966536301031",
+     *           "client_name": null
+     *       },
+     *       "points": {
+     *           {
+     *               "id": 7,
+     *               "lat": 24.476466,
+     *               "lng": 39.594674,
+     *               "description": "street name 1",
+     *               "order_id": 10,
+     *               "created_at": "2022-08-19 07:47:36",
+     *               "updated_at": "2022-08-19 07:47:36",
+     *               "deleted_at": null
+     *           },
+     *           {
+     *               "id": 8,
+     *               "lat": 24.47715,
+     *               "lng": 39.587913,
+     *               "description": "street name 3",
+     *               "order_id": 10,
+     *               "created_at": "2022-08-19 07:47:36",
+     *               "updated_at": "2022-08-19 07:47:36",
+     *               "deleted_at": null
+     *           },
+     *           {
+     *               "id": 9,
+     *               "lat": 24.477591,
+     *               "lng": 39.587203,
+     *               "description": "street name 2",
+     *               "order_id": 10,
+     *               "created_at": "2022-08-19 07:47:36",
+     *                  "updated_at": "2022-08-19 07:47:36",
+     *                   "deleted_at": null
+     *               }
+     *           }
+     *      } ),     
+     *     )
+     * )
+     */
+    public function getMultiPathOrdersDetails(Request $request)
+    {
+
+        // get last driver location
+        $userId = $request->user()->id;
+        $order_id = $request->order_id;     
+              
+        // get orders
+        $order_details = DB::table('order_multi_path')        
+        ->join('multi_path_orders_assigned_to_driver' , 'multi_path_orders_assigned_to_driver.order_id' , '=' , 'order_multi_path.id')
+        ->join('driver' , 'multi_path_orders_assigned_to_driver.driver_id' , '=' , 'driver.id')
+        ->select('order_multi_path.*' , 'driver.phone_numeber AS driver_phone' , 'driver.first_name AS driver_fname', 'driver.last_name AS driver_lname' )
+        ->where('order_multi_path.id' , '=' , $order_id)        
+        ->first();
+
+
+        $points = DB::table('order_locations')
+        ->where('order_id' , '=', $order_id)
+        ->get();
+
+        $obj = new stdClass();
+        $obj->order_details = $order_details;
+        $obj->points = $points;
+
+        return $obj;
 
     }
 

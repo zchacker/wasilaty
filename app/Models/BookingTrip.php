@@ -27,7 +27,9 @@ class BookingTrip extends Model
     protected $fillable = [
         'user_id',
         'trip_id',
-        'status'               
+        'status',
+        'lat',
+        'lng'
     ];
 
 

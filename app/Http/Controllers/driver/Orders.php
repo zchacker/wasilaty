@@ -98,6 +98,64 @@ class Orders extends Controller
 
     }
 
+
+    /**
+     * @OA\Get(
+     * path="/api/driver/bookedTripUsers/{trip_id}",
+     * security={{ "apiAuth": {} }},
+     * summary="جلب الاشخاص الذين حجزو التذكرة",
+     * description="",
+     * operationId="driver/bookedTripUsers",
+     * tags={"OrderDriver"},     
+     * @OA\Parameter(
+     *    description="ID of trip",
+     *    in="path",
+     *    name="trip_id",
+     *    required=true,
+     *    example="1",
+     *    @OA\Schema(
+     *       type="integer",
+     *       format="int64"
+     *    )
+     * ),
+     * @OA\Response(
+     *    response=200,
+     *    description="success response",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="TRUE"),
+     *       @OA\Property(property="status", type="int", example=200),
+     *       @OA\Property(property="error", type="string", example=""),
+     *       @OA\Property(property="data", type="string", example={"message":"offer accepted"} ),
+     *      )
+     *    ),
+     * )
+     */
+    public function bookedTripUsers(Request $request, $trip_id)
+    {
+
+        // get languae 
+        $lang     = $request->header('Accept-Language' , 'en');
+        $driverId = $request->user()->id;
+        //$trip_id  = $request->trip_id;
+
+        $tickets = DB::table('booking_trip')
+        ->where(['booking_trip.trip_id' => $trip_id])
+        ->join('user' , 'user.id' , '=' , 'booking_trip.user_id')
+        ->get([
+            'booking_trip.id'  ,
+            'booking_trip.created_at',
+            'booking_trip.lat' ,
+            'booking_trip.lng' ,
+            'booking_trip.status',
+            'user.name AS customerName',
+            'user.phone AS customerPhone'
+        ]);
+             
+        return $tickets;
+        //return Utils::generateJSON(TRUE, Response::HTTP_OK , "" , $tickets);
+
+    }
+
     /**
      * @OA\Get(
      * path="/api/driver/orders/getMyOrders",
@@ -604,7 +662,7 @@ class Orders extends Controller
      *       required=true,
      *       description="جميع الخيارات إلزامية",           
      *       @OA\JsonContent(
-     *           required={"order_id","amount"},         
+     *           required={"order_id"},         
      *           @OA\Property(property="order_id", type="int", example="1"),               
      *      ),  
      * ),  
