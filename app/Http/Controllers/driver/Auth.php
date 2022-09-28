@@ -789,10 +789,10 @@ class Auth extends Controller
                 
 
                 if($lang == 'ar'){
-                    return Utils::generateJSON(TRUE , Response::HTTP_OK , "", "تم الطلب بنجاح");
+                    return Utils::generateJSON(TRUE , Response::HTTP_OK , "", "تم الطلب بنجاح سيتم حذف حسابك خلال 14 يوم");
                 }
 
-                return Utils::generateJSON(TRUE , Response::HTTP_OK , "", "Request completed Successfuly");
+                return Utils::generateJSON(TRUE , Response::HTTP_OK , "", "Request completed Successfuly, your account will deleted in 14 days");
                 
             }else{
 

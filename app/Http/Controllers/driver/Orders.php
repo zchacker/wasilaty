@@ -90,7 +90,16 @@ class Orders extends Controller
 
         $orders = Trips::where(['driver_id' => $driverId])
         ->orderBy('created_at' , 'desc')
-        ->get(['start_time' , 'end_time' , 'passengers', 'start_lat' , 'start_lng' , 'end_lat' , 'end_lng' ]);
+        ->get([
+            'id',
+            'start_time' ,
+            'end_time' ,
+            'passengers',
+            'start_lat' ,
+            'start_lng' ,
+            'end_lat' ,
+            'end_lng'
+        ]);
 
         
         //$orders = $request->user()->tokenCan('driver');

@@ -80,6 +80,8 @@ Route::group(['middleware' => ['auth:users']] , function(){
 
     Route::post('/user/order/addOrderWithMultiPath' , [\App\Http\Controllers\user\Orders::class , 'addOrderWithMultiPath']);
     Route::post('/user/update_firebase_token' , [\App\Http\Controllers\user\Profile::class , 'update_firebase_token']);
+    
+    Route::post('/user/request_account_deletion' , [\App\Http\Controllers\user\Auth::class , 'request_account_deletion']);
 
     Route::get('test' , [\App\Http\Controllers\user\Auth::class, 'test']);
     
