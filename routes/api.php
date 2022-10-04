@@ -48,7 +48,7 @@ Route::post('/driver/auth/verfyOTP' , [\App\Http\Controllers\driver\Auth::class 
 
 Route::get('/user/getVehicles' , [\App\Http\Controllers\user\Orders::class , 'getVehicles']);
 
-
+Route::get('/app/settings', [\App\Http\Controllers\shared\Settings::class , 'getAppSettings']);
 
 
 
@@ -64,6 +64,8 @@ Route::group(['middleware' => ['auth:users']] , function(){
     Route::get('/user/orders/getMyPastOrders' , [\App\Http\Controllers\user\Orders::class , 'getMyPastOrders']);
     Route::post('/user/orders/getOrderDetails' , [\App\Http\Controllers\user\Orders::class , 'getOrderDetails']);
     Route::get('/user/orders/getMyBookedTrips' , [\App\Http\Controllers\user\Orders::class , 'getMyBookedTrips']);
+    
+    Route::post('/user/orders/cancelMultiPathOrder' , [\App\Http\Controllers\user\Orders::class , 'cancelMultiPathOrder']);
     Route::post('/user/orders/cancelOrder' , [\App\Http\Controllers\user\Orders::class , 'cancelOrder']);
     
     // multi path orders
@@ -96,6 +98,10 @@ Route::group(['middleware' => ['auth:drivers']] , function(){
     Route::post('/driver/getMultiPathOrdersDetails' , [\App\Http\Controllers\driver\Orders::class , 'getMultiPathOrdersDetails']);
     Route::get('/driver/order/getMyMultiPathOrders' , [\App\Http\Controllers\driver\Orders::class , 'getMyMultiPathOrders']);
     Route::get('/driver/order/getMyPastMultiPathOrders' , [\App\Http\Controllers\driver\Orders::class , 'getMyPastMultiPathOrders']);
+    
+    // controller order
+    Route::post('/driver/order/updateMultipathOrderStatus' , [\App\Http\Controllers\driver\Orders::class , 'updateMultiPathStatus']);
+    Route::post('/driver/order/updateOrderStatus' , [\App\Http\Controllers\driver\Orders::class , 'updateMultiPathStatus']);
 
     Route::post('/driver/addTrip' , [\App\Http\Controllers\driver\Orders::class , 'addTrip']);
     Route::get('/driver/getMyAddedTrips' , [\App\Http\Controllers\driver\Orders::class , 'getMyAddedTrips']);

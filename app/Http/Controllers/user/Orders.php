@@ -401,7 +401,7 @@ class Orders extends Controller
 
     /**
      * @OA\Post(
-     * path="/api/user/orders/cancelOrder",
+     * path="/api/user/orders/cancelOrder1",
      * security={{ "apiAuth": {} }},
      * summary="إلغاء طلب",
      * description="تقوم بإلغاء طلب",
@@ -429,7 +429,7 @@ class Orders extends Controller
      *     )
      * )
      */    
-    public function cancelOrder(Request $request)
+    /*public function cancelOrder(Request $request)
     {
         // get languae 
         $lang   = $request->header('Accept-Language' , 'en');
@@ -465,7 +465,7 @@ class Orders extends Controller
             // Response::HTTP_BAD_REQUEST
             // ); 
         }
-    }
+    }*/
 
     /**
      * @OA\Get(
@@ -984,6 +984,200 @@ class Orders extends Controller
 
         return $obj;
 
+    }
+
+    /**
+     * @OA\Post(
+     * path="/api/user/order/cancelMultiPathOrder",
+     * security={{ "apiAuth": {} }},
+     * summary="إلغاء طلب",
+     * description="",
+     * operationId="user/order/cancelMultiPathOrder",
+     * tags={"User Order Cancel"},
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="جميع الخيارات إلزامية",
+     *    @OA\JsonContent(
+     *       required={"order_id","reason"},
+     *       @OA\Property(property="order_id", type="int", format="int", example=11),     
+     *       @OA\Property(property="reason", type="int", format="int", example=3),     
+     *    ),
+     * ),
+     * @OA\Response(
+     *    response=502,
+     *    description="Wrong credentials response",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="FALSE"),
+     *       @OA\Property(property="status", type="int", example=502),
+     *       @OA\Property(property="error", type="string", example={"message":"error message"}),
+     *       @OA\Property(property="data", type="string", example="" ),
+     *        )
+     *     )
+     * )
+     */
+    public function cancelMultiPathOrder(Request $request)
+    {
+        // get languae 
+        $lang = $request->header('Accept-Language' , 'en');
+
+        $rules = array(
+            'order_id' => 'required',                                                                                    
+            'reason' => 'required',                                                                                    
+        );
+
+        $messages = [
+            'order_id.required' => 'رقم الطلب مطلوب',
+            'reason.required' => 'سبب الإلغاء مطلوب',
+        ];
+
+        if ($lang == 'en')
+        {
+            $messages = [
+                'order_id.required' => 'Order ID is required',
+                'reason.required' => 'Canclation Reason is required',
+            ];
+        }
+
+        $validator = FacadesValidator::make($request->all() , $rules, $messages); //Validator::make($request->all() , $rules);
+
+        if($validator->fails()){
+
+            $error = $validator->errors();
+            $allErrors = array();
+
+            foreach($error->all() as $err){                
+                array_push($allErrors , $err);
+            }
+
+            $data = new \stdClass();
+            $data->message = $allErrors;
+            $json = Utils::generateJSON(FALSE , Response::HTTP_BAD_REQUEST , $data, "" );
+            return $json;
+
+        }else{
+           
+            try{                        
+
+                $order = DB::table('order_multi_path')
+                ->where(['id' => $request->order_id])
+                ->update([
+                    'status' => 6 ,
+                ]);
+                                
+                
+                $data = new \stdClass();
+                $data->message = "updated";
+                $json = Utils::generateJSON(TRUE , Response::HTTP_OK, "", $data);
+    
+                return $json;
+    
+            }catch(\Illuminate\Database\QueryException $ex){
+                //dd($ex->getMessage());
+    
+                $data = new \stdClass();
+                $data->message = "error while updateing order status";
+                $json = Utils::generateJSON(FALSE , Response::HTTP_BAD_REQUEST , "bad request", $data);
+                return $json;
+            }
+            
+        }
+    }
+
+    /**
+     * @OA\Post(
+     * path="/api/user/order/cancelOrder",
+     * security={{ "apiAuth": {} }},
+     * summary="إلغاء طلب",
+     * description="",
+     * operationId="user/order/cancelOrder",
+     * tags={"User Order Cancel"},
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="جميع الخيارات إلزامية",
+     *    @OA\JsonContent(
+     *       required={"order_id","reason"},
+     *       @OA\Property(property="order_id", type="int", format="int", example=11),     
+     *       @OA\Property(property="reason", type="int", format="int", example=3),     
+     *    ),
+     * ),
+     * @OA\Response(
+     *    response=502,
+     *    description="Wrong credentials response",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="FALSE"),
+     *       @OA\Property(property="status", type="int", example=502),
+     *       @OA\Property(property="error", type="string", example={"message":"error message"}),
+     *       @OA\Property(property="data", type="string", example="" ),
+     *        )
+     *     )
+     * )
+     */
+    public function cancelOrder(Request $request)
+    {
+        // get languae 
+        $lang = $request->header('Accept-Language' , 'en');
+
+        $rules = array(
+            'order_id' => 'required',                                                                                    
+            'reason' => 'required',                                                                                    
+        );
+
+        $messages = [
+            'order_id.required' => 'رقم الطلب مطلوب',
+            'reason.required' => 'سبب الإلغاء مطلوب',
+        ];
+
+        if ($lang == 'en')
+        {
+            $messages = [
+                'order_id.required' => 'Order ID is required',
+                'reason.required' => 'Canclation Reason is required',
+            ];
+        }
+
+        $validator = FacadesValidator::make($request->all() , $rules, $messages); //Validator::make($request->all() , $rules);
+
+        if($validator->fails()){
+
+            $error = $validator->errors();
+            $allErrors = array();
+
+            foreach($error->all() as $err){                
+                array_push($allErrors , $err);
+            }
+
+            $data = new \stdClass();
+            $data->message = $allErrors;
+            $json = Utils::generateJSON(FALSE , Response::HTTP_BAD_REQUEST , $data, "" );
+            return $json;
+
+        }else{
+           
+            try{                        
+
+                $order = DB::table('orders')
+                ->where(['id' => $request->order_id])
+                ->update([
+                    'status' => 6 ,
+                ]);
+                                
+                
+                $data = new \stdClass();
+                $data->message = "updated";
+                $json = Utils::generateJSON(TRUE , Response::HTTP_OK, "", $data);
+    
+                return $json;
+    
+            }catch(\Illuminate\Database\QueryException $ex){
+                //dd($ex->getMessage());
+    
+                $data = new \stdClass();
+                $data->message = "error while updateing order status";
+                $json = Utils::generateJSON(FALSE , Response::HTTP_BAD_REQUEST , "bad request", $data);
+                return $json;
+            }
+            
+        }
     }
 
     private function get_distance_between_points($latitude1, $longitude1, $latitude2, $longitude2) {

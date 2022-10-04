@@ -955,6 +955,66 @@
                 ]
             }
         },
+        "/api/driver/bookedTripUsers/{trip_id}": {
+            "get": {
+                "tags": [
+                    "OrderDriver"
+                ],
+                "summary": "جلب الاشخاص الذين حجزو التذكرة",
+                "description": "",
+                "operationId": "driver/bookedTripUsers",
+                "parameters": [
+                    {
+                        "name": "trip_id",
+                        "in": "path",
+                        "description": "ID of trip",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "TRUE"
+                                        },
+                                        "status": {
+                                            "type": "int",
+                                            "example": 200
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": {
+                                                "message": "offer accepted"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
         "/api/driver/orders/getMyOrders": {
             "get": {
                 "tags": [
@@ -1348,8 +1408,7 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "order_id",
-                                    "amount"
+                                    "order_id"
                                 ],
                                 "properties": {
                                     "order_id": {
@@ -1523,6 +1582,181 @@
                 ]
             }
         },
+        "/api/driver/order/updateOrderStatus": {
+            "post": {
+                "tags": [
+                    "Driver Order Update Status"
+                ],
+                "summary": "تحديث حالة الطلب",
+                "description": "",
+                "operationId": "driver/order/updateOrderStatus",
+                "requestBody": {
+                    "description": "جميع الخيارات إلزامية",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "order_id",
+                                    "status"
+                                ],
+                                "properties": {
+                                    "order_id": {
+                                        "type": "int",
+                                        "format": "int",
+                                        "example": 11
+                                    },
+                                    "status": {
+                                        "type": "int",
+                                        "format": "int",
+                                        "example": 3
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "502": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "FALSE"
+                                        },
+                                        "status": {
+                                            "type": "int",
+                                            "example": 502
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": {
+                                                "message": "error message"
+                                            }
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": ""
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/driver/order/updateMultipathOrderStatus": {
+            "post": {
+                "tags": [
+                    "Driver Order Update Status"
+                ],
+                "summary": "تحديث حالة الطلب",
+                "description": "",
+                "operationId": "driver/order/updateMultipathOrderStatus",
+                "requestBody": {
+                    "description": "جميع الخيارات إلزامية",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "order_id",
+                                    "status"
+                                ],
+                                "properties": {
+                                    "order_id": {
+                                        "type": "int",
+                                        "format": "int",
+                                        "example": 11
+                                    },
+                                    "status": {
+                                        "type": "int",
+                                        "format": "int",
+                                        "example": 3
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "502": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "FALSE"
+                                        },
+                                        "status": {
+                                            "type": "int",
+                                            "example": 502
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": {
+                                                "message": "error message"
+                                            }
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": ""
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/app/settings": {
+            "get": {
+                "tags": [
+                    "App Settings"
+                ],
+                "summary": "جلب بيانات اعدادات التطبيق",
+                "description": "",
+                "operationId": "app/settings",
+                "responses": {
+                    "200": {
+                        "description": "Success credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "max_distance": 2000,
+                                    "start_price": 5,
+                                    "killo_price": 12,
+                                    "support_phone": "",
+                                    "terms": ""
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/user/auth/login": {
             "post": {
                 "tags": [
@@ -1654,6 +1888,74 @@
                 }
             }
         },
+        "/api/user/request_account_deletion": {
+            "post": {
+                "tags": [
+                    "User Profile"
+                ],
+                "summary": "طلب حذف حساب",
+                "description": "",
+                "operationId": "user/request_account_deletion",
+                "requestBody": {
+                    "description": "جميع الخيارات إلزامية",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "reason"
+                                ],
+                                "properties": {
+                                    "reason": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "i want to stop working"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "TRUE"
+                                        },
+                                        "status": {
+                                            "type": "int",
+                                            "example": 200
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": {
+                                                "message": "done Successfuly"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
         "/api/uploadImage": {
             "post": {
                 "tags": [
@@ -1738,7 +2040,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Wrong credentials response",
+                        "description": "success response",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2192,7 +2494,7 @@
                 ]
             }
         },
-        "/api/user/orders/cancelOrder": {
+        "/api/user/orders/cancelOrder1": {
             "post": {
                 "tags": [
                     "OrderUser"
@@ -2298,13 +2600,25 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "trip_id"
+                                    "trip_id",
+                                    "lat",
+                                    "lng"
                                 ],
                                 "properties": {
                                     "trip_id": {
                                         "type": "int",
                                         "format": "int",
                                         "example": "1"
+                                    },
+                                    "lat": {
+                                        "type": "double",
+                                        "format": "double",
+                                        "example": "34.2525525"
+                                    },
+                                    "lng": {
+                                        "type": "double",
+                                        "format": "double",
+                                        "example": "34.2525525"
                                     }
                                 },
                                 "type": "object"
@@ -2497,6 +2811,251 @@
                                     "updated_at": null,
                                     "deleted_at": null,
                                     "calculated_distance": 547.0263208294848
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/user/orders/getMultiPathOrdersDetails": {
+            "post": {
+                "tags": [
+                    "OrderUser"
+                ],
+                "summary": "جلب الطلبات متعددة النقاط",
+                "description": "تقوم بجلب الطلبات ذات النقاط المتعددة",
+                "operationId": "user/getMultiPathOrdersDetails",
+                "requestBody": {
+                    "description": "جميع الخيارات إلزامية",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "order_id"
+                                ],
+                                "properties": {
+                                    "order_id": {
+                                        "type": "int",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {},
+                                "example": {
+                                    "order_details": {
+                                        "id": 10,
+                                        "end_lat": 24.480911,
+                                        "end_lng": 39.595821,
+                                        "location_description": null,
+                                        "user_id": 60013,
+                                        "status": 1,
+                                        "payment_method": 1,
+                                        "passengers": 4,
+                                        "driver_gender": "male",
+                                        "price": 0,
+                                        "total_distance": 1147.1,
+                                        "created_at": null,
+                                        "updated_at": null,
+                                        "deleted_at": null,
+                                        "client_phone": "966536301031",
+                                        "client_name": null
+                                    },
+                                    "points": [
+                                        {
+                                            "id": 7,
+                                            "lat": 24.476466,
+                                            "lng": 39.594674,
+                                            "description": "street name 1",
+                                            "order_id": 10,
+                                            "created_at": "2022-08-19 07:47:36",
+                                            "updated_at": "2022-08-19 07:47:36",
+                                            "deleted_at": null
+                                        },
+                                        {
+                                            "id": 8,
+                                            "lat": 24.47715,
+                                            "lng": 39.587913,
+                                            "description": "street name 3",
+                                            "order_id": 10,
+                                            "created_at": "2022-08-19 07:47:36",
+                                            "updated_at": "2022-08-19 07:47:36",
+                                            "deleted_at": null
+                                        },
+                                        {
+                                            "id": 9,
+                                            "lat": 24.477591,
+                                            "lng": 39.587203,
+                                            "description": "street name 2",
+                                            "order_id": 10,
+                                            "created_at": "2022-08-19 07:47:36",
+                                            "updated_at": "2022-08-19 07:47:36",
+                                            "deleted_at": null
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/user/order/cancelMultiPathOrder": {
+            "post": {
+                "tags": [
+                    "User Order Cancel"
+                ],
+                "summary": "إلغاء طلب",
+                "description": "",
+                "operationId": "user/order/cancelMultiPathOrder",
+                "requestBody": {
+                    "description": "جميع الخيارات إلزامية",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "order_id",
+                                    "reason"
+                                ],
+                                "properties": {
+                                    "order_id": {
+                                        "type": "int",
+                                        "format": "int",
+                                        "example": 11
+                                    },
+                                    "reason": {
+                                        "type": "int",
+                                        "format": "int",
+                                        "example": 3
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "502": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "FALSE"
+                                        },
+                                        "status": {
+                                            "type": "int",
+                                            "example": 502
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": {
+                                                "message": "error message"
+                                            }
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": ""
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/user/order/cancelOrder": {
+            "post": {
+                "tags": [
+                    "User Order Cancel"
+                ],
+                "summary": "إلغاء طلب",
+                "description": "",
+                "operationId": "user/order/cancelOrder",
+                "requestBody": {
+                    "description": "جميع الخيارات إلزامية",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "order_id",
+                                    "reason"
+                                ],
+                                "properties": {
+                                    "order_id": {
+                                        "type": "int",
+                                        "format": "int",
+                                        "example": 11
+                                    },
+                                    "reason": {
+                                        "type": "int",
+                                        "format": "int",
+                                        "example": 3
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "502": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "FALSE"
+                                        },
+                                        "status": {
+                                            "type": "int",
+                                            "example": 502
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": {
+                                                "message": "error message"
+                                            }
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "example": ""
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
