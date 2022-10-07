@@ -95,7 +95,7 @@ class Data extends Controller
                 $driver->update();
                 
                 $data = new \stdClass();
-                $data->message = "Updated";
+                $data->message = "Updated: $driverId";
                 $json = Utils::generateJSON(TRUE , Response::HTTP_OK, "", $data);
     
                 return $json;
