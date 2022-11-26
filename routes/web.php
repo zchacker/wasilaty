@@ -29,4 +29,9 @@ Route::get('/fastUsers' , function(){
     return view('welcome');
 });
 
+Route::get('/mod' , function(){
+    $i = 3 % 4;
+    return $i;
+});
+
 Route::get('viewImage/{file}' , [\App\Http\Controllers\user\Auth::class , 'viewImage']);

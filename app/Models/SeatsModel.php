@@ -4,17 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Trips extends Model
+class SeatsModel extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'trips';
+    protected $table = 'seats';
 
 
     /**
@@ -26,9 +27,9 @@ class Trips extends Model
 
 
     protected $fillable = [
-        'start_time',
-        'end_time',
-        'passengers',    
+        'name',
+        'reserved',
+        'client_id',    
         'start_lat',
         'start_lng',
         'end_lat',
@@ -45,9 +46,6 @@ class Trips extends Model
     protected $hidden = [
         'created_at',
         'updated_at',
-        'deleted_at' 
+        'deleted_at'            
     ];
-
-
-
 }

@@ -147,17 +147,21 @@ class Orders extends Controller
         $driverId = $request->user()->id;
         //$trip_id  = $request->trip_id;
 
-        $tickets = DB::table('booking_trip')
-        ->where(['booking_trip.trip_id' => $trip_id])
-        ->join('user' , 'user.id' , '=' , 'booking_trip.user_id')
+        $tickets = DB::table('seats')
+        ->where(['seats.trip_id' => $trip_id])
+        ->where(['seats.reserved' => TRUE])
+        ->join('user' , 'user.id' , '=' , 'seats.user_id')
+        // ->join('seats' , 'seats.trip_id' , '=' , 'booking_trip.trip_id')
         ->get([
-            'booking_trip.id'  ,
-            'booking_trip.created_at',
-            'booking_trip.lat' ,
-            'booking_trip.lng' ,
-            'booking_trip.status',
+            // 'booking_trip.id'  ,
+            // 'booking_trip.created_at',
+            // 'booking_trip.lat' ,
+            // 'booking_trip.lng' ,
+            // 'booking_trip.status',
             'user.name AS customerName',
-            'user.phone AS customerPhone'
+            'user.phone AS customerPhone',
+            'seats.name AS seat_name',
+            'seats.name AS seat_name',
         ]);
              
         return $tickets;
@@ -394,7 +398,7 @@ class Orders extends Controller
         $rules = array(
             'start_time' => 'required',
             'end_time' => 'required',
-            'passengers' => 'required',
+            'passengers' => 'required|integer',
             //'vehicle_id' => 'required',
             'start_lat' => 'required',
             'start_lng' => 'required',
@@ -406,7 +410,7 @@ class Orders extends Controller
         $messages = [
             'start_time.required' => 'الرجاء إرفاق الصورة الشخصية',
             'end_time.required' => 'الرجاء كتابة الاسم الاول',
-            'passengers.required' => 'الرجاء كتابة الاسم الاخير',
+            'passengers.required' => 'الرجاء كتابة عدد الركاب',
             'vehicle_id.required' => 'الرجاء اختيار نوع المركبة',
             'start_lat.required' => 'الرجاء كتابة البريد الالكتروني',
             'start_lng.required' => 'تاريخ الميلاد مطلوب',
@@ -462,6 +466,12 @@ class Orders extends Controller
                         'driver_id' => $driverId,
                     ]
                 );
+
+                // generate seats for this trip
+                $trip_id = $driver->id;
+                $passenger = $request->input('passengers');
+
+                $this->genereteSeats($trip_id , $passenger);
                 
                 $data = new \stdClass();
                 $data->message = "Created";
@@ -480,6 +490,55 @@ class Orders extends Controller
             
         }
        
+    }
+
+    private function genereteSeats($trip_id, $passenger)
+    {
+        for($i = 1; $i <= $passenger; $i++)
+        {
+            $mod = $i % 3;
+            $seats = [];
+            switch($mod)
+            {
+                case 1:
+                    $seats[$i-1] = [
+                        'name' => "A$i",
+                        'reserved' => FALSE,
+                        'user_id' => 0,
+                        'trip_id' => $trip_id
+                    ];
+                    break;
+                case 2:
+                    $seats[$i-1] = [
+                        'name' => "B$i",
+                        'reserved' => FALSE,
+                        'user_id' => 0,
+                        'trip_id' => $trip_id
+                    ];
+                    break;
+                case 3:
+                    $seats[$i-1] = [
+                        'name' => "C$i",
+                        'reserved' => FALSE,
+                        'user_id' => 0,
+                        'trip_id' => $trip_id
+                    ];
+                    break;
+                case 0:
+                    $seats[$i-1] = [
+                        'name' => "D$i",
+                        'reserved' => FALSE,
+                        'user_id' => 0,
+                        'trip_id' => $trip_id
+                    ];
+                    break;
+                default:
+                    break;
+            }
+
+            DB::table('seats')->insert($seats);
+
+        }
     }
 
     /**

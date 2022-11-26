@@ -85,10 +85,10 @@ class Utils extends Controller
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => 'POST',
         CURLOPT_POSTFIELDS =>'{
-            "userName":"1samm",
+            "userName":'.env('SMS_USERNAME').',
             "numbers":  "'.$number.'",
-            "userSender":"samm",
-            "apiKey":"e8b6742ec184489a78894259443082f1",
+            "userSender":'.env('SMS_SENDER_NAME').',
+            "apiKey":'.env('SMS_API_KEY').',
             "msg":"'.$message.'"
         }',
         CURLOPT_HTTPHEADER => array(
