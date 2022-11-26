@@ -7,6 +7,7 @@ use App\Http\Controllers\shared\Utils;
 use App\Models\BookingTrip;
 use App\Models\Orders as ModelsOrders;
 use App\Models\OrdersAssignedToDrivers;
+use App\Models\SeatsModel;
 use App\Models\Trips;
 use Illuminate\Support\Facades\Validator as FacadesValidator;
 use App\Models\Vehicle;
@@ -370,15 +371,9 @@ class Orders extends Controller
      *    @OA\JsonContent( example=   
      *           {{
      *               "id": 3,
-     *               "user_id": 2,
-     *               "trip_id": 2,
-     *               "status": 1,
-     *               "start_lat": 15.12,
-     *               "start_lng": 15.1,
-     *               "end_lat": 14.12,
-     *               "end_lng": 14.1,
-     *               "passengers": 15,
-     *               "driver_id": 1
+     *               "seat_name":"A2",
+     *               "reserved": TRUE,
+     *               "trip_id": 1
      *           }})     
      *        )
      *     )
@@ -390,12 +385,22 @@ class Orders extends Controller
         $lang   = $request->header('Accept-Language' , 'en');
         $userId = $request->user()->id;
 
-        $trips = BookingTrip::where('user_id', $userId)
+        /*$trips = BookingTrip::where('user_id', $userId)
         ->join('trips', 'booking_trip.trip_id', '=', 'trips.id')
         ->orderBy('booking_trip.created_at', 'desc')
         ->get(['booking_trip.*', 'trips.start_lat', 'trips.start_lng', 'trips.end_lat', 'trips.end_lng', 'trips.passengers', 'trips.driver_id']);
 
-        return $trips;
+        return $trips;*/
+
+        $availableTickets    = SeatsModel::where(['seats.user_id' => $userId]) 
+        ->where(['seats.reserved' => TRUE])              
+        ->get([            
+            'seats.id',       
+            'seats.name AS seat_name',            
+            'seats.trip_id AS trip_id',
+        ]);
+             
+        return $availableTickets;
     }
     
 
@@ -469,7 +474,7 @@ class Orders extends Controller
 
     /**
      * @OA\Get(
-     * path="/api/user/getAvailableTrips",
+     * path="/api/user/getAvailableTrips/trip_id",
      * security={{ "apiAuth": {} }},
      * summary="إحضار الرحلات المتاحة",
      * description="تقوم بعرض الرحلات المتاحة للحجز حسب المواعيد",
@@ -479,28 +484,19 @@ class Orders extends Controller
      *    response=200,
      *    description="Success credentials response",
      *    @OA\JsonContent( example=    
-     *           {
-     *               "id": 1,
-     *               "start_time": "17:44:16",
-     *               "end_time": "03:14:41",
-     *               "passengers": 25,
-     *               "vehicle_id": 1,
-     *               "start_lat": 34.26,
-     *               "start_lng": 26.2,
-     *               "end_lat": 34.26,
-     *               "end_lng": 26.2,
-     *               "driver_id": 1,
-     *               "first_name": "Ahmed",
-     *               "last_name": "Nagem"
-     *           })
+     *           {{
+     *               "id" : 1,
+     *               "seat_name": "B5",
+     *               "reserved": false,
+     *           }})
      *       
      *        )
      *     )
      * )
      */
-    public function getAvailableTrips(Request $request)
+    public function getAvailableTrips(Request $request, $trip_id)
     {
-        $trips = [];
+        /*$trips = [];
 
         $all_trips = Trips::
         join('driver', 'driver.id', '=', 'trips.driver_id')
@@ -508,11 +504,12 @@ class Orders extends Controller
         ->get(['trips.*' , 'driver.first_name' , 'driver.last_name']);
 
         foreach($all_trips as $trip){
+
             // checking if the trip have max open trips online
 
-            $trip_id = $trip->id;
+            $trip_id    = $trip->id;
             $passengers = $trip->passengers;
-            $booked = BookingTrip::where(['trip_id' => $trip_id  , "status" => 2 ]);
+            $booked     = BookingTrip::where(['trip_id' => $trip_id  , "status" => 2 ]);
             
             if($booked->count() < $passengers)
             {
@@ -521,7 +518,17 @@ class Orders extends Controller
 
         }
 
-        return $trips;
+        return $trips;*/
+       
+        $availableTickets    = SeatsModel::where(['seats.trip_id' => $trip_id])               
+        ->get([            
+            'seats.id',       
+            'seats.name AS seat_name',
+            'seats.reserved AS reserved',
+        ]);
+             
+        return $availableTickets;
+        
     }
        
     /**
@@ -536,10 +543,8 @@ class Orders extends Controller
      *    required=true,
      *    description="جميع الخيارات إلزامية",
      *    @OA\JsonContent(
-     *       required={"trip_id" , "lat", "lng"},
-     *       @OA\Property(property="trip_id", type="int", format="int", example="1"),        
-     *       @OA\Property(property="lat", type="double", format="double", example="34.2525525"),        
-     *       @OA\Property(property="lng", type="double", format="double", example="34.2525525"),        
+     *       required={"seat_id" },
+     *       @OA\Property(property="seat_id", type="int", format="int", example="1")            
      *    ),
      * ), 
      * @OA\Response(
@@ -566,9 +571,9 @@ class Orders extends Controller
         $userId = $request->user()->id;
 
         $rules = array(            
-            'trip_id' => 'required',
-            'lat' => 'required',
-            'lng' => 'required'
+            'seat_id' => 'required',            
+            // 'lat' => 'required',
+            // 'lng' => 'required'
         );
 
         $validator = FacadesValidator::make($request->all() , $rules); //Validator::make($request->all() , $rules);
@@ -587,8 +592,14 @@ class Orders extends Controller
         }
 
         try{
+
+            SeatsModel::where(['seats.id' => $request->input('seat_id')])
+            ->update([
+                'reserved' => TRUE,
+                'user_id' => $request->user()->id
+            ]);
                         
-            $order = BookingTrip::create(
+            /*$order = BookingTrip::create(
                 [                        
                     'trip_id' => $request->input('trip_id'),
                     'lat' => $request->input('lat'),
@@ -596,7 +607,7 @@ class Orders extends Controller
                     'status' => 1,
                     'user_id' => $userId ,
                 ]
-            );
+            );*/
                         
             
             $data = new \stdClass();

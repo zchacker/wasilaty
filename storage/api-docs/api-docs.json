@@ -981,29 +981,15 @@
                         "description": "success response",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": "TRUE"
-                                        },
-                                        "status": {
-                                            "type": "int",
-                                            "example": 200
-                                        },
-                                        "error": {
-                                            "type": "string",
-                                            "example": ""
-                                        },
-                                        "data": {
-                                            "type": "string",
-                                            "example": {
-                                                "message": "offer accepted"
-                                            }
-                                        }
-                                    },
-                                    "type": "object"
-                                }
+                                "schema": {},
+                                "example": [
+                                    {
+                                        "customerName": "Ahmed Moahmmed",
+                                        "customerPhone": "966536301031",
+                                        "seat_name": "A1",
+                                        "reserved": true
+                                    }
+                                ]
                             }
                         }
                     }
@@ -2546,7 +2532,7 @@
                 ]
             }
         },
-        "/api/user/getAvailableTrips": {
+        "/api/user/getAvailableTrips/trip_id": {
             "get": {
                 "tags": [
                     "OrderUser"
@@ -2560,20 +2546,13 @@
                         "content": {
                             "application/json": {
                                 "schema": {},
-                                "example": {
-                                    "id": 1,
-                                    "start_time": "17:44:16",
-                                    "end_time": "03:14:41",
-                                    "passengers": 25,
-                                    "vehicle_id": 1,
-                                    "start_lat": 34.26,
-                                    "start_lng": 26.2,
-                                    "end_lat": 34.26,
-                                    "end_lng": 26.2,
-                                    "driver_id": 1,
-                                    "first_name": "Ahmed",
-                                    "last_name": "Nagem"
-                                }
+                                "example": [
+                                    {
+                                        "id": 1,
+                                        "seat_name": "B5",
+                                        "reserved": false
+                                    }
+                                ]
                             }
                         }
                     }
@@ -2600,25 +2579,19 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "trip_id",
-                                    "lat",
-                                    "lng"
+                                    "seat_id",
+                                    "trip_id"
                                 ],
                                 "properties": {
-                                    "trip_id": {
+                                    "seat_id": {
                                         "type": "int",
                                         "format": "int",
                                         "example": "1"
                                     },
-                                    "lat": {
-                                        "type": "double",
-                                        "format": "double",
-                                        "example": "34.2525525"
-                                    },
-                                    "lng": {
-                                        "type": "double",
-                                        "format": "double",
-                                        "example": "34.2525525"
+                                    "trip_id": {
+                                        "type": "int",
+                                        "format": "int",
+                                        "example": "1"
                                     }
                                 },
                                 "type": "object"

@@ -48,4 +48,9 @@ class SeatsModel extends Model
         'updated_at',
         'deleted_at'            
     ];
+
+    protected $casts = [
+        'reserved' => 'boolean',
+    ];
+
 }

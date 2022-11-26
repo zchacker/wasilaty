@@ -8,6 +8,7 @@ use App\Models\Driver;
 use App\Models\MultiPathOrdersAssignedToDriver;
 use App\Models\Orders as ModelsOrders;
 use App\Models\OrdersAssignedToDrivers;
+use App\Models\SeatsModel;
 use App\Models\Trips;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -130,13 +131,15 @@ class Orders extends Controller
      * @OA\Response(
      *    response=200,
      *    description="success response",
-     *    @OA\JsonContent(
-     *       @OA\Property(property="success", type="boolean", example="TRUE"),
-     *       @OA\Property(property="status", type="int", example=200),
-     *       @OA\Property(property="error", type="string", example=""),
-     *       @OA\Property(property="data", type="string", example={"message":"offer accepted"} ),
-     *      )
-     *    ),
+     *      @OA\JsonContent( example=    
+     *           {{
+     *               "customerName": "Ahmed Moahmmed",
+     *               "customerPhone": "966536301031",
+     *               "seat_name": "A1",
+     *               "reserved": true
+     *           }})     
+     *        )
+     *     )
      * )
      */
     public function bookedTripUsers(Request $request, $trip_id)
@@ -147,8 +150,8 @@ class Orders extends Controller
         $driverId = $request->user()->id;
         //$trip_id  = $request->trip_id;
 
-        $tickets = DB::table('seats')
-        ->where(['seats.trip_id' => $trip_id])
+        $tickets = SeatsModel::
+        where(['seats.trip_id' => $trip_id])
         ->where(['seats.reserved' => TRUE])
         ->join('user' , 'user.id' , '=' , 'seats.user_id')
         // ->join('seats' , 'seats.trip_id' , '=' , 'booking_trip.trip_id')
@@ -159,9 +162,9 @@ class Orders extends Controller
             // 'booking_trip.lng' ,
             // 'booking_trip.status',
             'user.name AS customerName',
-            'user.phone AS customerPhone',
+            'user.phone AS customerPhone',            
             'seats.name AS seat_name',
-            'seats.name AS seat_name',
+            'seats.reserved AS reserved',
         ]);
              
         return $tickets;
