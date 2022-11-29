@@ -57,7 +57,8 @@ Route::get('/app/settings', [\App\Http\Controllers\shared\Settings::class , 'get
 Route::group(['middleware' => ['auth:users']] , function(){
             
     Route::post('user/AddOrder' , [\App\Http\Controllers\user\Orders::class , 'addOrder']);    
-    Route::get('/user/getAvailableTrips/{trip_id?}' , [\App\Http\Controllers\user\Orders::class , 'getAvailableTrips']);
+    Route::get('/user/getAvailableSeatsForTrip/{trip_id?}' , [\App\Http\Controllers\user\Orders::class , 'getAvailableSeatsForTrip']);
+    Route::get('/user/getAvailableTrips' , [\App\Http\Controllers\user\Orders::class , 'getAvailableTrips']);
     Route::post('/user/bookingTrip' , [\App\Http\Controllers\user\Orders::class , 'bookingTrip']);
     
     Route::get('/user/orders/getMyOrders' , [\App\Http\Controllers\user\Orders::class , 'getMyOrders']);

@@ -474,12 +474,23 @@ class Orders extends Controller
 
     /**
      * @OA\Get(
-     * path="/api/user/getAvailableTrips/trip_id",
+     * path="/api/user/getAvailableSeatsForTrip/{trip_id}",
      * security={{ "apiAuth": {} }},
-     * summary="إحضار الرحلات المتاحة",
-     * description="تقوم بعرض الرحلات المتاحة للحجز حسب المواعيد",
-     * operationId="getAvailableTrips",
-     * tags={"OrderUser"},     
+     * summary="إحضار مقاعد الرحلات المتاحة",
+     * description="تقوم بعرض مقاعد الرحلات المتاحة للحجز حسب المواعيد",
+     * operationId="getAvailableSeatsForTrip",
+     * tags={"OrderUser"},    
+     * @OA\Parameter(
+     *    description="ID of trip",
+     *    in="path",
+     *    name="trip_id",
+     *    required=true,
+     *    example="1",
+     *    @OA\Schema(
+     *       type="integer",
+     *       format="int64"
+     *    )
+     * ),  
      * @OA\Response(
      *    response=200,
      *    description="Success credentials response",
@@ -494,7 +505,7 @@ class Orders extends Controller
      *     )
      * )
      */
-    public function getAvailableTrips(Request $request, $trip_id)
+    public function getAvailableSeatsForTrip(Request $request, $trip_id)
     {
         /*$trips = [];
 
@@ -528,6 +539,46 @@ class Orders extends Controller
         ]);
              
         return $availableTickets;
+        
+    }
+
+    /**
+     * @OA\Get(
+     * path="/api/user/getAvailableTrips",
+     * security={{ "apiAuth": {} }},
+     * summary="إحضار الرحلات المتاحة",
+     * description="تقوم بعرض الرحلات المتاحة للحجز حسب المواعيد",
+     * operationId="getAvailableTrips",
+     * tags={"OrderUser"},      
+     * @OA\Response(
+     *    response=200,
+     *    description="Success credentials response",
+     *    @OA\JsonContent( example=    
+     *           {{
+     *               "id" : 1,
+     *               "seat_name": "B5",
+     *               "reserved": false,
+     *           }})
+     *       
+     *        )
+     *     )
+     * )
+     */
+    public function getAvailableTrips(Request $request)
+    {
+
+        $trips    = Trips::
+        get([ 
+            'trips.id',           
+            'trips.start_time',
+            'trips.end_time',            
+            'trips.start_lat',            
+            'trips.start_lng',            
+            'trips.end_lat',            
+            'trips.end_lng',            
+        ]);
+             
+        return $trips;
         
     }
        
