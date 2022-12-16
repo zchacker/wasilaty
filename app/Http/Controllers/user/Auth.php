@@ -47,6 +47,11 @@ class Auth extends Controller
         $user  = User::where('phone' , $phone)->first();
         $otp   = Utils::generateOPT();
 
+        if(ctype_digit($phone) == false){
+            $json = Utils::generateJSON( FALSE , Response::HTTP_UNAUTHORIZED , "user not found or wrong otp" , "");
+            return $json;
+        }
+
         // TODO: this is test account
         if( $phone == '966536301031'){
             $otp = 1111;
