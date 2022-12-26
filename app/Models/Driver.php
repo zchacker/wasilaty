@@ -47,6 +47,7 @@ class Driver extends Model
         'otp_requested_time',
         'isActive',
         'isApproved',
+        'firebase_token',
         'latitude',
         'longitude'
     ];
@@ -61,10 +62,26 @@ class Driver extends Model
         'otp_requested_time',
         'one_time_password',
         'deleted_at',
-        //'created_at',
-        //'updated_at',
+        // 'created_at',
+        // 'updated_at',        
+        'birth_date',
+        'id_photo',
+        'driver_license_front',
+        'driver_license_back',
+        'military_service_certificate',
+        'vehicle_model',
+        'vehicle_color',
+        'vehicle_type',
+        'vehicle_made_year',
+        'vehicle_passengers',
+        'vehicle_license_front',
+        'vehicle_license_back',        
+        'one_time_password',
+        'otp_requested_time',
         'isActive',
         'isApproved',
+        'firebase_token',
+        'id'
     ];
 
     protected $casts = [

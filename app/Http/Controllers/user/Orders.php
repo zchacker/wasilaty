@@ -567,16 +567,7 @@ class Orders extends Controller
     public function getAvailableTrips(Request $request)
     {
 
-        $trips    = Trips::
-        get([ 
-            'trips.id',           
-            'trips.start_time',
-            'trips.end_time',            
-            'trips.start_lat',            
-            'trips.start_lng',            
-            'trips.end_lat',            
-            'trips.end_lng',            
-        ]);
+        $trips    = Trips::with('driver')->get();
              
         return $trips;
         

@@ -33,6 +33,8 @@ class Trips extends Model
         'start_lng',
         'end_lat',
         'end_lng',
+        'start_location_description',
+        'end_location_description',
         'driver_id'        
     ];
 
@@ -45,9 +47,17 @@ class Trips extends Model
     protected $hidden = [
         'created_at',
         'updated_at',
-        'deleted_at' 
+        'deleted_at',
+        'driver_id',
+        'id'
     ];
 
 
+    public function driver(){
+        return $this->hasOne(Driver::class , 'id', 'driver_id');
+        
+        // ->select('driver.first_name', 'driver.last_name', 'driver.phone_numeber')
+        // ->get()
+    }
 
 }

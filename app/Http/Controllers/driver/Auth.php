@@ -84,7 +84,7 @@ class Auth extends Controller
             // 'vehicle_passengers' => 'required',
             // 'vehicle_license_front' => 'required',
             // 'vehicle_license_back' => 'required',               
-            'phone_numeber' => 'required'                           
+            'phone_numeber' => 'required|unique:driver,phone_numeber'                           
         );
 
         $messages = [
@@ -104,6 +104,7 @@ class Auth extends Controller
             'vehicle_license_front.accepted' => 'صورة رخصة القيادة من أمام مطلوبة',
             'vehicle_license_back.accepted' => 'صورة رخصة القيادة من خلف مطلوبة',
             'phone_numeber.accepted' => 'رقم الهاتف مطلوب',
+            'phone_numeber.unique' => 'الرقم موجود مسبقاً',
         ];
 
         if ($lang == 'ar')
@@ -125,6 +126,7 @@ class Auth extends Controller
                 'vehicle_license_front.accepted' => 'الرجاء قبول اتفاقية الاستخدام',
                 'vehicle_license_back.accepted' => 'الرجاء قبول اتفاقية الاستخدام',
                 'phone_numeber.accepted' => 'الرجاء قبول اتفاقية الاستخدام',
+                'phone_numeber.unique' => 'الرقم موجود مسبقاً',
             ];
         }
 

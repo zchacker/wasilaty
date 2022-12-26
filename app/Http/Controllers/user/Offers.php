@@ -102,7 +102,7 @@ class Offers extends Controller
 
             $data = new \stdClass();
             $data->message = [];
-            $json = Utils::generateJSON(FALSE , Response::HTTP_BAD_REQUEST , $data, $offer );
+            $json = Utils::generateJSON(TRUE , Response::HTTP_OK , $data, $offer );
             return $json;            
 
         }

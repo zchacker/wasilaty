@@ -379,6 +379,8 @@ class Orders extends Controller
      *       @OA\Property(property="start_lng", type="string", example="26.20" ),
      *       @OA\Property(property="end_lat", type="string", example="34.26" ),
      *       @OA\Property(property="end_lng", type="string", example="26.20" ),     
+     *       @OA\Property(property="start_location_description", type="string", example="Start Street Name" ),     
+     *       @OA\Property(property="end_location_description", type="string", example="End Street Name" ),     
      *      ),     
      * ), 
      * @OA\Response(
@@ -466,6 +468,8 @@ class Orders extends Controller
                         'start_lng' => $request->input('start_lng'),
                         'end_lat' => $request->input('end_lat'),
                         'end_lng' => $request->input('end_lng'),
+                        "start_location_description" => @$request->input('start_location_description'),
+                        "end_location_description" => @$request->input('end_location_description'),
                         'driver_id' => $driverId,
                     ]
                 );
