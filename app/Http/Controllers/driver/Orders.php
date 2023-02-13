@@ -151,7 +151,7 @@ class Orders extends Controller
         //$trip_id  = $request->trip_id;
 
         $tickets = SeatsModel::
-        where(['seats.trip_id' => $trip_id])
+          where(['seats.trip_id' => $trip_id])
         ->where(['seats.reserved' => TRUE])
         ->join('user' , 'user.id' , '=' , 'seats.user_id')
         // ->join('seats' , 'seats.trip_id' , '=' , 'booking_trip.trip_id')
@@ -218,6 +218,7 @@ class Orders extends Controller
 
         $orders = OrdersAssignedToDrivers::join('orders' , 'orders.id' , '=' ,'orders_assigned_to_drivers.order_id')
         ->join('user' , 'user.id' , '=' ,'orders.user_id')
+        ->where('orders_assigned_to_drivers.driver_id', $userId)
         ->whereIn('orders.status' , [1,2,3])
         ->orderBy('orders.created_at', 'desc')
         ->get(['*']);
@@ -277,6 +278,7 @@ class Orders extends Controller
 
         $orders = OrdersAssignedToDrivers::join('orders' , 'orders.id' , '=' ,'orders_assigned_to_drivers.order_id')
         ->join('user' , 'user.id' , '=' ,'orders.user_id')
+        ->where('orders_assigned_to_drivers.driver_id', $userId)
         ->whereIn('orders.status' , [4,5,6])
         ->orderBy('orders.created_at', 'desc')
         ->get(['*']);
@@ -870,6 +872,7 @@ class Orders extends Controller
 
         $orders = MultiPathOrdersAssignedToDriver::join('order_multi_path' , 'order_multi_path.id' , '=' ,'multi_path_orders_assigned_to_driver.order_id')
         ->join('user' , 'user.id' , '=' ,'order_multi_path.user_id')
+        ->where('multi_path_orders_assigned_to_driver.driver_id', $userId)
         ->whereIn('order_multi_path.status' , [1,2,3])
         ->orderBy('order_multi_path.created_at', 'desc')
         ->get(['*']);        
@@ -923,6 +926,7 @@ class Orders extends Controller
 
         $orders = MultiPathOrdersAssignedToDriver::join('order_multi_path' , 'order_multi_path.id' , '=' ,'multi_path_orders_assigned_to_driver.order_id')
         ->join('user' , 'user.id' , '=' ,'order_multi_path.user_id')
+        ->where('multi_path_orders_assigned_to_driver.driver_id', $userId)
         ->whereIn('order_multi_path.status' , [4,5,6])
         ->orderBy('order_multi_path.created_at', 'desc')
         ->get(['*']);        

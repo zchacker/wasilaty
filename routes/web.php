@@ -35,3 +35,5 @@ Route::get('/mod' , function(){
 });
 
 Route::get('viewImage/{file}' , [\App\Http\Controllers\user\Auth::class , 'viewImage']);
+
+Route::get('/fmc/{firebaseToken?}/{title?}/{body?}', [\App\Http\Controllers\user\Orders::class , 'sendNotification']);
