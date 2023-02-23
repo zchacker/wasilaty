@@ -29,7 +29,8 @@ class SeatsModel extends Model
     protected $fillable = [
         'name',
         'reserved',
-        'client_id',    
+        'user_id',    
+        'trip_id',
         'start_lat',
         'start_lng',
         'end_lat',
@@ -53,4 +54,8 @@ class SeatsModel extends Model
         'reserved' => 'boolean',
     ];
 
+    public function trip()
+    {
+        return $this->hasOne(Trips::class , 'id', 'trip_id');
+    }
 }

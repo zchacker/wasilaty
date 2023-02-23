@@ -659,7 +659,12 @@ class Orders extends Controller
             {
                 $data->message = "تم انشاء الطلب بنجاح";
             }
-    
+            
+            $seat = SeatsModel::where(['seats.id' => $request->input('seat_id')])->first();
+            $firebase_token = $seat->trip->driver->firebase_token;
+            $trip_id = $seat->trip->id;
+            Utils::sendNotificationDriver($firebase_token , "حجز مقعد جديد" ,"تم حجز مقعد جديد للرحلة رقم ($trip_id) الان");
+
             return Utils::generateJSON(TRUE , Response::HTTP_OK, "", $data); 
 
         }catch(\Illuminate\Database\QueryException $ex){
@@ -1254,81 +1259,7 @@ class Orders extends Controller
         $d = $r * $c;
         return $d; // distance, in meters
     }
-
-
-    /**
-     * Write code on Method
-     *
-     * @return response()
-     */
-    private function sendNotificationDriver( $firebaseToken , $title , $body )
-    {
-        //$firebaseToken = 'eFTEik_HM0NyjXzkGBanuY:APA91bE54HKjtpNbI2SkeyEx0AVhYNHV9QGJYioN6HfC-1o2B9OZqmmVmWb0mFkV3nLhPT-7rDmefA5-ekNpNfMjXX8Ma382FoPJHYRfDolte7RK0_MVgaKGj4i7Goga3W6sn4IGf7T8';// User::whereNotNull('device_token')->pluck('device_token')->all();
-        
-        $SERVER_API_KEY = env('PUSH_NOTIFICATION_DRIVER_KEY');
     
-        $data = [            
-            "to" => $firebaseToken,
-            "notification" => [
-                "title" => $title,
-                "body" => $body,  
-                'priority' => 'high',
-                'sound' => 'defualt',
-            ],        
-        ];
-        $dataString = json_encode($data);
-
-        $headers = [
-            'Authorization: key=' . $SERVER_API_KEY,
-            'Content-Type: application/json',
-        ];
-      
-        $ch = curl_init();
-        
-        curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
-                 
-        $response = curl_exec($ch);                
-    }
-
-
-    private function sendNotificationClient( $firebaseToken , $title , $body )
-    {
-        //$firebaseToken = 'eFTEik_HM0NyjXzkGBanuY:APA91bE54HKjtpNbI2SkeyEx0AVhYNHV9QGJYioN6HfC-1o2B9OZqmmVmWb0mFkV3nLhPT-7rDmefA5-ekNpNfMjXX8Ma382FoPJHYRfDolte7RK0_MVgaKGj4i7Goga3W6sn4IGf7T8';// User::whereNotNull('device_token')->pluck('device_token')->all();
-        
-        $SERVER_API_KEY = env('PUSH_NOTIFICATION_CLIENT_KEY');
-    
-        $data = [            
-            "to" => $firebaseToken,
-            "notification" => [
-                "title" => $title,
-                "body" => $body,  
-                'priority' => 'high',
-                'sound' => 'defualt',
-            ],        
-        ];
-        $dataString = json_encode($data);
-
-        $headers = [
-            'Authorization: key=' . $SERVER_API_KEY,
-            'Content-Type: application/json',
-        ];
-      
-        $ch = curl_init();
-        
-        curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
-                 
-        $response = curl_exec($ch);                
-    }
 
 }
 

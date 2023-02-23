@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\SeatsModel;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -13,7 +14,7 @@ class Clients extends Controller
     {        
         $query = User::orderByDesc('created_at');
         $sum = $query->count('id');
-        $users = $query->paginate(100);
+        $users = $query->paginate(100); 
         return view('admin_dashboard.clients.list', compact('users','sum'));
     }
     

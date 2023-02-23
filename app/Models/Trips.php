@@ -53,10 +53,7 @@ class Trips extends Model
 
 
     public function driver(){
-        return $this->hasOne(Driver::class , 'id', 'driver_id');
-        
-        // ->select('driver.first_name', 'driver.last_name', 'driver.phone_numeber')
-        // ->get()
+        return $this->hasOne(Driver::class , 'id', 'driver_id');        
     }
 
 }

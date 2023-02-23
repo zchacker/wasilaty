@@ -10,6 +10,7 @@ use App\Models\Orders as ModelsOrders;
 use App\Models\OrdersAssignedToDrivers;
 use App\Models\SeatsModel;
 use App\Models\Trips;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
@@ -629,6 +630,12 @@ class Orders extends Controller
             {
                 $data->message = "تم قبول الطلب";
             }
+            
+            try{
+                $firebase_token = User::where(['id' => $request->input('order_id')])->first()->firebase_token;
+                Utils::sendNotificationClient($firebase_token , "حالة الطلب" , "تم قبول الطلب من السائق");
+            }catch(\Illuminate\Database\QueryException $ex){}
+
             return Utils::generateJSON(TRUE , Response::HTTP_OK, "", $data);
 
         }else{
@@ -1020,6 +1027,13 @@ class Orders extends Controller
                 $data->message = "updated";
                 $json = Utils::generateJSON(TRUE , Response::HTTP_OK, "", $data);
     
+                try{    
+                    $statusMsg = Utils::orderStatusMessage($request->status);                                    
+                    $firebase_token = ModelsOrders::where(['id' => $request->order_id])->first()->firebase_token;
+                    Utils::sendNotificationClient($firebase_token , "حالة الطلب" , "حالة الطلب تغيرت الى $statusMsg");
+                }catch(\Illuminate\Database\QueryException $ex){}
+                
+
                 return $json;
     
             }catch(\Illuminate\Database\QueryException $ex){

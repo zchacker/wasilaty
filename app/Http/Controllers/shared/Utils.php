@@ -105,4 +105,115 @@ class Utils extends Controller
 
     }
 
+
+    public static function orderStatusMessage($status)
+    {
+        /**
+         * init = 1 
+         * at pickup = 2
+         * traveling = 3
+         * complete = 4
+         * driver cancel = 5
+         * customer cancel = 6         
+         */        
+        switch ($status)
+        {
+            case 1:
+                return "تم الانشاء";
+                break;
+            case 2:
+                return "وصل الى موقع الانطلاق";
+                break;
+            case 3:
+                return "تم بدء الرحلة";
+                break;
+            case 4:
+                return "مكتمل";
+                break;
+            case 5:
+                return "تم الالغاء من طرف السائق";
+                break;
+            case 6:
+                return "تم الالغاء من طرف العميل";
+                break;
+            default:
+                return "تحت المعالجة";
+        }
+        
+    }
+
+    /**
+     * Write code on Method
+     *
+     * @return response()
+     */
+    public static function sendNotificationDriver( $firebaseToken , $title , $body )
+    {
+        //$firebaseToken = 'eFTEik_HM0NyjXzkGBanuY:APA91bE54HKjtpNbI2SkeyEx0AVhYNHV9QGJYioN6HfC-1o2B9OZqmmVmWb0mFkV3nLhPT-7rDmefA5-ekNpNfMjXX8Ma382FoPJHYRfDolte7RK0_MVgaKGj4i7Goga3W6sn4IGf7T8';// User::whereNotNull('device_token')->pluck('device_token')->all();
+        
+        $SERVER_API_KEY = env('PUSH_NOTIFICATION_DRIVER_KEY');
+    
+        $data = [            
+            "to" => $firebaseToken,
+            "notification" => [
+                "title" => $title,
+                "body" => $body,  
+                'priority' => 'high',
+                'sound' => 'defualt',
+            ],        
+        ];
+        $dataString = json_encode($data);
+
+        $headers = [
+            'Authorization: key=' . $SERVER_API_KEY,
+            'Content-Type: application/json',
+        ];
+      
+        $ch = curl_init();
+        
+        curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+                 
+        $response = curl_exec($ch);                
+    }
+
+
+    public static function sendNotificationClient( $firebaseToken , $title , $body )
+    {
+        //$firebaseToken = 'eFTEik_HM0NyjXzkGBanuY:APA91bE54HKjtpNbI2SkeyEx0AVhYNHV9QGJYioN6HfC-1o2B9OZqmmVmWb0mFkV3nLhPT-7rDmefA5-ekNpNfMjXX8Ma382FoPJHYRfDolte7RK0_MVgaKGj4i7Goga3W6sn4IGf7T8';// User::whereNotNull('device_token')->pluck('device_token')->all();
+        
+        $SERVER_API_KEY = env('PUSH_NOTIFICATION_CLIENT_KEY');
+    
+        $data = [            
+            "to" => $firebaseToken,
+            "notification" => [
+                "title" => $title,
+                "body" => $body,  
+                'priority' => 'high',
+                'sound' => 'defualt',
+            ],        
+        ];
+        $dataString = json_encode($data);
+
+        $headers = [
+            'Authorization: key=' . $SERVER_API_KEY,
+            'Content-Type: application/json',
+        ];
+      
+        $ch = curl_init();
+        
+        curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+                 
+        $response = curl_exec($ch);                
+    }
+
 }
