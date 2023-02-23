@@ -4,10 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 class Orders extends Model
 {
-    use HasFactory;
+    
+    use HasFactory, SoftDeletes, Notifiable;
 
     
     /**
@@ -53,6 +57,10 @@ class Orders extends Model
         //'birthday' => 'date:Y-m-d',
         'created_at' => 'datetime:Y-m-d H:i',
         'updated_at' => 'datetime:Y-m-d H:i',
-    ];
+    ];   
+
+    public function client(){
+        return $this->hasOne(User::class , 'id', 'user_id');        
+    }
 
 }

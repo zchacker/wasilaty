@@ -49,5 +49,9 @@ class User extends Model
         'updated_at' => 'datetime:Y-m-d H:i',
     ];
        
+    public function user()
+    {
+        return $this->belongsTo(Orders::class);
+    }
 
 }
