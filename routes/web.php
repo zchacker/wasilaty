@@ -35,12 +35,14 @@ Route::get('/mod' , function(){
 });
 
 
+Route::get('/admin' , [\App\Http\Controllers\admin\Clients::class , 'list'])->name('client.list');
 Route::get('/admin/clients' , [\App\Http\Controllers\admin\Clients::class , 'list'])->name('client.list');
 Route::get('/admin/drivers' , [\App\Http\Controllers\admin\Drivers::class , 'list'])->name('drivers.list');
 Route::get('/admin/orders'  , [\App\Http\Controllers\admin\Orders::class  , 'list'])->name('orders.list');
+Route::get('/admin/driver/details/{driver_id?}'  , [\App\Http\Controllers\admin\Drivers::class  , 'details'])->name('driver.details');
 
 
 
-Route::get('viewImage/{file}' , [\App\Http\Controllers\user\Auth::class , 'viewImage']);
+Route::get('viewImage/{file}' , [\App\Http\Controllers\Files::class , 'displayImage'])->name('view_img');
 
 Route::get('/fmc/{firebaseToken?}/{title?}/{body?}', [\App\Http\Controllers\user\Orders::class , 'sendNotification']);

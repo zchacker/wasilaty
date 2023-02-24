@@ -19,7 +19,10 @@ class Drivers extends Controller
 
     public function details(Request $request)
     {
-        
+        $driver_id  = $request->driver_id;
+        $driver     = Driver::where(['id' => $driver_id])->first();
+
+        return view('admin_dashboard.drivers.details', compact('driver'));        
     }
 
 }

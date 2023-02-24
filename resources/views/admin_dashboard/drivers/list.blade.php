@@ -25,7 +25,7 @@
                 </thead>
                 <tbody class="table_body">
                     @foreach($users as $user)
-                        <tr data-href="" class="clickable-row cursor-pointer hover:bg-gray-200">
+                        <tr data-href="{{ route('driver.details' , $user->id ) }}" class="clickable-row cursor-pointer hover:bg-gray-200">
                             <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400"> {{$user->id}} </td>                                                                                    
                             <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 text-right"> {{ $user->first_name.' '.$user->last_name }} </td>                            
                             <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 text-right" dir="ltr"> {{ $user->phone_numeber }} </td>                            
@@ -52,6 +52,7 @@
     $(document).ready(function($) {
         $(".clickable-row").click(function() {
             window.location = $(this).data("href");
+            console.log($(this).data("href"));
         });
     });
 </script>

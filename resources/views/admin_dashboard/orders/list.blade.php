@@ -1,5 +1,37 @@
 @include('admin_dashboard.header')
 
+@php 
+
+function get_status_str($status)
+{
+    switch ($status)
+    {
+        case 1:
+            return "تم الانشاء";
+            break;
+        case 2:
+            return "وصل الى موقع الانطلاق";
+            break;
+        case 3:
+            return "تم بدء الرحلة";
+            break;
+        case 4:
+            return "مكتمل";
+            break;
+        case 5:
+            return "تم الالغاء من طرف السائق";
+            break;
+        case 6:
+            return "تم الالغاء من طرف العميل";
+            break;
+        default:
+            return "تحت المعالجة";
+    }
+}
+
+@endphp
+
+
 <div class="content">
 
     <h2 class="text-2xl font-bold mb-4"> الطلبات اتجاه واحد </h2>
@@ -32,7 +64,7 @@
                             <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 text-right" dir="ltr"> {{ $order->price }} </td>                            
                             <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 text-right"> {{ $order->passengers  }} </td>                            
                             <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 text-right"> {{ @$order->created_at }} </td>                            
-                            <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 text-right"> {{ $order->status }} </td>                            
+                            <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 text-right"><strong> {{get_status_str($order->status) }} </strong></td>                            
                         </tr>
                     @endforeach
                 </tbody>
@@ -55,4 +87,7 @@
         });
     });
 </script>
+
+
+
 @include('admin_dashboard.footer')

@@ -14,8 +14,7 @@ class Orders extends Controller
         $query = OrdersModel::orderByDesc('created_at');
         $sum = $query->count('id');
         $orders = $query->paginate(100);
-        // dd($query->first()->client->name);
-
+                
         return view('admin_dashboard.orders.list', compact('orders','sum'));
     }
 
