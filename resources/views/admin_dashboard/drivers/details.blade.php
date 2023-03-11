@@ -4,6 +4,18 @@
 
     <h2 class="text-2xl font-bold mb-4"> تفاصيل السائق </h2>
 
+    @if(Session::has('errors'))
+    <div class="my-3 w-full p-4 bg-orange-500 text-white rounded-md">
+        {!! session('errors')->first('error') !!}
+    </div>
+    @endif
+
+    @if(Session::has('success'))
+    <div class="my-3 w-full p-4 bg-green-700 text-white rounded-md">
+        {!! session('success') !!}
+    </div>
+    @endif
+
     <div class="p-16">
         <div class="p-8 bg-white shadow mt-24">
             <div class="grid grid-cols-1 md:grid-cols-3">
@@ -19,16 +31,25 @@
                     </div>
                 </div>
 
-                <div class="space-x-8 flex justify-between mt-32 md:mt-0 md:justify-center">
-                    <a href="tel:{{ $driver->phone_numeber }}" class="text-white py-2 px-4 uppercase rounded bg-blue-400 hover:bg-blue-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5">
+                <div class=" flex justify-between mt-32 md:mt-0 md:justify-center">
+                    <a href="tel:{{ $driver->phone_numeber }}" class="text-white mx-1 py-2 px-4 uppercase text-sm rounded bg-blue-400 hover:bg-blue-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5">
                         اتصل
                     </a>
-                    
+                    <a href="{{ route('drivers.update.status' , [$driver->id , 1]) }}" class="text-white mx-1 py-2 px-2 uppercase text-sm rounded bg-green-400 hover:bg-green-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5">
+                        قبول السائق
+                    </a>
+                    <a href="{{ route('drivers.update.status' , [$driver->id , 0]) }}" class="text-white mx-1 py-2 px-2 uppercase text-sm rounded bg-red-400 hover:bg-red-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5">
+                        رفض السائق
+                    </a>
                 </div>
             </div>
 
-            <div class="mt-20 text-center border-b pb-12">
-                <h1 class="text-4xl font-medium text-gray-700">{{ $driver->first_name.' '.$driver->last_name }} <span class="font-light text-gray-500">27</span></h1>
+            <div class="mt-16 text-center">
+                <p class="text-2xl font-bold"> {!! $driver->isApproved ? "<span class='text-green-500'>مقبول</span>" : "<span class='text-red-500'>مرفوض</span>" !!} </p>
+            </div>
+
+            <div class="mt-16 text-center border-b pb-12">
+                <h1 class="text-4xl font-medium text-gray-700">{{ $driver->first_name.' '.$driver->last_name }}</h1>
                 <p class="font-light text-gray-600 mt-3">هاتف: {{ $driver->phone_numeber }}</p>
                 <p class="font-light text-gray-600 mt-3">إيميل: {{ $driver->email }}</p>
                 <p class="font-light text-gray-600 mt-3">تاريخ ميلاد: {{ $driver->birth_date }}</p>                

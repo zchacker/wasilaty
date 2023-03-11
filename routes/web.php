@@ -38,6 +38,7 @@ Route::get('/mod' , function(){
 Route::get('/admin' , [\App\Http\Controllers\admin\Clients::class , 'list'])->name('client.list');
 Route::get('/admin/clients' , [\App\Http\Controllers\admin\Clients::class , 'list'])->name('client.list');
 Route::get('/admin/drivers' , [\App\Http\Controllers\admin\Drivers::class , 'list'])->name('drivers.list');
+Route::get('/admin/drivers/suatus/{driver_id}/{status}' , [\App\Http\Controllers\admin\Drivers::class , 'status'])->name('drivers.update.status');
 Route::get('/admin/orders'  , [\App\Http\Controllers\admin\Orders::class  , 'list'])->name('orders.list');
 Route::get('/admin/driver/details/{driver_id?}'  , [\App\Http\Controllers\admin\Drivers::class  , 'details'])->name('driver.details');
 

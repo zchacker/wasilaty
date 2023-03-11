@@ -25,4 +25,20 @@ class Drivers extends Controller
         return view('admin_dashboard.drivers.details', compact('driver'));        
     }
 
+    public function status(Request $request)
+    {
+        $driver_id = $request->driver_id;
+        $status = $request->status;
+
+        $driver = Driver::find($driver_id);
+        $driver->isApproved = $status;
+
+        if($driver->save()){
+            return back()->with(['success' => "تم الحفظ بنجاح"]);    
+        } else {                
+            return back()->withErrors(['error' => "حدث خطأ ما, لم يتم تحديث الحالة"])->withInput($request->all());
+        }
+        
+    }
+
 }
